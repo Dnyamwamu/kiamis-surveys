@@ -1078,7 +1078,7 @@ export default function SurveysPage() {
                                             <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
                                             <Tooltip
                                                 contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
-                                                formatter={(value: number | string | Array<number | string> | undefined) => [
+                                                formatter={(value: number | string | readonly (string | number)[] | undefined) => [
                                                     (typeof value === "number" ? value : Number(value || 0)).toLocaleString(),
                                                     "Farmers",
                                                 ]}
@@ -1758,7 +1758,7 @@ export default function SurveysPage() {
                                                 <Tooltip
                                                     contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                                                     formatter={(
-                                                        value: number | string | Array<number | string> | undefined,
+                                                        value: number | string | readonly (string | number)[] | undefined,
                                                         name: number | string | undefined
                                                     ) => [
                                                         (typeof value === "number" ? value : Number(value || 0)).toLocaleString(),
