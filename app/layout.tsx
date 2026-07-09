@@ -20,9 +20,9 @@ const fontMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Kenya Integrated Agricultural Management Information System Dashboard",
+  title: "KIAMIS Surveys Portal - Kenya Integrated Agricultural Management Information System",
   description:
-    "A centralised national platform enabling real-time monitoring and management of agricultural programmes, farmer registration, and government e-subsidy interventions across all 47 counties. The platform empowers both the public and national and county governments with actionable insights on farmer enrolment, fertiliser subsidy, seed  Subidy and, livestock vaccination Sudsidy, programme performance, and service delivery. With robust county-level analytics, it drives data-informed decision-making, transparency, and efficient delivery of agricultural support services.",
+    "A centralised national platform enabling the digital design, field data collection, real-time monitoring, and analysis of agricultural related surveys across all 47 counties in Kenya. Established and maintained by the Ministry of Agriculture and Livestock Development (MoALD) in collaboration with the Kenya Agricultural Digital and Information Centre (KADIC).",
   icons: {
     icon: [
       {
