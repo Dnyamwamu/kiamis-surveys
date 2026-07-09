@@ -3,7 +3,7 @@
 /**
  * Export data to CSV format
  */
-export function exportToCSV(data: any[], filename: string, headers?: string[]) {
+export function exportToCSV(data: Record<string, unknown>[], filename: string, headers?: string[]) {
   if (!data || data.length === 0) {
     console.error("No data to export");
     return;
@@ -48,12 +48,12 @@ export function exportToCSV(data: any[], filename: string, headers?: string[]) {
  * Format data for CSV export with custom formatting
  */
 export function formatDataForExport(
-  data: any[],
+  data: Record<string, unknown>[],
   keyMapping?: Record<string, string>,
-  formatters?: Record<string, (value: any) => string>
+  formatters?: Record<string, (value: unknown) => string>
 ) {
   return data.map((item) => {
-    const formattedItem: Record<string, any> = {};
+    const formattedItem: Record<string, unknown> = {};
 
     Object.keys(item).forEach((key) => {
       const displayKey = keyMapping?.[key] || key;

@@ -44,7 +44,7 @@ export default function SurveysLandingPage() {
                             </h1>
                             
                             <p className="text-lg text-emerald-100/80 leading-relaxed max-w-2xl">
-                                A centralized national platform enabling the digital design, field data collection, real-time monitoring, and analysis of national agricultural surveys, censuses, and crop yield assessments across Kenya's 47 counties.
+                                A centralized national platform enabling the digital design, field data collection, real-time monitoring, and analysis of national agricultural surveys, censuses, and crop yield assessments across {"Kenya's"} 47 counties.
                             </p>
 
                             <div className="flex flex-wrap gap-4 pt-2">

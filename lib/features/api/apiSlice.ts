@@ -20,7 +20,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_URL || "https://aharecruitment.kalro.org",
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as any).auth?.token;
+      const token = (getState() as { auth?: { token?: string } }).auth?.token;
       if (token) {
         headers.set("authorization", getAuthorizationHeaderValue(token));
       }
