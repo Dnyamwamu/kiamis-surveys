@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useGetAdminUnitsQuery } from "@/lib/features/api/vaccination/vaccinationApi";
+import { useGetAdminUnitsQuery } from "@/lib/features/api/admin/adminApi";
 import type { AdministrativeUnits } from "@/types/admin";
 
 /**
