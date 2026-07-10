@@ -266,6 +266,56 @@ const countyPerformanceData = [
     { county: "NAIROBI", project: "NAVCDP", visited: 10, target: 20 },
 ];
 
+const countyMaizeAcreageData = [
+    { county: "BUNGOMA", acres: 92100 },
+    { county: "TRANS NZOIA", acres: 107200 },
+    { county: "NANDI", acres: 73400 },
+    { county: "NAKURU", acres: 84600 },
+    { county: "UASIN GISHU", acres: 98500 },
+    { county: "MERU", acres: 42800 },
+    { county: "KAKAMEGA", acres: 68900 },
+    { county: "BOMET", acres: 48600 },
+    { county: "KERICHO", acres: 51200 },
+    { county: "NAROK", acres: 59300 },
+    { county: "WEST POKOT", acres: 35600 },
+    { county: "BARINGO", acres: 24500 },
+    { county: "ELGEYO MARAKWET", acres: 22800 },
+    { county: "MIGORI", acres: 38400 },
+    { county: "KISII", acres: 28900 },
+    { county: "HOMABAY", acres: 31200 },
+    { county: "NYANDARUA", acres: 18600 },
+    { county: "MURANG'A", acres: 15200 },
+    { county: "KIAMBU", acres: 12400 },
+    { county: "NYERI", acres: 10800 },
+    { county: "KIRINYAGA", acres: 8900 },
+    { county: "EMBU", acres: 23200 },
+    { county: "MACHAKOS", acres: 21600 },
+    { county: "MAKUENI", acres: 19800 },
+    { county: "KITUI", acres: 16500 },
+    { county: "THARAKA NITHI", acres: 11400 },
+    { county: "LAIKIPIA", acres: 14200 },
+    { county: "KAJIADO", acres: 8600 },
+    { county: "KISUMU", acres: 9800 },
+    { county: "SIAYA", acres: 17400 },
+    { county: "BUSIA", acres: 25600 },
+    { county: "VIHIGA", acres: 7800 },
+    { county: "NYAMIRA", acres: 13200 },
+    { county: "KWALE", acres: 6400 },
+    { county: "KILIFI", acres: 7100 },
+    { county: "TAITA TAVETA", acres: 5200 },
+    { county: "LAMU", acres: 4800 },
+    { county: "TANA RIVER", acres: 3900 },
+    { county: "SAMBURU", acres: 2800 },
+    { county: "TURKANA", acres: 1900 },
+    { county: "MARSABIT", acres: 1200 },
+    { county: "ISIOLO", acres: 800 },
+    { county: "GARISSA", acres: 600 },
+    { county: "WAJIR", acres: 400 },
+    { county: "MANDERA", acres: 200 },
+    { county: "MOMBASA", acres: 100 },
+    { county: "NAIROBI", acres: 50 },
+];
+
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#ef4444"];
 
 const emptySubscribe = () => () => { };
@@ -442,6 +492,36 @@ export default function SurveysPage() {
     const activeTargetComparisonData = [
         { name: "Long Rains Maize Survey", Surveyed: activeVisitedFarmers, Target: activeVisitedTarget },
     ];
+
+    const activeCountyMaizeAcreageData = countyMaizeAcreageData
+        .filter((item) => {
+            const matchesCounty = !selectedCounty || item.county.toLowerCase() === selectedCounty.toLowerCase();
+            const matchingPerf = countyPerformanceData.find(p => p.county === item.county);
+            const matchesProject = countyProjectFilter === "ALL" || (matchingPerf && matchingPerf.project === countyProjectFilter);
+            return matchesCounty && matchesProject;
+        })
+        .map((item) => {
+            let acres = item.acres;
+            acres = Math.round(acres * scaleFactor);
+            if (selectedCounty && item.county.toLowerCase() === selectedCounty.toLowerCase()) {
+                if (selectedSubCounty) {
+                    const subFactor = 0.25 + (selectedSubCounty.charCodeAt(0) % 5) * 0.05;
+                    acres = Math.round(acres * subFactor);
+                    if (selectedWard) {
+                        const wardFactor = 0.15 + (selectedWard.charCodeAt(0) % 4) * 0.05;
+                        acres = Math.round(acres * wardFactor);
+                    }
+                }
+            }
+            return {
+                ...item,
+                acres
+            };
+        });
+
+    const sortedCountyMaizeAcreageData = [...activeCountyMaizeAcreageData].sort((a, b) => b.acres - a.acres);
+    const topCountiesAcreageData = sortedCountyMaizeAcreageData.slice(0, 10);
+    const totalMaizeAcreage = activeCountyMaizeAcreageData.reduce((sum, item) => sum + item.acres, 0);
 
     if (!mounted) {
         return (
@@ -802,7 +882,7 @@ export default function SurveysPage() {
                             <div className="space-y-0.5">
                                 <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Expected Yield</CardDescription>
                                 <CardTitle className="text-3xl font-extrabold text-slate-800">
-                                    16.5 <span className="text-lg font-semibold text-slate-500">Bags/Ac</span>
+                                    16.5 <span className="text-lg font-semibold text-slate-500">Bags/Acres</span>
                                 </CardTitle>
                             </div>
                             <div className="h-10 w-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shadow-inner">
@@ -1127,6 +1207,75 @@ export default function SurveysPage() {
                 {/* Tab 2: Maize Growth */}
                 {activeSubTab === "maize-growth" && (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Area Under Maize (County vs Acres) */}
+                        <Card className="shadow-md border-slate-200 lg:col-span-2">
+                            <CardHeader>
+                                <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                    <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
+                                    Area Under Maize (County vs Acres)
+                                </CardTitle>
+                                <CardDescription>
+                                    Distribution of surveyed maize crop acreage by county and total cultivated area.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Column 1: Horizontal Bar Chart of Top Counties */}
+                                    <div className="space-y-4">
+                                        <h4 className="text-sm font-semibold text-slate-700">Top Counties by Maize Acreage</h4>
+                                        <div className="h-[300px]">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <BarChart
+                                                    layout="vertical"
+                                                    data={topCountiesAcreageData}
+                                                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                                                >
+                                                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
+                                                    <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} />
+                                                    <YAxis dataKey="county" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} width={100} />
+                                                    <Tooltip
+                                                        contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
+                                                        formatter={(value: unknown) => [`${Number(value).toLocaleString()} Acres`, "Acreage"]}
+                                                    />
+                                                    <Bar dataKey="acres" fill="#10b981" radius={[0, 4, 4, 0]} />
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                    </div>
+
+                                    {/* Column 2: Scrollable Table of County vs Acres */}
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <h4 className="text-sm font-semibold text-slate-700">County Acreage Ledger</h4>
+                                            <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-50">
+                                                Total: {totalMaizeAcreage.toLocaleString()} Acres
+                                            </Badge>
+                                        </div>
+                                        <div className="border border-slate-200 rounded-xl overflow-hidden">
+                                            <div className="overflow-y-auto max-h-[298px]">
+                                                <table className="w-full border-collapse text-left text-sm">
+                                                    <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                                                        <tr>
+                                                            <th className="p-3 font-semibold">County</th>
+                                                            <th className="p-3 font-semibold text-right">Maize Area (Acres)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-slate-200">
+                                                        {sortedCountyMaizeAcreageData.map((item) => (
+                                                            <tr key={item.county} className="hover:bg-slate-50/50 transition-colors">
+                                                                <td className="p-3 font-bold text-slate-800">{item.county}</td>
+                                                                <td className="p-3 text-slate-600 font-mono text-right">{item.acres.toLocaleString()}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
                         {/* Crop Growth Stages */}
                         <Card className="shadow-md border-slate-200">
                             <CardHeader>
@@ -1343,6 +1492,8 @@ export default function SurveysPage() {
                                 </div>
                             </CardContent>
                         </Card>
+
+
                     </div>
                 )}
 
@@ -1761,9 +1912,9 @@ export default function SurveysPage() {
                                                         value: number | string | readonly (string | number)[] | undefined,
                                                         name: number | string | undefined
                                                     ) => [
-                                                        (typeof value === "number" ? value : Number(value || 0)).toLocaleString(),
-                                                        String(name || ""),
-                                                    ]}
+                                                            (typeof value === "number" ? value : Number(value || 0)).toLocaleString(),
+                                                            String(name || ""),
+                                                        ]}
                                                 />
                                                 <Legend />
                                                 <Bar dataKey="Reached" fill="#10b981" radius={[4, 4, 0, 0]} />
