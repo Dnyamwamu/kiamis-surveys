@@ -35,9 +35,11 @@ import {
     Target,
     Sun,
     Home,
+    Compass,
 } from "lucide-react";
 import Link from "next/link";
 import { AdminUnitFilter } from "@/components/admin-unit-filter";
+import KenyaFarmersD3Map from "@/components/maps/kenya-farmers-d3-map";
 import {
     ResponsiveContainer,
     AreaChart,
@@ -55,6 +57,7 @@ import {
     LineChart,
     Line,
     ComposedChart,
+    LabelList,
 } from "recharts";
 
 // Mock data reflecting the Maize Performance Assessment Programme
@@ -86,6 +89,22 @@ const householdRangeData = [
 ];
 
 const dailyProgressData = [
+    { day: "Jun 10", Visited: 3100 },
+    { day: "Jun 11", Visited: 3400 },
+    { day: "Jun 12", Visited: 3800 },
+    { day: "Jun 13", Visited: 3500 },
+    { day: "Jun 14", Visited: 4200 },
+    { day: "Jun 15", Visited: 4500 },
+    { day: "Jun 16", Visited: 4800 },
+    { day: "Jun 17", Visited: 5100 },
+    { day: "Jun 18", Visited: 4900 },
+    { day: "Jun 19", Visited: 5600 },
+    { day: "Jun 20", Visited: 6100 },
+    { day: "Jun 21", Visited: 6400 },
+    { day: "Jun 22", Visited: 6800 },
+    { day: "Jun 23", Visited: 6500 },
+    { day: "Jun 24", Visited: 7200 },
+    { day: "Jun 25", Visited: 7800 },
     { day: "Jun 26", Visited: 8200 },
     { day: "Jun 27", Visited: 9400 },
     { day: "Jun 28", Visited: 10100 },
@@ -171,12 +190,12 @@ const cropUniformityData = [
 ];
 
 const growthStageDetailedData = [
-    { stage: "Emergence", acreage: "18,595 Ac", uniformity: "Even (92%)", color: "Deep Green (88%)", irrigation: "Rainfed (95%)" },
-    { stage: "Vegetative", acreage: "79,033 Ac", uniformity: "Even (81%)", color: "Deep Green (76%)", irrigation: "Rainfed (90%)" },
-    { stage: "Tasseling", acreage: "116,224 Ac", uniformity: "Even (74%)", color: "Deep Green (62%)", irrigation: "Rainfed (88%)" },
-    { stage: "Milking", acreage: "92,979 Ac", uniformity: "Even (68%)", color: "Deep Green (54%)", irrigation: "Rainfed (89%)" },
-    { stage: "Grain Fill", acreage: "106,928 Ac", uniformity: "Even (70%)", color: "Deep Green (58%)", irrigation: "Rainfed (91%)" },
-    { stage: "Maturity", acreage: "51,136 Ac", uniformity: "Even (85%)", color: "Deep/Pale Green (94%)", irrigation: "Rainfed (93%)" },
+    { stage: "Emergence", acreage: "18,595 Acres", uniformity: "Even (92%)", color: "Deep Green (88%)", irrigation: "Rainfed (95%)" },
+    { stage: "Vegetative", acreage: "79,033 Acres", uniformity: "Even (81%)", color: "Deep Green (76%)", irrigation: "Rainfed (90%)" },
+    { stage: "Tasseling", acreage: "116,224 Acres", uniformity: "Even (74%)", color: "Deep Green (62%)", irrigation: "Rainfed (88%)" },
+    { stage: "Milking", acreage: "92,979 Acres", uniformity: "Even (68%)", color: "Deep Green (54%)", irrigation: "Rainfed (89%)" },
+    { stage: "Grain Fill", acreage: "106,928 Acres", uniformity: "Even (70%)", color: "Deep Green (58%)", irrigation: "Rainfed (91%)" },
+    { stage: "Maturity", acreage: "51,136 Acres", uniformity: "Even (85%)", color: "Deep/Pale Green (94%)", irrigation: "Rainfed (93%)" },
 ];
 
 const pestDiseaseData = [
@@ -316,6 +335,56 @@ const countyMaizeAcreageData = [
     { county: "NAIROBI", acres: 50 },
 ];
 
+const KENYA_COUNTIES = [
+    { name: "BUNGOMA", lat: 0.563, lon: 34.56 },
+    { name: "TRANS NZOIA", lat: 1.018, lon: 34.996 },
+    { name: "NANDI", lat: 0.183, lon: 35.127 },
+    { name: "NAKURU", lat: -0.303, lon: 36.08 },
+    { name: "UASIN GISHU", lat: 0.52, lon: 35.269 },
+    { name: "MERU", lat: 0.047, lon: 37.649 },
+    { name: "KAKAMEGA", lat: 0.284, lon: 34.752 },
+    { name: "BOMET", lat: -0.781, lon: 35.341 },
+    { name: "KERICHO", lat: -0.367, lon: 35.289 },
+    { name: "NAROK", lat: -1.078, lon: 35.86 },
+    { name: "WEST POKOT", lat: 1.508, lon: 35.12 },
+    { name: "BARINGO", lat: 0.485, lon: 35.972 },
+    { name: "ELGEYO MARAKWET", lat: 0.805, lon: 35.539 },
+    { name: "MIGORI", lat: -1.063, lon: 34.473 },
+    { name: "KISII", lat: -0.681, lon: 34.779 },
+    { name: "HOMABAY", lat: -0.529, lon: 34.455 },
+    { name: "NYANDARUA", lat: -0.33, lon: 36.37 },
+    { name: "MURANG'A", lat: -0.803, lon: 37.129 },
+    { name: "KIAMBU", lat: -1.168, lon: 36.825 },
+    { name: "NYERI", lat: -0.42, lon: 36.95 },
+    { name: "KIRINYAGA", lat: -0.499, lon: 37.311 },
+    { name: "EMBU", lat: -0.531, lon: 37.457 },
+    { name: "MACHAKOS", lat: -1.517, lon: 37.262 },
+    { name: "MAKUENI", lat: -2.253, lon: 37.828 },
+    { name: "KITUI", lat: -1.371, lon: 38.016 },
+    { name: "THARAKA NITHI", lat: -0.298, lon: 37.892 },
+    { name: "LAIKIPIA", lat: 0.363, lon: 36.786 },
+    { name: "KAJIADO", lat: -2.098, lon: 36.782 },
+    { name: "KISUMU", lat: -0.102, lon: 34.761 },
+    { name: "SIAYA", lat: -0.061, lon: 34.288 },
+    { name: "BUSIA", lat: 0.434, lon: 34.218 },
+    { name: "VIHIGA", lat: 0.076, lon: 34.721 },
+    { name: "NYAMIRA", lat: -0.566, lon: 34.935 },
+    { name: "KWALE", lat: -4.174, lon: 39.26 },
+    { name: "KILIFI", lat: -3.224, lon: 39.814 },
+    { name: "TAITA TAVETA", lat: -3.398, lon: 38.358 },
+    { name: "LAMU", lat: -2.172, lon: 40.898 },
+    { name: "TANA RIVER", lat: -1.716, lon: 39.521 },
+    { name: "SAMBURU", lat: 1.258, lon: 37.265 },
+    { name: "TURKANA", lat: 3.116, lon: 35.617 },
+    { name: "MARSABIT", lat: 2.336, lon: 37.99 },
+    { name: "ISIOLO", lat: 1.026, lon: 38.483 },
+    { name: "GARISSA", lat: -0.457, lon: 39.638 },
+    { name: "WAJIR", lat: 1.748, lon: 40.059 },
+    { name: "MANDERA", lat: 3.937, lon: 41.134 },
+    { name: "MOMBASA", lat: -4.043, lon: 39.668 },
+    { name: "NAIROBI", lat: -1.292, lon: 36.821 }
+];
+
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#ef4444"];
 
 const emptySubscribe = () => () => { };
@@ -325,10 +394,11 @@ const getServerSnapshot = () => false;
 export default function SurveysPage() {
     const mounted = useSyncExternalStore(emptySubscribe, getClientSnapshot, getServerSnapshot);
     const [activeSubTab, setActiveSubTab] = useState<
-        "demographics" | "maize-growth" | "fertilizer-seed" | "pests-yields" | "county-performance"
+        "demographics" | "maize-growth" | "fertilizer-seed" | "pests-yields" | "yield-estimate" | "county-performance"
     >("demographics");
     const [countySearch, setCountySearch] = useState("");
     const [countyProjectFilter, setCountyProjectFilter] = useState<"ALL" | "FSRP" | "NAVCDP">("ALL");
+    const [hoveredMapCounty, setHoveredMapCounty] = useState<string | null>(null);
     const [selectedCounty, setSelectedCounty] = useState("");
     const [selectedSubCounty, setSelectedSubCounty] = useState("");
     const [selectedWard, setSelectedWard] = useState("");
@@ -384,6 +454,7 @@ export default function SurveysPage() {
     const activeVisitedPercent = targetSum > 0 ? parseFloat(((reachedSum / targetSum) * 100).toFixed(2)) : 0;
     const activeCountiesCovered = selectedCounty ? 1 : activeCountiesCount;
     const activeAverageAcreage = 2.4;
+    const activeAverageAcreageTotal = 3.2;
     const activeAvgHouseholdSize = 5.2;
 
     // Calculate dynamic scale factor
@@ -451,7 +522,7 @@ export default function SurveysPage() {
         const scaledAcreage = Math.round(acreageNum * scaleFactor);
         return {
             ...item,
-            acreage: `${scaledAcreage.toLocaleString()} Ac`
+            acreage: `${scaledAcreage.toLocaleString()} Acres`
         };
     });
 
@@ -531,6 +602,53 @@ export default function SurveysPage() {
     const sortedCountyMaizeAcreageData = [...activeCountyMaizeAcreageData].sort((a, b) => b.acres - a.acres);
     const topCountiesAcreageData = sortedCountyMaizeAcreageData.slice(0, 10);
     const totalMaizeAcreage = activeCountyMaizeAcreageData.reduce((sum, item) => sum + item.acres, 0);
+
+    const activeCountySunflowerData = activeCountyMaizeAcreageData.map((item) => {
+        const interested = Math.round(item.acres * 0.28);
+        return {
+            county: item.county,
+            interested
+        };
+    });
+    const sortedCountySunflowerData = [...activeCountySunflowerData].sort((a, b) => b.interested - a.interested);
+    const topCountiesSunflowerData = sortedCountySunflowerData.slice(0, 10);
+    const totalSunflowerInterested = activeCountySunflowerData.reduce((sum, item) => sum + item.interested, 0);
+
+    const activeYieldEstimateData = activeCountyMaizeAcreageData.map((item) => {
+        const maize_acres = item.acres;
+        const silage_acres = Math.round(maize_acres * 0.08);
+        const green_acres = Math.round(maize_acres * 0.12);
+        const dry_grain_acres = maize_acres - silage_acres - green_acres;
+        const expected_yield_outlook = 16.5; // Bags/Acre
+        const total_expected_yield = Math.round((maize_acres - silage_acres) * expected_yield_outlook);
+
+        // 5c. Maize use breakdown
+        const family_consumption = Math.round(total_expected_yield * 0.55);
+        const commercial_sale = Math.round(total_expected_yield * 0.30);
+        const animal_feed = Math.round(total_expected_yield * 0.15);
+
+        return {
+            county: item.county,
+            maize_acres,
+            silage_acres,
+            green_acres,
+            dry_grain_acres,
+            expected_yield_outlook,
+            total_expected_yield,
+            family_consumption,
+            commercial_sale,
+            animal_feed
+        };
+    });
+
+    const sortedYieldEstimateData = [...activeYieldEstimateData].sort((a, b) => b.total_expected_yield - a.total_expected_yield);
+    const topCountiesYieldData = sortedYieldEstimateData.slice(0, 10);
+    const totalGreenAcreage = activeYieldEstimateData.reduce((sum, item) => sum + item.green_acres, 0);
+    const totalSilageAcreage = activeYieldEstimateData.reduce((sum, item) => sum + item.silage_acres, 0);
+    const totalExpectedYieldBags = activeYieldEstimateData.reduce((sum, item) => sum + item.total_expected_yield, 0);
+    const totalFamilyConsumptionBags = activeYieldEstimateData.reduce((sum, item) => sum + item.family_consumption, 0);
+    const totalCommercialSaleBags = activeYieldEstimateData.reduce((sum, item) => sum + item.commercial_sale, 0);
+    const totalAnimalFeedBags = activeYieldEstimateData.reduce((sum, item) => sum + item.animal_feed, 0);
 
     if (!mounted) {
         return (
@@ -761,7 +879,7 @@ export default function SurveysPage() {
 
                         <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border-none font-semibold text-xs px-2.5 py-1 flex items-center gap-1.5 shadow-2xs">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                            Sponsor: {countyProjectFilter === "ALL" ? "All Projects" : countyProjectFilter}
+                            Project: {countyProjectFilter === "ALL" ? "All Projects" : countyProjectFilter}
                         </Badge>
 
                         <Badge className={`border-none font-semibold text-xs px-2.5 py-1 flex items-center gap-1.5 shadow-2xs ${selectedCounty ? 'bg-blue-100 text-blue-800 hover:bg-blue-100' : 'bg-slate-200/60 text-slate-500 hover:bg-slate-200/60'}`}>
@@ -842,6 +960,26 @@ export default function SurveysPage() {
                         </CardContent>
                     </Card>
 
+                    {/* Card 3: Avg Household Size */}
+                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                            <div className="space-y-0.5">
+                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Avg Household Size</CardDescription>
+                                <CardTitle className="text-3xl font-extrabold text-slate-800">
+                                    {activeAvgHouseholdSize} <span className="text-lg font-semibold text-slate-500">Members</span>
+                                </CardTitle>
+                            </div>
+                            <div className="h-10 w-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-inner">
+                                <Users className="w-5 h-5" />
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex items-center gap-2 mt-2">
+                                <span className="text-xs text-muted-foreground">Average size of surveyed households</span>
+                            </div>
+                        </CardContent>
+                    </Card>
+
                     {/* Card 3: Target to Be Reached */}
                     <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
@@ -868,7 +1006,7 @@ export default function SurveysPage() {
                             <div className="space-y-0.5">
                                 <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Maize Acreage Covered</CardDescription>
                                 <CardTitle className="text-3xl font-extrabold text-slate-800">
-                                    {(activeVisitedFarmers * activeAverageAcreage).toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-semibold text-slate-500">Ac</span>
+                                    {(activeVisitedFarmers * activeAverageAcreage).toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-semibold text-slate-500">Acres</span>
                                 </CardTitle>
                             </div>
                             <div className="h-10 w-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center shadow-inner">
@@ -880,7 +1018,30 @@ export default function SurveysPage() {
                                 <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 border-none font-medium">
                                     Rainfed Dominant
                                 </Badge>
-                                <span className="text-xs text-muted-foreground">Avg: {activeAverageAcreage} Ac / farm</span>
+                                <span className="text-xs text-muted-foreground">Avg: {activeAverageAcreage} Acres / farm</span>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Card 6: Total Land Acreage */}
+                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                            <div className="space-y-0.5">
+                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Land Acreage</CardDescription>
+                                <CardTitle className="text-3xl font-extrabold text-slate-800">
+                                    {(activeVisitedFarmers * activeAverageAcreageTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-semibold text-slate-500">Acres</span>
+                                </CardTitle>
+                            </div>
+                            <div className="h-10 w-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center shadow-inner">
+                                <Layers className="w-5 h-5" />
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex items-center gap-2 mt-2">
+                                <Badge className="bg-teal-100 text-teal-700 hover:bg-teal-100 border-none font-medium">
+                                    Total Farm Holdings
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">Avg: {activeAverageAcreageTotal} Acre / farm</span>
                             </div>
                         </CardContent>
                     </Card>
@@ -900,59 +1061,20 @@ export default function SurveysPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="flex items-center gap-2 mt-2">
-                                <span className="text-xs text-muted-foreground">Expected 2026 average bags/acre</span>
+                                <span className="text-xs text-muted-foreground">Expected 2026 average bags(90Kg)/acre</span>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Card 6: Maize Utilisation */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Maize Utilisation</CardDescription>
-                                <CardTitle className="text-xl font-extrabold text-slate-800 leading-tight">
-                                    Home Consumption
-                                </CardTitle>
-                            </div>
-                            <div className="h-10 w-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner">
-                                <CheckCircle className="w-5 h-5" />
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mt-2">
-                                <span className="text-xs font-medium text-slate-600">55% Family | 30% Sale | 15% Feed</span>
-                            </div>
-                        </CardContent>
-                    </Card>
 
-                    {/* Card 7: Sunflower Interest */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Sunflower Interest</CardDescription>
-                                <CardTitle className="text-3xl font-extrabold text-slate-800">
-                                    {activeSunflowerInterestCount.toLocaleString()}
-                                </CardTitle>
-                            </div>
-                            <div className="h-10 w-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shadow-inner">
-                                <Sun className="w-5 h-5" />
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mt-2">
-                                <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none font-medium">
-                                    33.2% Interested
-                                </Badge>
-                                <span className="text-xs text-muted-foreground">Of reached farmers</span>
-                            </div>
-                        </CardContent>
-                    </Card>
+
+
 
                     {/* Card 8: Avg Submission by AGP */}
                     <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                             <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Avg Submissions / AGP</CardDescription>
+                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Average Daily Submissions</CardDescription>
                                 <CardTitle className="text-3xl font-extrabold text-slate-800">
                                     {activeAvgAgpSubmissions.toLocaleString()}
                                 </CardTitle>
@@ -967,12 +1089,66 @@ export default function SurveysPage() {
                             </div>
                         </CardContent>
                     </Card>
+
+                    {/* Card 7: Sunflower Interest */}
+                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                            <div className="space-y-0.5">
+                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Sunflower</CardDescription>
+                                <CardTitle className="text-3xl font-extrabold text-slate-800">
+                                    {activeSunflowerInterestCount.toLocaleString()}
+                                </CardTitle>
+                            </div>
+                            <div className="h-10 w-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shadow-inner">
+                                <Sun className="w-5 h-5" />
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex items-center gap-2 mt-2">
+                                <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none font-medium">
+                                    33.2% Farmers
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">Interested to grow sunflower</span>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Card 6: Maize Utilisation */}
+                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
+                        <CardHeader className="flex flex-row items-center justify-between pb-1 space-y-0">
+                            <div className="space-y-0.5">
+                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Maize Utilisation</CardDescription>
+                            </div>
+                            <div className="h-10 w-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner">
+                                <CheckCircle className="w-5 h-5" />
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex flex-col gap-1.5 mt-2">
+                                <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-1">
+                                    <span className="text-slate-500 font-medium">Family Consumption:</span>
+                                    <span className="font-bold text-slate-700">55%</span>
+                                </div>
+                                <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-1">
+                                    <span className="text-slate-500 font-medium">Commercial Sale:</span>
+                                    <span className="font-bold text-slate-700">30%</span>
+                                </div>
+                                <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-1">
+                                    <span className="text-slate-500 font-medium">Animal Feed:</span>
+                                    <span className="font-bold text-slate-700">15%</span>
+                                </div>
+                            </div>
+                            <p className="text-[10px] text-slate-400 mt-3">
+                                Distribution of maize usage by surveyed smallholder farming households.
+                            </p>
+                        </CardContent>
+                    </Card>
                 </div>
             </section>
 
             {/* Main Tabs Selection */}
             <section className="py-8 container mx-auto px-6 max-w-7xl">
-                <div className="flex flex-wrap items-center justify-center bg-white border border-slate-200 rounded-xl p-1.5 shadow-sm max-w-4xl mx-auto mb-8 gap-1">
+                <div className="flex flex-wrap items-center justify-center bg-white border border-slate-200 rounded-xl p-1.5 shadow-sm max-w-5xl mx-auto mb-8 gap-1">
                     <button
                         onClick={() => setActiveSubTab("demographics")}
                         className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "demographics"
@@ -1010,6 +1186,15 @@ export default function SurveysPage() {
                         Pests, Diseases & Yields
                     </button>
                     <button
+                        onClick={() => setActiveSubTab("yield-estimate")}
+                        className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "yield-estimate"
+                            ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
+                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                            }`}
+                    >
+                        Yield Estimate
+                    </button>
+                    <button
                         onClick={() => setActiveSubTab("county-performance")}
                         className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "county-performance"
                             ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
@@ -1028,21 +1213,24 @@ export default function SurveysPage() {
                             <CardHeader>
                                 <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                                     <Activity className="w-5 h-5 text-emerald-600" />
-                                    Daily Assessment Progress (14-Day Trend)
+                                    Daily Assessment Progress (30-Day Trend)
                                 </CardTitle>
                                 <CardDescription>
-                                    Tracking the daily volume of farmers visited by field agripreneurs over the last two weeks.
+                                    Tracking the daily volume of farmers visited by field agripreneurs over the last 30 days.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="h-[320px]">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={activeDailyProgressData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                                        <BarChart data={activeDailyProgressData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
                                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis dataKey="day" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                                            <XAxis dataKey="day" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Date / Day', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Farmers Visited', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
                                             <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
-                                            <Bar dataKey="Visited" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={45} />
+                                            <Legend verticalAlign="top" height={36} iconType="circle" />
+                                            <Bar dataKey="Visited" name="Farmers Reached" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={45}>
+                                                <LabelList dataKey="Visited" position="top" style={{ fill: '#64748b', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
+                                            </Bar>
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -1161,10 +1349,10 @@ export default function SurveysPage() {
                             <CardContent>
                                 <div className="h-[200px]">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={activeHouseholdRangeData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                                        <BarChart data={activeHouseholdRangeData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
                                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis dataKey="range" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                                            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+                                            <XAxis dataKey="range" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Household Size Range', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} label={{ value: 'Farmers Count', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
                                             <Tooltip
                                                 contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                                                 formatter={(value: number | string | readonly (string | number)[] | undefined) => [
@@ -1172,10 +1360,12 @@ export default function SurveysPage() {
                                                     "Farmers",
                                                 ]}
                                             />
-                                            <Bar dataKey="value" fill="#8b5cf6" radius={[4, 4, 0, 0]} maxBarSize={50}>
+                                            <Legend verticalAlign="top" height={36} iconType="circle" />
+                                            <Bar dataKey="value" name="Farmers Surveyed" fill="#8b5cf6" radius={[4, 4, 0, 0]} maxBarSize={50}>
                                                 {activeHouseholdRangeData.map((entry, index) => (
                                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                                 ))}
+                                                <LabelList dataKey="value" position="top" style={{ fill: '#64748b', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
                                             </Bar>
                                         </BarChart>
                                     </ResponsiveContainer>
@@ -1199,12 +1389,16 @@ export default function SurveysPage() {
                                     <ResponsiveContainer width="100%" height="100%">
                                         <BarChart data={activeTargetComparisonData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} />
-                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                                            <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Category', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Farmers Count', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
                                             <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
-                                            <Legend verticalAlign="top" height={36} />
-                                            <Bar dataKey="Surveyed" fill="#10b981" radius={[8, 8, 0, 0]} maxBarSize={120} />
-                                            <Bar dataKey="Target" fill="#cbd5e1" radius={[8, 8, 0, 0]} maxBarSize={120} />
+                                            <Legend verticalAlign="top" height={36} iconType="circle" />
+                                            <Bar dataKey="Surveyed" fill="#10b981" radius={[8, 8, 0, 0]} maxBarSize={120}>
+                                                <LabelList dataKey="Surveyed" position="top" style={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
+                                            </Bar>
+                                            <Bar dataKey="Target" fill="#cbd5e1" radius={[8, 8, 0, 0]} maxBarSize={120}>
+                                                <LabelList dataKey="Target" position="top" style={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
+                                            </Bar>
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -1237,16 +1431,19 @@ export default function SurveysPage() {
                                                 <BarChart
                                                     layout="vertical"
                                                     data={topCountiesAcreageData}
-                                                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                                                    margin={{ top: 5, right: 35, left: 10, bottom: 20 }}
                                                 >
                                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
-                                                    <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                                                    <YAxis dataKey="county" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} width={100} />
+                                                    <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Maize Area (Acres)', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                                    <YAxis dataKey="county" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} width={100} label={{ value: 'County', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} />
                                                     <Tooltip
                                                         contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                                                         formatter={(value: unknown) => [`${Number(value).toLocaleString()} Acres`, "Acreage"]}
                                                     />
-                                                    <Bar dataKey="acres" fill="#10b981" radius={[0, 4, 4, 0]} />
+                                                    <Legend verticalAlign="top" height={36} iconType="circle" />
+                                                    <Bar dataKey="acres" name="Cultivated Maize Area" fill="#10b981" radius={[0, 4, 4, 0]}>
+                                                        <LabelList dataKey="acres" position="right" style={{ fill: '#64748b', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
+                                                    </Bar>
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </div>
@@ -1285,12 +1482,84 @@ export default function SurveysPage() {
                             </CardContent>
                         </Card>
 
+                        {/* Sunflower Cultivation Interest by County */}
+                        <Card className="shadow-md border-slate-200 lg:col-span-2">
+                            <CardHeader>
+                                <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                    <Sun className="w-5 h-5 text-amber-500" />
+                                    Sunflower Cultivation Interest (County Comparison)
+                                </CardTitle>
+                                <CardDescription>
+                                    Distribution of farmers who expressed interest in sunflower cultivation as a crop diversification option.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Column 1: Horizontal Bar Chart of Top Counties */}
+                                    <div className="space-y-4">
+                                        <h4 className="text-sm font-semibold text-slate-700">Top Counties by Sunflower Interest</h4>
+                                        <div className="h-[300px]">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <BarChart
+                                                    layout="vertical"
+                                                    data={topCountiesSunflowerData}
+                                                    margin={{ top: 5, right: 35, left: 10, bottom: 20 }}
+                                                >
+                                                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
+                                                    <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Interested Farmers', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                                    <YAxis dataKey="county" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} width={100} label={{ value: 'County', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} />
+                                                    <Tooltip
+                                                        contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
+                                                        formatter={(value: unknown) => [`${Number(value).toLocaleString()} Farmers`, "Interested"]}
+                                                    />
+                                                    <Legend verticalAlign="top" height={36} iconType="circle" />
+                                                    <Bar dataKey="interested" name="Interested Farmers" fill="#fbbf24" radius={[0, 4, 4, 0]}>
+                                                        <LabelList dataKey="interested" position="right" style={{ fill: '#64748b', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
+                                                    </Bar>
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                    </div>
+
+                                    {/* Column 2: Scrollable Table of County vs Sunflower Interest */}
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <h4 className="text-sm font-semibold text-slate-700">County Sunflower Interest</h4>
+                                            <Badge className="bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-50 font-bold">
+                                                Total: {totalSunflowerInterested.toLocaleString()} Farmers
+                                            </Badge>
+                                        </div>
+                                        <div className="border border-slate-200 rounded-xl overflow-hidden">
+                                            <div className="overflow-y-auto max-h-[298px]">
+                                                <table className="w-full border-collapse text-left text-sm">
+                                                    <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                                                        <tr>
+                                                            <th className="p-3 font-semibold text-left">County</th>
+                                                            <th className="p-3 font-semibold text-right">Interested Farmers</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-slate-200">
+                                                        {sortedCountySunflowerData.map((item) => (
+                                                            <tr key={item.county} className="hover:bg-slate-50/50 transition-colors">
+                                                                <td className="p-3 font-bold text-slate-800 text-xs sm:text-sm">{item.county}</td>
+                                                                <td className="p-3 text-slate-600 font-mono text-right text-xs sm:text-sm">{item.interested.toLocaleString()}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
                         {/* Irrigation Mode Comparison (County Comparison) */}
                         <Card className="shadow-md border-slate-200 lg:col-span-2">
                             <CardHeader>
                                 <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                                     <BarChart3 className="w-5 h-5 text-emerald-600" />
-                                    Irrigation Mode Comparison (County Comparison)
+                                    Source of Water Comparison (County Comparison)
                                 </CardTitle>
                                 <CardDescription>
                                     County-level comparison of rainfed vs. irrigated cultivated area (top 10 counties).
@@ -1306,18 +1575,22 @@ export default function SurveysPage() {
                                                 <BarChart
                                                     layout="vertical"
                                                     data={topCountiesAcreageData}
-                                                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                                                    margin={{ top: 5, right: 20, left: 10, bottom: 20 }}
                                                 >
                                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
-                                                    <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                                                    <YAxis dataKey="county" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} width={100} />
+                                                    <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Maize Area (Acres)', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                                    <YAxis dataKey="county" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} width={100} label={{ value: 'County', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} />
                                                     <Tooltip
                                                         contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                                                         formatter={(value: unknown, name: unknown) => [`${Number(value || 0).toLocaleString()} Acres`, String(name ?? "")]}
                                                     />
-                                                    <Legend wrapperStyle={{ fontSize: '12px' }} />
-                                                    <Bar dataKey="rainfed" name="Rainfed Area" stackId="a" fill="#3b82f6" />
-                                                    <Bar dataKey="irrigated" name="Irrigated Area" stackId="a" fill="#10b981" radius={[0, 4, 4, 0]} />
+                                                    <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '12px' }} iconType="circle" />
+                                                    <Bar dataKey="rainfed" name="Rainfed Area" stackId="a" fill="#3b82f6">
+                                                        <LabelList dataKey="rainfed" position="inside" style={{ fill: '#ffffff', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => Number(val) > 2000 ? Number(val).toLocaleString() : ""} />
+                                                    </Bar>
+                                                    <Bar dataKey="irrigated" name="Irrigated Area" stackId="a" fill="#10b981" radius={[0, 4, 4, 0]}>
+                                                        <LabelList dataKey="irrigated" position="inside" style={{ fill: '#ffffff', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => Number(val) > 2000 ? Number(val).toLocaleString() : ""} />
+                                                    </Bar>
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </div>
@@ -1331,21 +1604,26 @@ export default function SurveysPage() {
                                                 <table className="w-full border-collapse text-left text-sm">
                                                     <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
                                                         <tr>
-                                                            <th className="p-3 font-semibold text-left">County</th>
+                                                            <th className="p-3 font-semibold text-left text-xs">County</th>
+                                                            <th className="p-2 font-semibold text-right text-xs">Total Area (Ac)</th>
                                                             <th className="p-2 font-semibold text-right text-xs">Rainfed (Ac)</th>
+                                                            <th className="p-2 font-semibold text-right text-xs">Rainfed %</th>
                                                             <th className="p-2 font-semibold text-right text-xs">Irrigated (Ac)</th>
                                                             <th className="p-2 font-semibold text-right text-xs">Irrigated %</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody className="divide-y divide-slate-200">
                                                         {sortedCountyMaizeAcreageData.map((item) => {
-                                                            const irrPercent = item.acres > 0 ? Math.round((item.irrigated / item.acres) * 100) : 0;
+                                                            const rainfedPercent = item.acres > 0 ? Math.round((item.rainfed / item.acres) * 100) : 0;
+                                                            const irrPercent = item.acres > 0 ? 100 - rainfedPercent : 0;
                                                             return (
                                                                 <tr key={item.county} className="hover:bg-slate-50/50 transition-colors">
-                                                                    <td className="p-3 font-bold text-slate-800 text-xs sm:text-sm">{item.county}</td>
+                                                                    <td className="p-3 font-bold text-slate-800 text-xs">{item.county}</td>
+                                                                    <td className="p-2 text-slate-800 font-mono text-right text-xs font-semibold">{item.acres.toLocaleString()}</td>
                                                                     <td className="p-2 text-slate-600 font-mono text-right text-xs">{item.rainfed.toLocaleString()}</td>
+                                                                    <td className="p-2 text-slate-500 font-mono text-right text-xs">{rainfedPercent}%</td>
                                                                     <td className="p-2 text-slate-600 font-mono text-right text-xs">{item.irrigated.toLocaleString()}</td>
-                                                                    <td className="p-2 text-slate-600 font-mono text-right text-xs font-semibold text-emerald-600">{irrPercent}%</td>
+                                                                    <td className="p-2 text-emerald-600 font-mono text-right text-xs font-semibold">{irrPercent}%</td>
                                                                 </tr>
                                                             );
                                                         })}
@@ -1372,15 +1650,17 @@ export default function SurveysPage() {
                             <CardContent>
                                 <div className="h-[300px]">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={activeGrowthStageData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                                        <BarChart data={activeGrowthStageData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
                                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis dataKey="stage" stroke="#94a3b8" fontSize={12} tickLine={false} />
-                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                                            <XAxis dataKey="stage" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Growth Stage', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Number of Farmers', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
                                             <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
-                                            <Bar dataKey="Count" fill="#10b981" radius={[6, 6, 0, 0]}>
+                                            <Legend verticalAlign="top" height={36} iconType="circle" />
+                                            <Bar dataKey="Count" name="Surveyed Fields" fill="#10b981" radius={[6, 6, 0, 0]}>
                                                 {activeGrowthStageData.map((entry, index) => (
                                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                                 ))}
+                                                <LabelList dataKey="Count" position="top" style={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
                                             </Bar>
                                         </BarChart>
                                     </ResponsiveContainer>
@@ -1393,7 +1673,7 @@ export default function SurveysPage() {
                             <CardHeader>
                                 <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                                     <CalendarDays className="w-5 h-5 text-emerald-600" />
-                                    Planting Window Timeline
+                                    Planting Window Period
                                 </CardTitle>
                                 <CardDescription>
                                     Estimated distribution of fields by planting period during the season.
@@ -1402,7 +1682,7 @@ export default function SurveysPage() {
                             <CardContent>
                                 <div className="h-[300px]">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={activePlantingDateData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                                        <AreaChart data={activePlantingDateData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
                                             <defs>
                                                 <linearGradient id="colorFields" x1="0" y1="0" x2="0" y2="1">
                                                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
@@ -1410,10 +1690,11 @@ export default function SurveysPage() {
                                                 </linearGradient>
                                             </defs>
                                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis dataKey="period" stroke="#94a3b8" fontSize={12} tickLine={false} />
-                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                                            <XAxis dataKey="period" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Planting Period', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Fields Count', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
                                             <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
-                                            <Area type="monotone" dataKey="Fields" stroke="#3b82f6" strokeWidth={2.5} fillOpacity={1} fill="url(#colorFields)" />
+                                            <Legend verticalAlign="top" height={36} iconType="circle" />
+                                            <Area type="monotone" dataKey="Fields" name="Planted Fields" stroke="#3b82f6" strokeWidth={2.5} fillOpacity={1} fill="url(#colorFields)" />
                                         </AreaChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -1425,10 +1706,10 @@ export default function SurveysPage() {
                             <CardHeader>
                                 <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                                     <Droplets className="w-5 h-5 text-blue-600" />
-                                    Irrigation & Water Source Profile
+                                    Source of Water Summary
                                 </CardTitle>
                                 <CardDescription>
-                                    Classification of surveyed fields based on irrigation status.
+                                    Summary of water sources used in the surveyed fields.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="flex flex-col sm:flex-row items-center justify-around gap-6">
@@ -1460,7 +1741,7 @@ export default function SurveysPage() {
                                                 <span className="text-sm font-semibold text-slate-700">{item.name}</span>
                                             </div>
                                             <div className="text-right">
-                                                <span className="text-sm font-bold text-slate-800">{item.value.toLocaleString()} Fields</span>
+                                                <span className="text-sm font-bold text-slate-800">{item.value.toLocaleString()} Acres</span>
                                                 <span className="text-xs text-slate-500 ml-2">({item.percentage}%)</span>
                                             </div>
                                         </div>
@@ -1587,7 +1868,7 @@ export default function SurveysPage() {
                             <CardHeader>
                                 <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                                     <PieIcon className="w-5 h-5 text-emerald-600" />
-                                    Seed Source Distribution
+                                    Source of Seeds
                                 </CardTitle>
                                 <CardDescription>
                                     Maize seed varieties classification based on seed source acquisition.
@@ -1636,7 +1917,7 @@ export default function SurveysPage() {
                             <CardHeader>
                                 <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                                     <Sprout className="w-5 h-5 text-emerald-600" />
-                                    Top Seed Varieties Adopted
+                                    Type of Seed Variety
                                 </CardTitle>
                                 <CardDescription>
                                     Distribution of major maize seed varieties used by surveyed farmers.
@@ -1645,15 +1926,17 @@ export default function SurveysPage() {
                             <CardContent>
                                 <div className="h-[300px]">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={activeSeedVarietyData} layout="vertical" margin={{ top: 10, right: 30, left: 35, bottom: 5 }}>
+                                        <BarChart data={activeSeedVarietyData} layout="vertical" margin={{ top: 10, right: 40, left: 35, bottom: 20 }}>
                                             <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
-                                            <XAxis type="number" stroke="#94a3b8" fontSize={12} tickLine={false} />
-                                            <YAxis dataKey="name" type="category" stroke="#475569" fontSize={11} tickLine={false} width={130} />
+                                            <XAxis type="number" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Farmers Count', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                            <YAxis dataKey="name" type="category" stroke="#475569" fontSize={11} tickLine={false} width={130} label={{ value: 'Seed Variety', angle: -90, position: 'insideLeft', offset: 25, fill: '#64748b', fontSize: 11, fontWeight: 500 }} />
                                             <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
-                                            <Bar dataKey="value" name="Farmers" fill="#3b82f6" radius={[0, 4, 4, 0]}>
+                                            <Legend verticalAlign="top" height={36} iconType="circle" />
+                                            <Bar dataKey="value" name="Farmers Count" fill="#3b82f6" radius={[0, 4, 4, 0]}>
                                                 {activeSeedVarietyData.map((entry, index) => (
                                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                                 ))}
+                                                <LabelList dataKey="value" position="right" style={{ fill: '#64748b', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
                                             </Bar>
                                         </BarChart>
                                     </ResponsiveContainer>
@@ -1675,14 +1958,18 @@ export default function SurveysPage() {
                             <CardContent>
                                 <div className="h-[300px]">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={activeNutrientDeficiencyData} layout="vertical" margin={{ top: 20, right: 30, left: 80, bottom: 5 }}>
+                                        <BarChart data={activeNutrientDeficiencyData} layout="vertical" margin={{ top: 20, right: 30, left: 80, bottom: 20 }}>
                                             <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
-                                            <XAxis type="number" stroke="#94a3b8" fontSize={12} tickLine={false} />
-                                            <YAxis dataKey="deficiency" type="category" stroke="#475569" fontSize={12} tickLine={false} />
+                                            <XAxis type="number" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Prevalence (%)', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                            <YAxis dataKey="deficiency" type="category" stroke="#475569" fontSize={12} tickLine={false} label={{ value: 'Nutrient indicator', angle: -90, position: 'insideLeft', offset: 25, fill: '#64748b', fontSize: 11, fontWeight: 500 }} />
                                             <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
-                                            <Legend />
-                                            <Bar dataKey="Present" fill="#fbbf24" stackId="a" radius={[0, 4, 4, 0]} />
-                                            <Bar dataKey="Absent" fill="#10b981" stackId="a" radius={[0, 0, 0, 0]} />
+                                            <Legend verticalAlign="top" height={36} iconType="circle" />
+                                            <Bar dataKey="Present" name="Prevalent (%)" fill="#fbbf24" stackId="a" radius={[0, 4, 4, 0]}>
+                                                <LabelList dataKey="Present" position="inside" style={{ fill: '#ffffff', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => `${val}%`} />
+                                            </Bar>
+                                            <Bar dataKey="Absent" name="Not Detected (%)" fill="#10b981" stackId="a" radius={[0, 0, 0, 0]}>
+                                                <LabelList dataKey="Absent" position="inside" style={{ fill: '#ffffff', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => `${val}%`} />
+                                            </Bar>
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -1757,12 +2044,16 @@ export default function SurveysPage() {
                                     <ResponsiveContainer width="100%" height="100%">
                                         <BarChart data={activePestDiseaseData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                                            <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Threat Category', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Prevalence (%)', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
                                             <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
-                                            <Legend />
-                                            <Bar dataKey="Present" fill="#ef4444" radius={[6, 6, 0, 0]} maxBarSize={60} />
-                                            <Bar dataKey="Absent" fill="#10b981" radius={[6, 6, 0, 0]} maxBarSize={60} />
+                                            <Legend verticalAlign="top" height={36} iconType="circle" />
+                                            <Bar dataKey="Present" name="Present (%)" fill="#ef4444" radius={[6, 6, 0, 0]} maxBarSize={60}>
+                                                <LabelList dataKey="Present" position="top" style={{ fill: '#64748b', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => `${val}%`} />
+                                            </Bar>
+                                            <Bar dataKey="Absent" name="Absent (%)" fill="#10b981" radius={[6, 6, 0, 0]} maxBarSize={60}>
+                                                <LabelList dataKey="Absent" position="top" style={{ fill: '#64748b', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => `${val}%`} />
+                                            </Bar>
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -1829,12 +2120,15 @@ export default function SurveysPage() {
                             <CardContent>
                                 <div className="h-[300px]">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <LineChart data={activeHistoricalYieldData} margin={{ top: 20, right: 30, left: 10, bottom: 10 }}>
+                                        <LineChart data={activeHistoricalYieldData} margin={{ top: 20, right: 30, left: 10, bottom: 20 }}>
                                             <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                                            <XAxis dataKey="year" stroke="#94a3b8" fontSize={12} tickLine={false} />
-                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                                            <XAxis dataKey="year" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Year', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Yield (Bags / Acre)', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
                                             <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
-                                            <Line type="monotone" dataKey="Yield" stroke="#10b981" strokeWidth={3} dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }} activeDot={{ r: 8 }} />
+                                            <Legend verticalAlign="top" height={36} iconType="circle" />
+                                            <Line type="monotone" dataKey="Yield" name="Maize Yield" stroke="#10b981" strokeWidth={3} dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }} activeDot={{ r: 8 }} animate={false}>
+                                                <LabelList dataKey="Yield" position="top" style={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} formatter={(val: unknown) => `${val} Bags`} />
+                                            </Line>
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -1903,16 +2197,299 @@ export default function SurveysPage() {
                                     <ResponsiveContainer width="100%" height="100%">
                                         <BarChart data={activePoorPerformanceCauses} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis dataKey="cause" stroke="#94a3b8" fontSize={12} tickLine={false} />
-                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                                            <XAxis dataKey="cause" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Primary Cause', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                            <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Prevalence (%)', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
                                             <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
-                                            <Bar dataKey="percentage" radius={[8, 8, 0, 0]}>
+                                            <Legend verticalAlign="top" height={36} iconType="circle" />
+                                            <Bar dataKey="percentage" name="Prevalence (%)" radius={[8, 8, 0, 0]}>
                                                 {activePoorPerformanceCauses.map((entry, index) => (
                                                     <Cell key={`cell-${index}`} fill={entry.color} />
                                                 ))}
+                                                <LabelList dataKey="percentage" position="top" style={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} formatter={(val: unknown) => `${val}%`} />
                                             </Bar>
                                         </BarChart>
                                     </ResponsiveContainer>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                )}
+
+                {/* Tab 5: Yield Estimate */}
+                {activeSubTab === "yield-estimate" && (
+                    <div className="space-y-8 animate-in fade-in-50 duration-300">
+                        {/* KPI Mini Cards Section */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {/* Card 1: Expected Yield Bags */}
+                            <Card className="shadow-md border-slate-200 bg-emerald-50/20">
+                                <CardHeader className="pb-2">
+                                    <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Expected Yield</CardDescription>
+                                    <CardTitle className="text-2xl font-extrabold text-slate-800">
+                                        {totalExpectedYieldBags.toLocaleString()} <span className="text-lg font-semibold text-slate-500">Bags</span>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-xs text-slate-500">
+                                        Calculated on area under maize less silage acreage at an average outlook of <strong className="text-emerald-700">16.5 Bags/Acre</strong>.
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Card 2: Green Maize & Silage */}
+                            <Card className="shadow-md border-slate-200 bg-blue-50/20">
+                                <CardHeader className="pb-2">
+                                    <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Acreage Allocation</CardDescription>
+                                    <CardTitle className="text-2xl font-extrabold text-slate-800">
+                                        {totalGreenAcreage.toLocaleString()} <span className="text-sm font-semibold text-slate-500">Ac Green</span> / {totalSilageAcreage.toLocaleString()} <span className="text-sm font-semibold text-slate-500">Ac Silage</span>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-xs text-slate-500">
+                                        Acres dedicated to early green harvest (12%) and silage processing (8%).
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Card 3: Consumption vs Commercial */}
+                            <Card className="shadow-md border-slate-200 bg-amber-50/20">
+                                <CardHeader className="pb-2">
+                                    <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Primary Maize Use</CardDescription>
+                                    <CardTitle className="text-2xl font-extrabold text-slate-800">
+                                        55% <span className="text-sm font-semibold text-slate-500">Family</span> / 30% <span className="text-sm font-semibold text-slate-500">Sale</span>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-xs text-slate-500">
+                                        Dry grain post-harvest allocation including <strong className="text-amber-700">15%</strong> for animal feed.
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                        {/* Detail Block 1: 5a. Acreage Utilisation (Green Maize vs Silage) */}
+                        <Card className="shadow-md border-slate-200 lg:col-span-2">
+                            <CardHeader>
+                                <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                    <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
+                                    Acreage Utilisation (Green Maize vs. Silage)
+                                </CardTitle>
+                                <CardDescription>
+                                    County-level and aggregate allocation of maize crop acreage for green maize, silage, and dry grain.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Donut Chart */}
+                                    <div className="space-y-4">
+                                        <h4 className="text-sm font-semibold text-slate-700">Aggregate Allocation Breakdowns</h4>
+                                        <div className="h-[250px] flex items-center justify-center">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <PieChart>
+                                                    <Pie
+                                                        data={[
+                                                            { name: "Dry Grain (Ac)", value: totalMaizeAcreage - totalGreenAcreage - totalSilageAcreage },
+                                                            { name: "Green Maize (Ac)", value: totalGreenAcreage },
+                                                            { name: "Silage (Ac)", value: totalSilageAcreage },
+                                                        ]}
+                                                        cx="50%"
+                                                        cy="50%"
+                                                        innerRadius={60}
+                                                        outerRadius={80}
+                                                        paddingAngle={5}
+                                                        dataKey="value"
+                                                    >
+                                                        <Cell fill="#10b981" />
+                                                        <Cell fill="#3b82f6" />
+                                                        <Cell fill="#f59e0b" />
+                                                    </Pie>
+                                                    <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} formatter={(val: unknown) => `${Number(val).toLocaleString()} Acres`} />
+                                                    <Legend verticalAlign="bottom" height={36} iconType="circle" />
+                                                </PieChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                    </div>
+
+                                    {/* Table */}
+                                    <div className="space-y-4">
+                                        <h4 className="text-sm font-semibold text-slate-700">Acreage Allocation Ledger</h4>
+                                        <div className="border border-slate-200 rounded-xl overflow-hidden">
+                                            <div className="overflow-y-auto max-h-[240px]">
+                                                <table className="w-full border-collapse text-left text-sm">
+                                                    <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                                                        <tr>
+                                                            <th className="p-3 font-semibold text-left text-xs">County</th>
+                                                            <th className="p-2 font-semibold text-right text-xs">Green (Acres)</th>
+                                                            <th className="p-2 font-semibold text-right text-xs">Silage (Acres)</th>
+                                                            <th className="p-2 font-semibold text-right text-xs">Dry Grain (Acres)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-slate-200">
+                                                        {sortedYieldEstimateData.map((item) => (
+                                                            <tr key={item.county} className="hover:bg-slate-50/50 transition-colors">
+                                                                <td className="p-3 font-bold text-slate-800 text-xs">{item.county}</td>
+                                                                <td className="p-2 text-slate-600 font-mono text-right text-xs">{item.green_acres.toLocaleString()}</td>
+                                                                <td className="p-2 text-slate-600 font-mono text-right text-xs">{item.silage_acres.toLocaleString()}</td>
+                                                                <td className="p-2 text-slate-800 font-mono font-semibold text-right text-xs">{item.dry_grain_acres.toLocaleString()}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Detail Block 2: 5b. Yield Estimate Outlook */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <Card className="shadow-md border-slate-200">
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                        <TrendingUp className="w-5 h-5 text-emerald-600" />
+                                        Expected Yield Outlook vs. Benchmarks
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Average expected bags/acre for the 2026 season compared with historical seasons.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="h-[250px]">
+                                        <ResponsiveContainer width="100%" height="100%">
+                                            <LineChart
+                                                data={[
+                                                    { year: "2022", Yield: 12.8 },
+                                                    { year: "2023", Yield: 14.2 },
+                                                    { year: "2024", Yield: 15.6 },
+                                                    { year: "2025", Yield: 14.8 },
+                                                    { year: "2026 (Exp)", Yield: 16.5 }
+                                                ]}
+                                                margin={{ top: 20, right: 30, left: 10, bottom: 20 }}
+                                            >
+                                                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                                                <XAxis dataKey="year" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Season Year', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Yield (Bags / Acre)', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
+                                                <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
+                                                <Legend verticalAlign="top" height={36} iconType="circle" />
+                                                <Line type="monotone" dataKey="Yield" name="Yield Outlook" stroke="#fbbf24" strokeWidth={3} dot={{ fill: "#fbbf24", strokeWidth: 2, r: 6 }} activeDot={{ r: 8 }} animate={false}>
+                                                    <LabelList dataKey="Yield" position="top" style={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} formatter={(val: unknown) => `${val} Bags`} />
+                                                </Line>
+                                            </LineChart>
+                                        </ResponsiveContainer>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="shadow-md border-slate-200">
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                        <Layers className="w-5 h-5 text-emerald-600" />
+                                        County Production Outlook (Dry Grain)
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Total expected dry grain bags output computed on area under maize (less silage).
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="border border-slate-200 rounded-xl overflow-hidden">
+                                        <div className="overflow-y-auto max-h-[250px]">
+                                            <table className="w-full border-collapse text-left text-sm">
+                                                <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                                                    <tr>
+                                                        <th className="p-3 font-semibold text-left text-xs">County</th>
+                                                        <th className="p-2 font-semibold text-right text-xs">Outlook (Bags/Ac)</th>
+                                                        <th className="p-2 font-semibold text-right text-xs">Total Expected (Bags)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-200">
+                                                    {sortedYieldEstimateData.map((item) => (
+                                                        <tr key={item.county} className="hover:bg-slate-50/50 transition-colors">
+                                                            <td className="p-3 font-bold text-slate-800 text-xs">{item.county}</td>
+                                                            <td className="p-2 text-slate-600 font-mono text-right text-xs">{item.expected_yield_outlook}</td>
+                                                            <td className="p-2 text-emerald-700 font-mono font-semibold text-right text-xs">{item.total_expected_yield.toLocaleString()}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                        {/* Detail Block 3: 5c. Maize use (Dry grain) */}
+                        <Card className="shadow-md border-slate-200 lg:col-span-2">
+                            <CardHeader>
+                                <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                    <CheckCircle className="w-5 h-5 text-emerald-600" />
+                                    Post-Harvest Dry Grain Utilisation (Maize Use)
+                                </CardTitle>
+                                <CardDescription>
+                                    Distribution of expected harvested dry grain bags allocated for family consumption, commercial purposes, and feed.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Horizontal Stacked Bar Chart */}
+                                    <div className="space-y-4">
+                                        <h4 className="text-sm font-semibold text-slate-700">Top 10 Counties Utilisation (Bags)</h4>
+                                        <div className="h-[300px]">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <BarChart
+                                                    layout="vertical"
+                                                    data={topCountiesYieldData}
+                                                    margin={{ top: 5, right: 20, left: 10, bottom: 20 }}
+                                                >
+                                                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
+                                                    <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Expected Harvest (Bags)', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                                    <YAxis dataKey="county" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} width={100} label={{ value: 'County', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} />
+                                                    <Tooltip
+                                                        contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
+                                                        formatter={(value: unknown, name: unknown) => [`${Number(value || 0).toLocaleString()} Bags`, String(name ?? "")]}
+                                                    />
+                                                    <Legend verticalAlign="top" height={36} iconType="circle" />
+                                                    <Bar dataKey="family_consumption" name="Family Consumption" stackId="a" fill="#3b82f6">
+                                                        <LabelList dataKey="family_consumption" position="inside" style={{ fill: '#ffffff', fontSize: 8, fontWeight: 600 }} formatter={(val: unknown) => Number(val) > 40000 ? Number(val).toLocaleString() : ""} />
+                                                    </Bar>
+                                                    <Bar dataKey="commercial_sale" name="Commercial Sale" stackId="a" fill="#10b981">
+                                                        <LabelList dataKey="commercial_sale" position="inside" style={{ fill: '#ffffff', fontSize: 8, fontWeight: 600 }} formatter={(val: unknown) => Number(val) > 40000 ? Number(val).toLocaleString() : ""} />
+                                                    </Bar>
+                                                    <Bar dataKey="animal_feed" name="Animal Feed" stackId="a" fill="#f59e0b" radius={[0, 4, 4, 0]}>
+                                                        <LabelList dataKey="animal_feed" position="inside" style={{ fill: '#ffffff', fontSize: 8, fontWeight: 600 }} formatter={(val: unknown) => Number(val) > 20000 ? Number(val).toLocaleString() : ""} />
+                                                    </Bar>
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                    </div>
+
+                                    {/* Detailed Table */}
+                                    <div className="space-y-4">
+                                        <h4 className="text-sm font-semibold text-slate-700">County Maize Use Breakdown (Bags)</h4>
+                                        <div className="border border-slate-200 rounded-xl overflow-hidden">
+                                            <div className="overflow-y-auto max-h-[298px]">
+                                                <table className="w-full border-collapse text-left text-sm">
+                                                    <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                                                        <tr>
+                                                            <th className="p-3 font-semibold text-left text-xs">County</th>
+                                                            <th className="p-2 font-semibold text-right text-xs">Family Cons.</th>
+                                                            <th className="p-2 font-semibold text-right text-xs">Commercial</th>
+                                                            <th className="p-2 font-semibold text-right text-xs">Animal Feed</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-slate-200">
+                                                        {sortedYieldEstimateData.map((item) => (
+                                                            <tr key={item.county} className="hover:bg-slate-50/50 transition-colors">
+                                                                <td className="p-3 font-bold text-slate-800 text-xs">{item.county}</td>
+                                                                <td className="p-2 text-slate-600 font-mono text-right text-xs">{item.family_consumption.toLocaleString()}</td>
+                                                                <td className="p-2 text-slate-600 font-mono text-right text-xs">{item.commercial_sale.toLocaleString()}</td>
+                                                                <td className="p-2 text-slate-600 font-mono text-right text-xs">{item.animal_feed.toLocaleString()}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
@@ -1936,7 +2513,7 @@ export default function SurveysPage() {
                             </div>
 
                             <div className="flex items-center gap-2 w-full md:w-auto">
-                                <span className="text-sm font-medium text-slate-500 shrink-0">Project Sponsor:</span>
+                                <span className="text-sm font-medium text-slate-500 shrink-0">Category by Project:</span>
                                 <div className="flex bg-slate-100 p-1 rounded-lg w-full md:w-auto">
                                     <button
                                         onClick={() => setCountyProjectFilter("ALL")}
@@ -1970,39 +2547,62 @@ export default function SurveysPage() {
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            {/* Top 10 chart */}
-                            <Card className="shadow-md border-slate-200 lg:col-span-2">
-                                <CardHeader>
-                                    <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                                        <BarChart3 className="w-5 h-5 text-emerald-600" />
-                                        Top 10 Counties (By Reached)
-                                    </CardTitle>
-                                    <CardDescription>
-                                        Highest performing counties showing farmers reached vs target for the selected sponsor.
-                                    </CardDescription>
+                            {/* Interactive Map Card */}
+                            <Card className="shadow-md border-slate-200 lg:col-span-2 relative overflow-hidden">
+                                <CardHeader className="pb-2">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                                <Compass className="w-5 h-5 text-emerald-600" />
+                                                Interactive County Assessment Map
+                                            </CardTitle>
+                                            <CardDescription>
+                                                Geographical distribution of progress. Click any county to filter the entire dashboard.
+                                            </CardDescription>
+                                        </div>
+                                        {selectedCounty && (
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedCounty("");
+                                                    setSelectedSubCounty("");
+                                                    setSelectedWard("");
+                                                }}
+                                                className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-200 transition-colors"
+                                            >
+                                                Clear Map Filter
+                                            </button>
+                                        )}
+                                    </div>
                                 </CardHeader>
-                                <CardContent>
-                                    <div className="h-[350px]">
-                                        <ResponsiveContainer width="100%" height="100%">
-                                            <BarChart data={topCountiesChartData} margin={{ top: 20, right: 10, left: -10, bottom: 20 }}>
-                                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                                <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                                                <Tooltip
-                                                    contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
-                                                    formatter={(
-                                                        value: number | string | readonly (string | number)[] | undefined,
-                                                        name: number | string | undefined
-                                                    ) => [
-                                                            (typeof value === "number" ? value : Number(value || 0)).toLocaleString(),
-                                                            String(name || ""),
-                                                        ]}
-                                                />
-                                                <Legend />
-                                                <Bar dataKey="Reached" fill="#10b981" radius={[4, 4, 0, 0]} />
-                                                <Bar dataKey="Target" fill="#cbd5e1" radius={[4, 4, 0, 0]} />
-                                            </BarChart>
-                                        </ResponsiveContainer>
+                                <CardContent className="bg-slate-50/50 min-h-[480px] p-4 flex flex-col justify-between">
+                                    <KenyaFarmersD3Map
+                                        showCardWrapper={false}
+                                        selectedCounty={selectedCounty}
+                                        onCountySelect={(county) => {
+                                            setSelectedCounty(county);
+                                            setSelectedSubCounty("");
+                                            setSelectedWard("");
+                                        }}
+                                        surveyData={filteredCountyData}
+                                    />
+
+                                    {/* Map Legend Overlay */}
+                                    <div className="mt-4 flex flex-wrap items-center justify-center gap-6 p-3 bg-white rounded-xl border border-slate-200/80 shadow-xs text-xs font-semibold text-slate-600">
+                                        <div className="flex items-center gap-2">
+                                            <span className="w-3 h-3 rounded-full bg-emerald-500" />
+                                            <span>95%+ Completion</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="w-3 h-3 rounded-full bg-amber-500" />
+                                            <span>85% - 95% Completion</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="w-3 h-3 rounded-full bg-red-500" />
+                                            <span>&lt;85% Completion</span>
+                                        </div>
+                                        <div className="text-[10px] text-slate-400 border-l border-slate-200 pl-4">
+                                            Click region to filter dashboard. Use scroll to zoom, drag to pan.
+                                        </div>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -2043,6 +2643,49 @@ export default function SurveysPage() {
                                             <div className="bg-emerald-600 h-2.5 rounded-full" style={{ width: `${(18170 / 18730 * 100).toFixed(1)}%` }} />
                                         </div>
                                         <div className="text-right text-xs font-bold text-emerald-700 mt-1">97.0% Completion</div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                        {/* Top 10 chart */}
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <Card className="shadow-md border-slate-200 lg:col-span-3">
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                        <BarChart3 className="w-5 h-5 text-emerald-600" />
+                                        Top 10 Counties (By Reached)
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Highest performing counties showing farmers reached vs target for the selected sponsor.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="h-[350px]">
+                                        <ResponsiveContainer width="100%" height="100%">
+                                            <BarChart data={topCountiesChartData} margin={{ top: 20, right: 10, left: -10, bottom: 20 }}>
+                                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                                <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'County', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Farmers Count', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
+                                                <Tooltip
+                                                    contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
+                                                    formatter={(
+                                                        value: number | string | readonly (string | number)[] | undefined,
+                                                        name: number | string | undefined
+                                                    ) => [
+                                                            (typeof value === "number" ? value : Number(value || 0)).toLocaleString(),
+                                                            String(name || ""),
+                                                        ]}
+                                                />
+                                                <Legend verticalAlign="top" height={36} iconType="circle" />
+                                                <Bar dataKey="Reached" fill="#10b981" radius={[4, 4, 0, 0]}>
+                                                    <LabelList dataKey="Reached" position="top" style={{ fill: '#64748b', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
+                                                </Bar>
+                                                <Bar dataKey="Target" fill="#cbd5e1" radius={[4, 4, 0, 0]}>
+                                                    <LabelList dataKey="Target" position="top" style={{ fill: '#64748b', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
+                                                </Bar>
+                                            </BarChart>
+                                        </ResponsiveContainer>
                                     </div>
                                 </CardContent>
                             </Card>
