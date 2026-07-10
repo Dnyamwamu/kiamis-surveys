@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 
 export const useAnimationFrameThrottle = <T>(value: T) => {
-  const lastRenderTime = useRef<DOMHighResTimeStamp>();
+  const lastRenderTime = useRef<DOMHighResTimeStamp | undefined>(undefined);
   const [throttledValue, setThrottledValue] = useState<T>(value);
 
   useEffect(() => {

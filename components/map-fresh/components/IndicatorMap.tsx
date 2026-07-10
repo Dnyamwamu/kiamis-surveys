@@ -161,7 +161,7 @@ export const IndicatorMap: React.FC<Props> = (props) => {
       adminLevel,
     ]);
 
-  const topology = useTopology(topoJSONURL);
+  const topology = useTopology();
 
   const ordinalValues = indicator?.ordinalSetId != null
     ? indicator.ordinalValues || []

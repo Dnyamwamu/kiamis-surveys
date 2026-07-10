@@ -179,7 +179,7 @@ export const DataMap = <T extends MapDatum>(props: Props<T>) => {
     return () => {
       group.remove();
     };
-  }, [height, path, data, width, zoom, topology, linkedRegions, router]);
+  }, [height, path, data, width, zoom, topology, linkedRegions, router, onRegionClick]);
 
   // Apply Zoom
   useLayoutEffect(() => {
@@ -266,20 +266,20 @@ export const DataMap = <T extends MapDatum>(props: Props<T>) => {
 };
 
 function keyForRegion(
-  region?: Record<string, any> | null,
+  region?: Record<string, unknown> | null,
 ) {
   if (region == null) {
     return '';
   }
-  if (region.COUNTY != null) {
-    return region.COUNTY.toUpperCase();
+  if (region['COUNTY'] != null) {
+    return String(region['COUNTY']).toUpperCase();
   }
-  if (region.code != null) {
-    return region.code.toUpperCase();
+  if (region['code'] != null) {
+    return String(region['code']).toUpperCase();
   }
-  if (region.name != null) {
-    return region.name.toUpperCase();
+  if (region['name'] != null) {
+    return String(region['name']).toUpperCase();
   }
 
-  return (region.shapeName ?? '').toUpperCase();
+  return String(region['shapeName'] ?? '').toUpperCase();
 }

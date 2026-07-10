@@ -1,44 +1,20 @@
 "use client";
 
-import { useState, Fragment, useEffect } from "react";
-import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogPanel, Transition, TransitionChild } from "@headlessui/react";
-import {
-    CloudArrowUpIcon,
-    LockClosedIcon,
-    ServerIcon,
-} from "@heroicons/react/20/solid";
 import { motion } from "framer-motion";
 import {
-    CheckCircle2,
-    Zap,
-    Target,
-    ShieldCheck,
     BarChart3,
     Users2,
-    Tractor as TractorIcon,
     Ticket,
     Globe,
     Package,
 } from "lucide-react";
-import { KiamisImpactAccordion } from "@/components/public/KiamisImpactAccordion";
-import { DynamicImageGrid } from "@/components/public/dynamic-image-grid";
-import { DynamicImageGridReverse } from "@/components/public/dynamic-image-grid-reverse";
-import KenyaFarmersChoropleth from "@/components/maps/kenya-farmers-choropleth";
 import KenyaFarmersD3Map from "@/components/maps/kenya-farmers-d3-map";
 
 
 
 export default function FarmersPage() {
-    const stats = [
-        { id: 1, name: "Farmers Supported", value: "7.4M+" },
-        { id: 2, name: "Counties Covered", value: "47" },
-        { id: 3, name: "Delivery Rate", value: "98%" },
-    ];
-
     // Auto-scroll logic for partners
     const [isPaused, setIsPaused] = useState(false);
 
@@ -377,6 +353,7 @@ export default function FarmersPage() {
                                     className="flex-shrink-0 snap-center px-4"
                                 >
                                     <div className="relative group  transition-all duration-500 hover:scale-110">
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img
                                             src={partner.src}
                                             alt={partner.alt}

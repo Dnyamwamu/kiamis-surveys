@@ -18,7 +18,7 @@ export const authApi = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           dispatch(setCredentials(data));
-        } catch (error) {
+        } catch {
           // Error handled in the hook
         }
       },
@@ -42,7 +42,7 @@ export const authApi = apiSlice.injectEndpoints({
               refreshToken,
             }),
           );
-        } catch (error) {
+        } catch {
           // Error handled in the hook
         }
       },

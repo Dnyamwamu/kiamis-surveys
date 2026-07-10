@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertCircle } from "lucide-react";
 import { DataMap, useTopology } from "@/components/map-fresh";
 
 const DUMMY_COUNTY_DATA = [
@@ -133,7 +132,7 @@ export default function KenyaFarmersD3Map({
 
   const mapData = useMemo(() => {
     return data.reduce((acc, d) => {
-      const target = (d as any).target || d.totalFarmers * 1.05;
+      const target = d.target || d.totalFarmers * 1.05;
       acc[d.county.toUpperCase()] = {
         value: d.totalFarmers,
         color: colorScale(d.county, d.totalFarmers, target),
@@ -181,7 +180,7 @@ export default function KenyaFarmersD3Map({
             if (!countyStats) {
               return <div className="p-1 font-bold text-gray-500">{regionKey} – No Data</div>;
             }
-            const target = (countyStats as any).target || countyStats.totalFarmers * 1.05;
+            const target = countyStats.target || countyStats.totalFarmers * 1.05;
             const percent = target > 0 ? ((countyStats.totalFarmers / target) * 100).toFixed(1) : "0.0";
             return (
               <div className="space-y-1 p-1">
@@ -263,33 +262,52 @@ export default function KenyaFarmersD3Map({
             {/* Color Scale Legend */}
             <div className="flex flex-col items-center lg:items-start border border-gray-100 p-4 rounded-xl bg-gray-50/40">
               <h4 className="text-sm font-semibold mb-3 text-gray-900">
-                Farmer Population Density
+                {surveyData ? "Completion Rate" : "Farmer Population Density"}
               </h4>
               <div className="flex flex-col gap-2 w-full">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs text-gray-500 font-medium whitespace-nowrap">
-                    0
-                  </span>
-                  <div className="flex-1 flex gap-0.5">
-                    {[0.2, 0.4, 0.6, 0.8, 1.0].map((ratio, idx) => (
-                      <div
-                        key={ratio}
-                        className="flex-1 h-6 border-r border-white/60 first:rounded-l last:rounded-r last:border-r-0"
-                        style={{
-                          backgroundColor: colorScale(maxValue * ratio),
-                        }}
-                        title={`${Math.round(maxValue * (idx * 0.2))}-${Math.round(maxValue * ratio)}`}
-                      />
-                    ))}
+                {surveyData ? (
+                  <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-gray-600">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />
+                      <span>95%+</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#f59e0b]" />
+                      <span>85% - 95%</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]" />
+                      <span>&lt;85%</span>
+                    </div>
                   </div>
-                  <span className="text-xs text-gray-500 font-medium whitespace-nowrap">
-                    {maxValue.toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[11px] text-gray-400 font-medium px-4">
-                  <span>Low Density</span>
-                  <span>High Density</span>
-                </div>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs text-gray-500 font-medium whitespace-nowrap">
+                        0
+                      </span>
+                      <div className="flex-1 flex gap-0.5">
+                        {[0.2, 0.4, 0.6, 0.8, 1.0].map((ratio, idx) => (
+                          <div
+                            key={ratio}
+                            className="flex-1 h-6 border-r border-white/60 first:rounded-l last:rounded-r last:border-r-0"
+                            style={{
+                              backgroundColor: colorScale("", maxValue * ratio, 0),
+                            }}
+                            title={`${Math.round(maxValue * (idx * 0.2))}-${Math.round(maxValue * ratio)}`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-xs text-gray-500 font-medium whitespace-nowrap">
+                        {maxValue.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-[11px] text-gray-400 font-medium px-4">
+                      <span>Low Density</span>
+                      <span>High Density</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
