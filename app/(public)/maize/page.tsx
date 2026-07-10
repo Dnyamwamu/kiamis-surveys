@@ -1313,7 +1313,7 @@ export default function SurveysPage() {
                                                     <YAxis dataKey="county" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} width={100} />
                                                     <Tooltip 
                                                         contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
-                                                        formatter={(value: unknown, name: string) => [`${Number(value).toLocaleString()} Acres`, name]}
+                                                        formatter={(value: unknown, name: unknown) => [`${Number(value || 0).toLocaleString()} Acres`, String(name ?? "")]}
                                                     />
                                                     <Legend wrapperStyle={{ fontSize: '12px' }} />
                                                     <Bar dataKey="rainfed" name="Rainfed Area" stackId="a" fill="#3b82f6" />
