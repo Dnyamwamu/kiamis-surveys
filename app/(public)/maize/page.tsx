@@ -1242,7 +1242,7 @@ export default function SurveysPage() {
                                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
                                                     <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} />
                                                     <YAxis dataKey="county" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} width={100} />
-                                                    <Tooltip 
+                                                    <Tooltip
                                                         contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                                                         formatter={(value: unknown) => [`${Number(value).toLocaleString()} Acres`, "Acreage"]}
                                                     />
@@ -1255,7 +1255,7 @@ export default function SurveysPage() {
                                     {/* Column 2: Scrollable Table of County vs Acres */}
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
-                                            <h4 className="text-sm font-semibold text-slate-700">County Acreage Ledger</h4>
+                                            <h4 className="text-sm font-semibold text-slate-700">County Acreage</h4>
                                             <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-50">
                                                 Total: {totalMaizeAcreage.toLocaleString()} Acres
                                             </Badge>
@@ -1311,7 +1311,7 @@ export default function SurveysPage() {
                                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
                                                     <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} />
                                                     <YAxis dataKey="county" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} width={100} />
-                                                    <Tooltip 
+                                                    <Tooltip
                                                         contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                                                         formatter={(value: unknown, name: unknown) => [`${Number(value || 0).toLocaleString()} Acres`, String(name ?? "")]}
                                                     />
