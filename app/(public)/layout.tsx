@@ -97,19 +97,14 @@ export default function PublicLayout({
 
             {/* LEFT LOGO SECTION */}
             <div className="flex items-center">
-              <Link
-                href="/"
-                className="flex items-center gap-2 sm:gap-4"
-              >
+              <Link href="/" className="-m-1.5 p-1.5 flex items-center gap-3">
                 <Image
                   alt="KIAMIS Logo"
-                  src="/MoALD.png"
-                  width={250}
-                  height={200}
-                  className="object-contain sm:w-[200px] sm:h-[200px]"
+                  src="/emblem-template.png"
+                  width={70}
+                  height={80}
                 />
-
-
+                <span className="text-2xl font-bold">KIAMIS</span>
               </Link>
             </div>
 
@@ -267,15 +262,7 @@ export default function PublicLayout({
               <li>
                 <Link href="/maize" className="hover:text-amber-300 transition-colors">Maize Crop Assessment Survey</Link>
               </li>
-              <li>
-                <span className="text-gray-500">National Farmer Census (Upcoming)</span>
-              </li>
-              <li>
-                <span className="text-gray-500">Livestock Health & Vaccination Survey</span>
-              </li>
-              <li>
-                <span className="text-gray-500">Seed Variety Adoption Survey</span>
-              </li>
+
               <li>
                 <a href="https://kilimo.go.ke" target="_blank" rel="noopener noreferrer" className="hover:text-amber-300 transition-colors">Ministry of Agriculture (MoALD)</a>
               </li>
