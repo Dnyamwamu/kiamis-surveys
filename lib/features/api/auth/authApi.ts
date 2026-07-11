@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { setCredentials, updateToken } from "./authSlice"
+import type { RefreshTokenResponse } from "@/types/auth"
 
 export interface LoginRequest {
   email: string
@@ -50,8 +52,67 @@ export const authApi = createApi({
 
         body: credentials,
       }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(
+            setCredentials({
+              user: data.data,
+              token: data.token,
+            })
+          );
+        } catch (error) {
+          // Error handled in the hook
+        }
+      },
+    }),
+
+    refreshToken: builder.mutation<RefreshTokenResponse, string>({
+      query: (refreshToken) => ({
+        url: "/api/auth/refresh/",
+        method: "POST",
+        body: { refresh_token: refreshToken },
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          const token = data.access || data.access_token || "";
+          const refreshToken = data.refresh || data.refresh_token;
+
+          dispatch(
+            updateToken({
+              token,
+              refreshToken,
+            })
+          );
+        } catch {
+          // Error handled in the hook
+        }
+      },
+    }),
+
+    logout: builder.mutation<void, void>({
+      queryFn: async () => {
+        try {
+          if (typeof window !== "undefined") {
+            localStorage.clear();
+          }
+          return { data: undefined };
+        } catch (error) {
+          return {
+            error: {
+              status: "CUSTOM_ERROR",
+              error: error instanceof Error ? error.message : "Logout failed",
+            },
+          };
+        }
+      },
     }),
   }),
 })
 
-export const { useLoginMutation } = authApi
+export const {
+  useLoginMutation,
+  useRefreshTokenMutation,
+  useLogoutMutation,
+} = authApi
