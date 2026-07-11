@@ -34,6 +34,7 @@ import MaizeFertilizerSeedTab from "@/components/maize/MaizeFertilizerSeedTab";
 import MaizePestsYieldsTab from "@/components/maize/MaizePestsYieldsTab";
 import MaizeYieldEstimateTab from "@/components/maize/MaizeYieldEstimateTab";
 import MaizeCountyPerformanceTab from "@/components/maize/MaizeCountyPerformanceTab";
+import { useGetCountySurveyStatsQuery } from "@/lib/features/api/surveys/surveysApi";
 
 import {
     ResponsiveContainer,
@@ -329,8 +330,27 @@ export default function SurveysPage() {
     const [selectedSubCounty, setSelectedSubCounty] = useState("");
     const [selectedWard, setSelectedWard] = useState("");
 
+    const { data: countyStatsData } = useGetCountySurveyStatsQuery({
+        page_size: 100,
+    });
+
+    const liveCountyPerformanceData = React.useMemo(() => {
+        if (!countyStatsData?.results) {
+            return countyPerformanceData;
+        }
+        return countyPerformanceData.map(mockItem => {
+            const apiItem = countyStatsData.results.find(
+                (r) => r.county.trim().toUpperCase() === mockItem.county.trim().toUpperCase()
+            );
+            return {
+                ...mockItem,
+                visited: apiItem ? apiItem.total_surveys : 0
+            };
+        });
+    }, [countyStatsData]);
+
     // Filtered County Performance Data for the top level KPI calculations
-    const filteredLocationData = countyPerformanceData.filter((item) => {
+    const filteredLocationData = liveCountyPerformanceData.filter((item) => {
         const matchesProject =
             countyProjectFilter === "ALL" ||
             item.project === countyProjectFilter;
@@ -493,7 +513,7 @@ export default function SurveysPage() {
     const activeCountyMaizeAcreageData = countyMaizeAcreageData
         .filter((item) => {
             const matchesCounty = !selectedCounty || item.county.toLowerCase() === selectedCounty.toLowerCase();
-            const matchingPerf = countyPerformanceData.find(p => p.county === item.county);
+            const matchingPerf = liveCountyPerformanceData.find(p => p.county === item.county);
             const matchesProject = countyProjectFilter === "ALL" || (matchingPerf && matchingPerf.project === countyProjectFilter);
             return matchesCounty && matchesProject;
         })
@@ -585,7 +605,7 @@ export default function SurveysPage() {
     }
 
     // Filter county performance data
-    const filteredCountyData = countyPerformanceData.filter((item) => {
+    const filteredCountyData = liveCountyPerformanceData.filter((item) => {
         const matchesSearch = item.county.toLowerCase().includes(countySearch.toLowerCase());
         const matchesProject =
             countyProjectFilter === "ALL" ||
@@ -597,7 +617,7 @@ export default function SurveysPage() {
     });
 
     // Get top 10 counties for the bar chart based on current project filter
-    const topCountiesData = countyPerformanceData
+    const topCountiesData = liveCountyPerformanceData
         .filter((item) => {
             return countyProjectFilter === "ALL" ||
                 (countyProjectFilter === "FSRP" && item.project === "FSRP") ||
