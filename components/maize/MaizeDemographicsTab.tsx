@@ -218,7 +218,7 @@ export default function MaizeDemographicsTab({
                                 <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} label={{ value: 'Farmers Count', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
                                 <Tooltip
                                     contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
-                                    formatter={(value: number | string) => [
+                                    formatter={(value: unknown) => [
                                         Number(value || 0).toLocaleString(),
                                         "Farmers",
                                     ]}
