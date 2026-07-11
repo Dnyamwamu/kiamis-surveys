@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Poppins, Geist_Mono, Figtree } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import { StoreProvider } from "@/app/StoreProvider"
+import { Providers } from "@/lib/providers";
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 import { cn } from "@/lib/utils"
@@ -59,11 +59,11 @@ export default function RootLayout({
       )}
     >
       <body>
-        <StoreProvider>
+        <Providers>
           {children}
           <Toaster />
           <Analytics />
-        </StoreProvider>
+        </Providers>
       </body>
     </html>
   )
