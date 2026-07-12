@@ -14,7 +14,9 @@ import {
     Home,
     BarChart3,
     Activity,
+    Compass,
 } from "lucide-react";
+import KenyaFarmersD3Map from "@/components/maps/kenya-farmers-d3-map";
 import {
     ResponsiveContainer,
     BarChart,
@@ -59,6 +61,12 @@ interface MaizeDemographicsTabProps {
     activeHouseholdRangeData: HouseholdRangeData[];
     activeTargetComparisonData: TargetComparisonData[];
     COLORS: string[];
+    filteredCountyData: { county: string; visited: number; target: number; project: string }[];
+    liveCountyPerformanceData: { county: string; visited: number; target: number; project: string }[];
+    selectedCounty: string;
+    setSelectedCounty: (val: string) => void;
+    setSelectedSubCounty: (val: string) => void;
+    setSelectedWard: (val: string) => void;
 }
 
 export default function MaizeDemographicsTab({
@@ -68,15 +76,132 @@ export default function MaizeDemographicsTab({
     activeHouseholdRangeData,
     activeTargetComparisonData,
     COLORS,
+    filteredCountyData,
+    liveCountyPerformanceData,
+    selectedCounty,
+    setSelectedCounty,
+    setSelectedSubCounty,
+    setSelectedWard,
 }: MaizeDemographicsTabProps) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Interactive Map Card */}
+            <Card className="shadow-md border-slate-200 lg:col-span-2 relative overflow-hidden">
+                <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                <Compass className="w-5 h-5 text-emerald-600" />
+                                Interactive County Assessment Map
+                            </CardTitle>
+                            <CardDescription>
+                                Geographical distribution of progress. Click any county to filter the entire dashboard.
+                            </CardDescription>
+                        </div>
+                        {selectedCounty && (
+                            <button
+                                onClick={() => {
+                                    setSelectedCounty("");
+                                    setSelectedSubCounty("");
+                                    setSelectedWard("");
+                                }}
+                                className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-200 transition-colors"
+                            >
+                                Clear Map Filter
+                            </button>
+                        )}
+                    </div>
+                </CardHeader>
+                <CardContent className="bg-slate-50/50 min-h-[500px] p-4 flex flex-col lg:flex-row gap-6">
+                    <div className="flex-1 flex flex-col justify-between">
+                        <KenyaFarmersD3Map
+                            showCardWrapper={false}
+                            selectedCounty={selectedCounty}
+                            onCountySelect={(county) => {
+                                setSelectedCounty(county);
+                                setSelectedSubCounty("");
+                                setSelectedWard("");
+                            }}
+                            surveyData={filteredCountyData}
+                        />
+
+                        {/* Map Legend Overlay */}
+                        <div className="mt-4 flex flex-wrap items-center justify-center gap-4 p-3 bg-white rounded-xl border border-slate-200/80 shadow-xs text-xs font-semibold text-slate-600">
+                            <div className="flex items-center gap-2">
+                                <span className="w-3 h-3 rounded-full bg-emerald-500" />
+                                <span>95%+ Completion</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="w-3 h-3 rounded-full bg-amber-500" />
+                                <span>85% - 95% Completion</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="w-3 h-3 rounded-full bg-red-500" />
+                                <span>&lt;85% Completion</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Scrollable County performance list */}
+                    <div className="w-full lg:w-80 bg-white border border-slate-200 rounded-xl p-4 flex flex-col h-[480px]">
+                        <h4 className="text-sm font-bold text-slate-800 mb-3 flex items-center justify-between">
+                            <span>Counties Summary</span>
+                            <span className="text-xs text-slate-500 font-semibold">{liveCountyPerformanceData.length} Counties</span>
+                        </h4>
+                        <div className="overflow-y-auto flex-1 space-y-2 pr-1 select-none">
+                            {liveCountyPerformanceData.map((item) => {
+                                const isSelected = selectedCounty.toLowerCase() === item.county.toLowerCase();
+                                const completionRate = item.target > 0 ? (item.visited / item.target) * 100 : 0;
+                                return (
+                                    <div
+                                        key={item.county}
+                                        onClick={() => {
+                                            if (isSelected) {
+                                                setSelectedCounty("");
+                                            } else {
+                                                setSelectedCounty(item.county);
+                                            }
+                                            setSelectedSubCounty("");
+                                            setSelectedWard("");
+                                        }}
+                                        className={`p-3 rounded-lg border text-left transition-all cursor-pointer ${
+                                            isSelected
+                                                ? "bg-emerald-50 border-emerald-500 shadow-sm"
+                                                : "bg-slate-50 hover:bg-slate-100/80 border-slate-100 hover:border-slate-200"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between mb-1">
+                                            <span className={`text-sm font-bold ${isSelected ? "text-emerald-950" : "text-slate-800"}`}>
+                                                {item.county}
+                                            </span>
+                                            <span className={`text-xs font-semibold ${isSelected ? "text-emerald-700" : "text-slate-500"}`}>
+                                                {item.project}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center text-xs text-slate-500 font-medium">
+                                            <span>Reached: <strong className="text-slate-700 font-bold">{item.visited.toLocaleString()}</strong></span>
+                                            <span>{completionRate.toFixed(1)}%</span>
+                                        </div>
+                                        <div className="w-full bg-slate-200 rounded-full h-1.5 mt-2 overflow-hidden">
+                                            <div
+                                                className={`h-1.5 rounded-full ${isSelected ? "bg-emerald-600" : "bg-emerald-500"}`}
+                                                style={{ width: `${Math.min(100, completionRate)}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
             {/* Chart 1: Daily Registration Progress */}
             <Card className="shadow-md border-slate-200 lg:col-span-2">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                         <Activity className="w-5 h-5 text-emerald-600" />
-                        Daily Assessment Progress (30-Day Trend)
+                        Daily Assessment Progress
                     </CardTitle>
                     <CardDescription>
                         Tracking the daily volume of farmers visited by field agripreneurs over the last 30 days.

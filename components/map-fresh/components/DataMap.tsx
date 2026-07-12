@@ -36,6 +36,7 @@ interface Props<T extends MapDatum> {
   linkedRegions?: Record<string, string>;
   projectionType?: MapProjectionType;
   onRegionClick?(regionName: string): void;
+  padding?: number;
 }
 
 export const DataMap = <T extends MapDatum>(props: Props<T>) => {
@@ -48,6 +49,7 @@ export const DataMap = <T extends MapDatum>(props: Props<T>) => {
     linkedRegions,
     projectionType = 'geoMercator',
     onRegionClick,
+    padding = 15,
   } = props;
 
   const router = useRouter();
@@ -79,14 +81,14 @@ export const DataMap = <T extends MapDatum>(props: Props<T>) => {
 
     const projection = mapProjections[projectionType]().fitExtent(
       [
-        [15, 15],
-        [width - 15, height - 15],
+        [padding, padding],
+        [width - padding, height - padding],
       ],
       topology.areas,
     );
 
     return d3.geoPath().projection(projection);
-  }, [topology, height, width, projectionType]);
+  }, [topology, height, width, projectionType, padding]);
 
   // Set up Zoom
   useLayoutEffect(() => {

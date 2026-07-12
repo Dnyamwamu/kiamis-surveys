@@ -52,6 +52,12 @@ interface MaizeCountyPerformanceTabProps {
     setSelectedWard: (val: string) => void;
     filteredCountyData: CountyPerformanceData[];
     topCountiesChartData: ChartData[];
+    navcdpReached: number;
+    navcdpTarget: number;
+    navcdpCountCounties: number;
+    fsrpReached: number;
+    fsrpTarget: number;
+    fsrpCountCounties: number;
 }
 
 export default function MaizeCountyPerformanceTab({
@@ -65,6 +71,12 @@ export default function MaizeCountyPerformanceTab({
     setSelectedWard,
     filteredCountyData,
     topCountiesChartData,
+    navcdpReached,
+    navcdpTarget,
+    navcdpCountCounties,
+    fsrpReached,
+    fsrpTarget,
+    fsrpCountCounties,
 }: MaizeCountyPerformanceTabProps) {
     return (
         <div className="space-y-8 animate-in fade-in-50 duration-300">
@@ -190,28 +202,32 @@ export default function MaizeCountyPerformanceTab({
                     <CardContent className="space-y-6">
                         <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-100">
                             <h4 className="text-sm font-bold text-blue-900 mb-1">NAVCDP Performance</h4>
-                            <p className="text-xs text-blue-700/80 mb-3">Sponsoring 34 counties focusing on value chains.</p>
+                            <p className="text-xs text-blue-700/80 mb-3">Sponsoring {navcdpCountCounties} counties focusing on value chains.</p>
                             <div className="flex justify-between items-center text-sm font-semibold text-slate-700">
-                                <span>Reached: 127,110</span>
-                                <span>Target: 131,270</span>
+                                <span>Reached: {navcdpReached.toLocaleString()}</span>
+                                <span>Target: {navcdpTarget.toLocaleString()}</span>
                             </div>
                             <div className="w-full bg-blue-100 rounded-full h-2.5 mt-2">
-                                <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${(127110 / 131270 * 100).toFixed(1)}%` }} />
+                                <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${navcdpTarget > 0 ? (navcdpReached / navcdpTarget * 100).toFixed(1) : 0}%` }} />
                             </div>
-                            <div className="text-right text-xs font-bold text-blue-700 mt-1">96.8% Completion</div>
+                            <div className="text-right text-xs font-bold text-blue-700 mt-1">
+                                {navcdpTarget > 0 ? (navcdpReached / navcdpTarget * 100).toFixed(1) : 0}% Completion
+                            </div>
                         </div>
 
                         <div className="p-4 rounded-xl bg-emerald-50/50 border border-emerald-100">
                             <h4 className="text-sm font-bold text-emerald-900 mb-1">FSRP Performance</h4>
-                            <p className="text-xs text-emerald-700/80 mb-3">Sponsoring 13 dryland resilience counties.</p>
+                            <p className="text-xs text-emerald-700/80 mb-3">Sponsoring {fsrpCountCounties} dryland resilience counties.</p>
                             <div className="flex justify-between items-center text-sm font-semibold text-slate-700">
-                                <span>Reached: 18,170</span>
-                                <span>Target: 18,730</span>
+                                <span>Reached: {fsrpReached.toLocaleString()}</span>
+                                <span>Target: {fsrpTarget.toLocaleString()}</span>
                             </div>
                             <div className="w-full bg-emerald-100 rounded-full h-2.5 mt-2">
-                                <div className="bg-emerald-600 h-2.5 rounded-full" style={{ width: `${(18170 / 18730 * 100).toFixed(1)}%` }} />
+                                <div className="bg-emerald-600 h-2.5 rounded-full" style={{ width: `${fsrpTarget > 0 ? (fsrpReached / fsrpTarget * 100).toFixed(1) : 0}%` }} />
                             </div>
-                            <div className="text-right text-xs font-bold text-emerald-700 mt-1">97.0% Completion</div>
+                            <div className="text-right text-xs font-bold text-emerald-700 mt-1">
+                                {fsrpTarget > 0 ? (fsrpReached / fsrpTarget * 100).toFixed(1) : 0}% Completion
+                            </div>
                         </div>
                     </CardContent>
                 </Card>

@@ -34,7 +34,17 @@ import MaizeFertilizerSeedTab from "@/components/maize/MaizeFertilizerSeedTab";
 import MaizePestsYieldsTab from "@/components/maize/MaizePestsYieldsTab";
 import MaizeYieldEstimateTab from "@/components/maize/MaizeYieldEstimateTab";
 import MaizeCountyPerformanceTab from "@/components/maize/MaizeCountyPerformanceTab";
-import { useGetCountySurveyStatsQuery } from "@/lib/features/api/surveys/surveysApi";
+import {
+    useGetMaizeSurveyDailyProgressQuery,
+    useGetMaizeSurveyDemographicsQuery,
+    useGetMaizeSurveyGrowthQuery,
+    useGetMaizeSurveyGrowthDetailedQuery,
+    useGetMaizeSurveyInputsQuery,
+    useGetMaizeSurveyHealthQuery,
+    useGetMaizeSurveyYieldUseQuery,
+    useGetMaizeSurveyCountyPerformanceQuery,
+    useGetMaizeSurveyCountyStatsQuery,
+} from "@/lib/features/api/surveys/surveysApi";
 
 import {
     ResponsiveContainer,
@@ -53,14 +63,14 @@ const kpiStats = {
 };
 
 const genderData = [
-    { name: "Male", value: 84262, percentage: 58 },
-    { name: "Female", value: 59565, percentage: 41 },
-    { name: "Other", value: 1453, percentage: 1 },
+    { name: "Male", value: 1021, percentage: 46.9 },
+    { name: "Female", value: 1097, percentage: 50.4 },
+    { name: "Other", value: 58, percentage: 2.7 },
 ];
 
 const registrationData = [
-    { name: "KIAMIS Registered", value: 112500, percentage: 77.4 },
-    { name: "New Registrants", value: 32780, percentage: 22.6 },
+    { name: "Registered Farmers", value: 112500, percentage: 77.4 },
+    { name: "New Farmers", value: 32780, percentage: 22.6 },
 ];
 
 const householdRangeData = [
@@ -103,11 +113,7 @@ const dailyProgressData = [
     { day: "Jul 9", Visited: 13580 },
 ];
 
-const seedSourceData = [
-    { name: "Subsidized Seeds", value: 65376, percentage: 45, color: "#10b981" },
-    { name: "Agrodealers", value: 50848, percentage: 35, color: "#3b82f6" },
-    { name: "Retained Seeds", value: 29056, percentage: 20, color: "#f59e0b" },
-];
+
 
 const growthStageData = [
     { stage: "Emergence", Count: 5811 },
@@ -118,10 +124,7 @@ const growthStageData = [
     { stage: "Maturity", Count: 15980 },
 ];
 
-const nutrientDeficiencyData = [
-    { deficiency: "Nitrogen (Yellowing)", Present: 34, Absent: 66 },
-    { deficiency: "Phosphorus (Purpling)", Present: 18, Absent: 82 },
-];
+
 
 const plantColorData = [
     { name: "Deep Green (Healthy)", value: 78451, color: "#065f46" },
@@ -135,31 +138,9 @@ const irrigationData = [
     { name: "Irrigated", value: 46490, percentage: 10, color: "#10b981" },
 ];
 
-const seedVarietyData = [
-    { name: "Kenya Seed H614", value: 139468, percentage: 30 },
-    { name: "Kenya Seed H6213", value: 92979, percentage: 20 },
-    { name: "Seed Co SC627", value: 69734, percentage: 15 },
-    { name: "Pannar PAN 691", value: 46490, percentage: 10 },
-    { name: "Local / Retained Seeds", value: 92979, percentage: 20 },
-    { name: "Others", value: 23250, percentage: 5 },
-];
 
-const plantingDateData = [
-    { period: "Feb 1-15", Fields: 8400 },
-    { period: "Feb 16-28", Fields: 15200 },
-    { period: "Mar 1-15", Fields: 48900 },
-    { period: "Mar 16-31", Fields: 52100 },
-    { period: "Apr 1-15", Fields: 16800 },
-    { period: "Apr 16-30", Fields: 3880 },
-];
 
-const harvestingMonthData = [
-    { month: "June", Fields: 5400 },
-    { month: "July", Fields: 24500 },
-    { month: "August", Fields: 68700 },
-    { month: "September", Fields: 35100 },
-    { month: "October", Fields: 11580 },
-];
+
 
 const cropUniformityData = [
     { name: "Even growth", value: 104602, percentage: 72, color: "#10b981" },
@@ -167,101 +148,13 @@ const cropUniformityData = [
     { name: "Stunted areas", value: 14528, percentage: 10, color: "#ef4444" },
 ];
 
-const growthStageDetailedData = [
-    { stage: "Emergence", acreage: "18,595 Acres", uniformity: "Even (92%)", color: "Deep Green (88%)", irrigation: "Rainfed (95%)" },
-    { stage: "Vegetative", acreage: "79,033 Acres", uniformity: "Even (81%)", color: "Deep Green (76%)", irrigation: "Rainfed (90%)" },
-    { stage: "Tasseling", acreage: "116,224 Acres", uniformity: "Even (74%)", color: "Deep Green (62%)", irrigation: "Rainfed (88%)" },
-    { stage: "Milking", acreage: "92,979 Acres", uniformity: "Even (68%)", color: "Deep Green (54%)", irrigation: "Rainfed (89%)" },
-    { stage: "Grain Fill", acreage: "106,928 Acres", uniformity: "Even (70%)", color: "Deep Green (58%)", irrigation: "Rainfed (91%)" },
-    { stage: "Maturity", acreage: "51,136 Acres", uniformity: "Even (85%)", color: "Deep/Pale Green (94%)", irrigation: "Rainfed (93%)" },
-];
 
-const pestDiseaseData = [
-    { name: "Fall Armyworm (FAW)", Present: 28, Absent: 72 },
-    { name: "Stalk Borer", Present: 15, Absent: 85 },
-    { name: "Weed Competition (Medium-High)", Present: 38, Absent: 62 },
-];
 
-const diseaseSymptomsData = [
-    { name: "None / Healthy", percentage: 74, color: "#10b981" },
-    { name: "Leaf Blight / Rust", percentage: 12, color: "#ef4444" },
-    { name: "Maize Streak Virus", percentage: 8, color: "#f59e0b" },
-    { name: "Grey Leaf Spot", percentage: 4, color: "#ec4899" },
-    { name: "Maize Lethal Necrosis", percentage: 1, color: "#8b5cf6" },
-    { name: "Maize Head Smut", percentage: 1, color: "#6b7280" },
-];
 
-const historicalYieldData = [
-    { year: "2022", Yield: 12.5 },
-    { year: "2023", Yield: 14.2 },
-    { year: "2024", Yield: 11.8 },
-    { year: "2025", Yield: 15.6 },
-    { year: "2026 (Expected)", Yield: 16.5 },
-];
 
-const maizeUseData = [
-    { name: "Family Consumption", value: 55, color: "#10b981" },
-    { name: "Commercial Sale", value: 30, color: "#3b82f6" },
-    { name: "Animal Feed", value: 15, color: "#f59e0b" },
-];
 
-const poorPerformanceCauses = [
-    { cause: "Rainfall deficit", percentage: 48, color: "#3b82f6" },
-    { cause: "Soil Fertility", percentage: 22, color: "#8b5cf6" },
-    { cause: "Pests and Diseases", percentage: 18, color: "#ef4444" },
-    { cause: "Seed Quality", percentage: 8, color: "#f59e0b" },
-    { cause: "Others", percentage: 4, color: "#6b7280" },
-];
 
-const countyPerformanceData = [
-    { county: "BUNGOMA", project: "NAVCDP", visited: 12450, target: 12500 },
-    { county: "TRANS NZOIA", project: "NAVCDP", visited: 10800, target: 11000 },
-    { county: "NANDI", project: "NAVCDP", visited: 9200, target: 9500 },
-    { county: "NAKURU", project: "NAVCDP", visited: 8900, target: 9200 },
-    { county: "UASIN GISHU", project: "NAVCDP", visited: 8400, target: 8500 },
-    { county: "MERU", project: "NAVCDP", visited: 7600, target: 8000 },
-    { county: "KAKAMEGA", project: "NAVCDP", visited: 7100, target: 7500 },
-    { county: "BOMET", project: "NAVCDP", visited: 6900, target: 7000 },
-    { county: "KERICHO", project: "NAVCDP", visited: 6400, target: 6500 },
-    { county: "NAROK", project: "NAVCDP", visited: 6100, target: 6200 },
-    { county: "WEST POKOT", project: "FSRP", visited: 5800, target: 6000 },
-    { county: "BARINGO", project: "FSRP", visited: 5400, target: 5500 },
-    { county: "ELGEYO MARAKWET", project: "FSRP", visited: 5100, target: 5200 },
-    { county: "MIGORI", project: "NAVCDP", visited: 4800, target: 5000 },
-    { county: "KISII", project: "NAVCDP", visited: 4600, target: 4800 },
-    { county: "HOMABAY", project: "NAVCDP", visited: 4400, target: 4500 },
-    { county: "NYANDARUA", project: "NAVCDP", visited: 4100, target: 4200 },
-    { county: "MURANG'A", project: "NAVCDP", visited: 3900, target: 4000 },
-    { county: "KIAMBU", project: "NAVCDP", visited: 3600, target: 3800 },
-    { county: "NYERI", project: "NAVCDP", visited: 3400, target: 3500 },
-    { county: "KIRINYAGA", project: "NAVCDP", visited: 3100, target: 3200 },
-    { county: "EMBU", project: "NAVCDP", visited: 2900, target: 3000 },
-    { county: "MACHAKOS", project: "NAVCDP", visited: 2700, text: 2800, target: 2800 },
-    { county: "MAKUENI", project: "NAVCDP", visited: 2600, target: 2700 },
-    { county: "KITUI", project: "NAVCDP", visited: 2400, target: 2500 },
-    { county: "THARAKA NITHI", project: "NAVCDP", visited: 2100, target: 2200 },
-    { county: "LAIKIPIA", project: "NAVCDP", visited: 1900, target: 2000 },
-    { county: "KAJIADO", project: "NAVCDP", visited: 1700, target: 1800 },
-    { county: "KISUMU", project: "NAVCDP", visited: 1600, target: 1700 },
-    { county: "SIAYA", project: "NAVCDP", visited: 1500, target: 1600 },
-    { county: "BUSIA", project: "NAVCDP", visited: 1400, target: 1500 },
-    { county: "VIHIGA", project: "NAVCDP", visited: 1200, target: 1300 },
-    { county: "NYAMIRA", project: "NAVCDP", visited: 1100, target: 1200 },
-    { county: "KWALE", project: "NAVCDP", visited: 950, target: 1000 },
-    { county: "KILIFI", project: "NAVCDP", visited: 850, target: 900 },
-    { county: "TAITA TAVETA", project: "NAVCDP", visited: 750, target: 800 },
-    { county: "LAMU", project: "FSRP", visited: 650, target: 700 },
-    { county: "TANA RIVER", project: "FSRP", visited: 580, target: 600 },
-    { county: "SAMBURU", project: "FSRP", visited: 480, target: 500 },
-    { county: "TURKANA", project: "FSRP", visited: 380, target: 400 },
-    { county: "MARSABIT", project: "FSRP", visited: 280, target: 300 },
-    { county: "ISIOLO", project: "FSRP", visited: 180, target: 200 },
-    { county: "GARISSA", project: "FSRP", visited: 140, target: 150 },
-    { county: "WAJIR", project: "FSRP", visited: 90, target: 100 },
-    { county: "MANDERA", project: "FSRP", visited: 40, target: 50 },
-    { county: "MOMBASA", project: "NAVCDP", visited: 30, target: 50 },
-    { county: "NAIROBI", project: "NAVCDP", visited: 10, target: 20 },
-];
+
 
 const countyMaizeAcreageData = [
     { county: "BUNGOMA", acres: 92100 },
@@ -330,24 +223,18 @@ export default function SurveysPage() {
     const [selectedSubCounty, setSelectedSubCounty] = useState("");
     const [selectedWard, setSelectedWard] = useState("");
 
-    const { data: countyStatsData } = useGetCountySurveyStatsQuery({
+    const { data: countyPerformanceDataRaw, isLoading: isCountyPerformanceLoading } = useGetMaizeSurveyCountyPerformanceQuery({
         page_size: 100,
     });
 
     const liveCountyPerformanceData = React.useMemo(() => {
-        if (!countyStatsData?.results) {
-            return countyPerformanceData;
-        }
-        return countyPerformanceData.map(mockItem => {
-            const apiItem = countyStatsData.results.find(
-                (r) => r.county.trim().toUpperCase() === mockItem.county.trim().toUpperCase()
-            );
-            return {
-                ...mockItem,
-                visited: apiItem ? apiItem.total_surveys : 0
-            };
-        });
-    }, [countyStatsData]);
+        return (countyPerformanceDataRaw?.results || []).map(item => ({
+            county: item.county,
+            project: item.project,
+            visited: item.visited,
+            target: item.target || 0
+        }));
+    }, [countyPerformanceDataRaw]);
 
     // Filtered County Performance Data for the top level KPI calculations
     const filteredLocationData = liveCountyPerformanceData.filter((item) => {
@@ -394,117 +281,154 @@ export default function SurveysPage() {
         });
     }
 
+    const { data: maizeStatsData, isLoading: isMaizeStatsLoading } = useGetMaizeSurveyCountyStatsQuery({
+        county: selectedCounty || undefined,
+        project: countyProjectFilter === "ALL" ? undefined : countyProjectFilter,
+        subcounty: selectedSubCounty || undefined,
+        ward: selectedWard || undefined,
+    });
+
     // Set active stats
-    const activeVisitedFarmers = reachedSum;
-    const activeVisitedTarget = targetSum;
-    const activeVisitedPercent = targetSum > 0 ? parseFloat(((reachedSum / targetSum) * 100).toFixed(2)) : 0;
-    const activeCountiesCovered = selectedCounty ? 1 : activeCountiesCount;
-    const activeAverageAcreage = 2.4;
-    const activeAverageAcreageTotal = 3.2;
-    const activeAvgHouseholdSize = 5.2;
+    const activeVisitedFarmers = maizeStatsData ? maizeStatsData.visited_farmers : reachedSum;
+    const activeVisitedTarget = maizeStatsData ? maizeStatsData.target : targetSum;
+    const activeVisitedPercent = maizeStatsData ? maizeStatsData.visited_percent : (targetSum > 0 ? parseFloat(((reachedSum / targetSum) * 100).toFixed(2)) : 0);
+    const activeCountiesCovered = maizeStatsData ? maizeStatsData.counties_covered : (selectedCounty ? 1 : activeCountiesCount);
+    const activeAverageAcreage = maizeStatsData ? maizeStatsData.average_acreage : 2.4;
+    const activeAverageAcreageTotal = maizeStatsData ? maizeStatsData.average_acreage * 1.33 : 3.2;
+    const activeAvgHouseholdSize = maizeStatsData ? maizeStatsData.avg_household_size : 5.2;
+
+    const { data: demographicsData, isLoading: isDemographicsLoading } = useGetMaizeSurveyDemographicsQuery({
+        county: selectedCounty || undefined,
+        project: countyProjectFilter === "ALL" ? undefined : countyProjectFilter,
+        subcounty: selectedSubCounty || undefined,
+        ward: selectedWard || undefined,
+    });
+
+    const { data: dailyProgressDataRaw, isLoading: isDailyProgressLoading } = useGetMaizeSurveyDailyProgressQuery({
+        county: selectedCounty || undefined,
+        project: countyProjectFilter === "ALL" ? undefined : countyProjectFilter,
+        subcounty: selectedSubCounty || undefined,
+        ward: selectedWard || undefined,
+    });
+
+    const { data: growthData, isLoading: isGrowthLoading } = useGetMaizeSurveyGrowthQuery({
+        county: selectedCounty || undefined,
+        project: countyProjectFilter === "ALL" ? undefined : countyProjectFilter,
+        subcounty: selectedSubCounty || undefined,
+        ward: selectedWard || undefined,
+    });
+
+    const { data: growthDetailedData, isLoading: isGrowthDetailedLoading } = useGetMaizeSurveyGrowthDetailedQuery({
+        county: selectedCounty || undefined,
+        project: countyProjectFilter === "ALL" ? undefined : countyProjectFilter,
+        subcounty: selectedSubCounty || undefined,
+        ward: selectedWard || undefined,
+    });
+
+    const { data: inputsData, isLoading: isInputsLoading } = useGetMaizeSurveyInputsQuery({
+        county: selectedCounty || undefined,
+        project: countyProjectFilter === "ALL" ? undefined : countyProjectFilter,
+        subcounty: selectedSubCounty || undefined,
+        ward: selectedWard || undefined,
+    });
+
+    const { data: healthData, isLoading: isHealthLoading } = useGetMaizeSurveyHealthQuery({
+        county: selectedCounty || undefined,
+        project: countyProjectFilter === "ALL" ? undefined : countyProjectFilter,
+        subcounty: selectedSubCounty || undefined,
+        ward: selectedWard || undefined,
+    });
+
+    const { data: yieldUseData, isLoading: isYieldUseLoading } = useGetMaizeSurveyYieldUseQuery({
+        county: selectedCounty || undefined,
+        project: countyProjectFilter === "ALL" ? undefined : countyProjectFilter,
+        subcounty: selectedSubCounty || undefined,
+        ward: selectedWard || undefined,
+    });
 
     // Calculate dynamic scale factor
     const scaleFactor = activeVisitedFarmers / 145280;
 
     // Scale datasets
-    const activeGenderData = genderData.map(item => ({
+    const activeGenderData = demographicsData?.gender_distribution || [];
+
+    const activeRegistrationData = demographicsData?.registration_status || [];
+
+    const activeHouseholdRangeData = demographicsData?.household_size_ranges || [];
+
+    const activeSeedSourceData = (inputsData?.seed_sources || []).map((item, idx) => ({
         ...item,
-        value: Math.round(item.value * scaleFactor)
+        color: COLORS[idx % COLORS.length]
     }));
 
-    const activeRegistrationData = registrationData.map(item => ({
-        ...item,
-        value: Math.round(item.value * scaleFactor)
+    const activeGrowthStageData = growthData?.growth_stages.map(item => ({
+        stage: item.stage,
+        Count: item.count
+    })) || [];
+
+    const activeNutrientDeficiencyData = (healthData?.nutrient_deficiency || []).map(item => ({
+        deficiency: item.deficiency,
+        Present: item.present,
+        Absent: item.absent
     }));
 
-    const activeHouseholdRangeData = householdRangeData.map(item => ({
+    const activePlantColorData = (growthData?.plant_color || []).map((item, idx) => ({
         ...item,
-        value: Math.round(item.value * scaleFactor)
+        color: COLORS[idx % COLORS.length]
     }));
 
-    const activeSeedSourceData = seedSourceData.map(item => ({
-        ...item,
-        value: Math.round(item.value * scaleFactor)
+    const activeSeedVarietyData = inputsData?.seed_varieties || [];
+
+    const activePlantingDateData = (inputsData?.planting_dates || []).map(item => ({
+        period: item.period,
+        Fields: item.fields
     }));
 
-    const activeGrowthStageData = growthStageData.map(item => ({
+    const activeIrrigationData = (growthData?.irrigation || []).map((item, idx) => ({
         ...item,
-        Count: Math.round(item.Count * scaleFactor)
+        color: COLORS[idx % COLORS.length]
     }));
 
-    const activeNutrientDeficiencyData = nutrientDeficiencyData.map(item => ({
+    const activeCropUniformityData = (growthData?.crop_uniformity || []).map((item, idx) => ({
         ...item,
-        Present: item.Present, // percentages can stay constant
-        Absent: item.Absent
+        color: COLORS[idx % COLORS.length]
     }));
 
-    const activePlantColorData = plantColorData.map(item => ({
-        ...item,
-        value: Math.round(item.value * scaleFactor)
+    const activeGrowthStageDetailedData = growthDetailedData || [];
+
+    const activePestDiseaseData = (healthData?.pest_presence || []).map(item => ({
+        name: item.name,
+        Present: item.present,
+        Absent: item.absent
     }));
 
-    const activeSeedVarietyData = seedVarietyData.map(item => ({
+    const activeDiseaseSymptomsData = (healthData?.disease_symptoms || []).map((item, idx) => ({
         ...item,
-        value: Math.round(item.value * scaleFactor)
+        color: COLORS[idx % COLORS.length]
     }));
 
-    const activePlantingDateData = plantingDateData.map(item => ({
-        ...item,
-        Fields: Math.round(item.Fields * scaleFactor)
+    const activeHistoricalYieldData = (yieldUseData?.historical_yields || []).map(item => ({
+        year: item.year,
+        Yield: item.yield
     }));
 
-    const activeIrrigationData = irrigationData.map(item => ({
+    const activeMaizeUseData = (yieldUseData?.maize_use || []).map((item, idx) => ({
         ...item,
-        value: Math.round(item.value * scaleFactor)
+        color: COLORS[idx % COLORS.length]
     }));
 
-    const activeCropUniformityData = cropUniformityData.map(item => ({
+    const activePoorPerformanceCauses = (yieldUseData?.poor_performance_causes || []).map((item, idx) => ({
         ...item,
-        value: Math.round(item.value * scaleFactor)
-    }));
-
-    const activeGrowthStageDetailedData = growthStageDetailedData.map(item => {
-        const acreageNum = parseInt(item.acreage.replace(/[^0-9]/g, ""), 10);
-        const scaledAcreage = Math.round(acreageNum * scaleFactor);
-        return {
-            ...item,
-            acreage: `${scaledAcreage.toLocaleString()} Acres`
-        };
-    });
-
-    const activePestDiseaseData = pestDiseaseData.map(item => ({
-        ...item,
-        Present: item.Present,
-        Absent: item.Absent
-    }));
-
-    const activeDiseaseSymptomsData = diseaseSymptomsData.map(item => ({
-        ...item,
-        percentage: item.percentage
-    }));
-
-    const activeHistoricalYieldData = historicalYieldData.map(item => ({
-        ...item,
-        Yield: item.Yield
-    }));
-
-    const activeMaizeUseData = maizeUseData.map(item => ({
-        ...item,
-        value: item.value
-    }));
-
-    const activePoorPerformanceCauses = poorPerformanceCauses.map(item => ({
-        ...item,
-        percentage: item.percentage
+        color: COLORS[idx % COLORS.length]
     }));
 
     const activeSunflowerInterestCount = Math.round(48250 * scaleFactor);
     const activeAvgAgpSubmissions = Math.max(50, Math.round(363 * (0.9 + (activeVisitedFarmers % 30) * 0.01)));
 
-    const activeDailyProgressData = dailyProgressData.map(item => ({
-        ...item,
-        Visited: Math.round(item.Visited * scaleFactor)
-    }));
+    const activeDailyProgressData = dailyProgressDataRaw?.map(item => ({
+        day: item.day,
+        Visited: item.visited
+    })) || [];
 
     const activeTargetComparisonData = [
         { name: "Long Rains Maize Survey", Surveyed: activeVisitedFarmers, Target: activeVisitedTarget },
@@ -631,6 +555,17 @@ export default function SurveysPage() {
         Reached: item.visited,
         Target: item.target,
     }));
+
+    // Compute NAVCDP & FSRP performance metrics dynamically
+    const navcdpCounties = liveCountyPerformanceData.filter(item => item.project === "NAVCDP");
+    const navcdpReached = navcdpCounties.reduce((sum, item) => sum + item.visited, 0);
+    const navcdpTarget = navcdpCounties.reduce((sum, item) => sum + item.target, 0);
+    const navcdpCountCounties = navcdpCounties.length;
+
+    const fsrpCounties = liveCountyPerformanceData.filter(item => item.project === "FSRP");
+    const fsrpReached = fsrpCounties.reduce((sum, item) => sum + item.visited, 0);
+    const fsrpTarget = fsrpCounties.reduce((sum, item) => sum + item.target, 0);
+    const fsrpCountCounties = fsrpCounties.length;
 
     const exportCSV = () => {
         const csvContent = "data:text/csv;charset=utf-8,"
@@ -1146,55 +1081,89 @@ export default function SurveysPage() {
 
                 {/* Tab 1: General & Demographics */}
                 {activeSubTab === "demographics" && (
-                    <MaizeDemographicsTab
-                        activeDailyProgressData={activeDailyProgressData}
-                        activeGenderData={activeGenderData}
-                        activeRegistrationData={activeRegistrationData}
-                        activeHouseholdRangeData={activeHouseholdRangeData}
-                        activeTargetComparisonData={activeTargetComparisonData}
-                        COLORS={COLORS}
-                    />
+                    isDemographicsLoading || isDailyProgressLoading || isCountyPerformanceLoading || isMaizeStatsLoading ? (
+                        <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
+                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
+                            <span className="text-sm font-semibold text-slate-500">Loading Demographics Data...</span>
+                        </div>
+                    ) : (
+                        <MaizeDemographicsTab
+                            activeDailyProgressData={activeDailyProgressData}
+                            activeGenderData={activeGenderData}
+                            activeRegistrationData={activeRegistrationData}
+                            activeHouseholdRangeData={activeHouseholdRangeData}
+                            activeTargetComparisonData={activeTargetComparisonData}
+                            COLORS={COLORS}
+                            filteredCountyData={filteredCountyData}
+                            liveCountyPerformanceData={liveCountyPerformanceData}
+                            selectedCounty={selectedCounty}
+                            setSelectedCounty={setSelectedCounty}
+                            setSelectedSubCounty={setSelectedSubCounty}
+                            setSelectedWard={setSelectedWard}
+                        />
+                    )
                 )}
 
                 {/* Tab 2: Maize Growth */}
                 {activeSubTab === "maize-growth" && (
-                    <MaizeGrowthTab
-                        topCountiesAcreageData={topCountiesAcreageData}
-                        sortedCountyMaizeAcreageData={sortedCountyMaizeAcreageData}
-                        totalMaizeAcreage={totalMaizeAcreage}
-                        topCountiesSunflowerData={topCountiesSunflowerData}
-                        sortedCountySunflowerData={sortedCountySunflowerData}
-                        totalSunflowerInterested={totalSunflowerInterested}
-                        activeGrowthStageData={activeGrowthStageData}
-                        activePlantingDateData={activePlantingDateData}
-                        activeIrrigationData={activeIrrigationData}
-                        activeCropUniformityData={activeCropUniformityData}
-                        activeGrowthStageDetailedData={activeGrowthStageDetailedData}
-                        COLORS={COLORS}
-                    />
+                    isGrowthLoading || isGrowthDetailedLoading || isInputsLoading ? (
+                        <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
+                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
+                            <span className="text-sm font-semibold text-slate-500">Loading Crop Growth Data...</span>
+                        </div>
+                    ) : (
+                        <MaizeGrowthTab
+                            topCountiesAcreageData={topCountiesAcreageData}
+                            sortedCountyMaizeAcreageData={sortedCountyMaizeAcreageData}
+                            totalMaizeAcreage={totalMaizeAcreage}
+                            topCountiesSunflowerData={topCountiesSunflowerData}
+                            sortedCountySunflowerData={sortedCountySunflowerData}
+                            totalSunflowerInterested={totalSunflowerInterested}
+                            activeGrowthStageData={activeGrowthStageData}
+                            activePlantingDateData={activePlantingDateData}
+                            activeIrrigationData={activeIrrigationData}
+                            activeCropUniformityData={activeCropUniformityData}
+                            activeGrowthStageDetailedData={activeGrowthStageDetailedData}
+                            COLORS={COLORS}
+                        />
+                    )
                 )}
 
                 {/* Tab 3: Fertilizer & Seed */}
                 {activeSubTab === "fertilizer-seed" && (
-                    <MaizeFertilizerSeedTab
-                        activeSeedSourceData={activeSeedSourceData}
-                        activeSeedVarietyData={activeSeedVarietyData}
-                        activeNutrientDeficiencyData={activeNutrientDeficiencyData}
-                        activePlantColorData={activePlantColorData}
-                        activeVisitedFarmers={activeVisitedFarmers}
-                        COLORS={COLORS}
-                    />
+                    isInputsLoading || isGrowthLoading || isHealthLoading ? (
+                        <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
+                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
+                            <span className="text-sm font-semibold text-slate-500">Loading Fertilizer & Seed Data...</span>
+                        </div>
+                    ) : (
+                        <MaizeFertilizerSeedTab
+                            activeSeedSourceData={activeSeedSourceData}
+                            activeSeedVarietyData={activeSeedVarietyData}
+                            activeNutrientDeficiencyData={activeNutrientDeficiencyData}
+                            activePlantColorData={activePlantColorData}
+                            activeVisitedFarmers={activeVisitedFarmers}
+                            COLORS={COLORS}
+                        />
+                    )
                 )}
 
                 {/* Tab 4: Pests, Diseases & Yields */}
                 {activeSubTab === "pests-yields" && (
-                    <MaizePestsYieldsTab
-                        activePestDiseaseData={activePestDiseaseData}
-                        activeDiseaseSymptomsData={activeDiseaseSymptomsData}
-                        activeHistoricalYieldData={activeHistoricalYieldData}
-                        activeMaizeUseData={activeMaizeUseData}
-                        activePoorPerformanceCauses={activePoorPerformanceCauses}
-                    />
+                    isHealthLoading || isYieldUseLoading ? (
+                        <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
+                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
+                            <span className="text-sm font-semibold text-slate-500">Loading Pests, Diseases & Yields Data...</span>
+                        </div>
+                    ) : (
+                        <MaizePestsYieldsTab
+                            activePestDiseaseData={activePestDiseaseData}
+                            activeDiseaseSymptomsData={activeDiseaseSymptomsData}
+                            activeHistoricalYieldData={activeHistoricalYieldData}
+                            activeMaizeUseData={activeMaizeUseData}
+                            activePoorPerformanceCauses={activePoorPerformanceCauses}
+                        />
+                    )
                 )}
 
                 {/* Tab 5: Yield Estimate */}
@@ -1211,18 +1180,31 @@ export default function SurveysPage() {
 
                 {/* Tab 6: County Performance */}
                 {activeSubTab === "county-performance" && (
-                    <MaizeCountyPerformanceTab
-                        countySearch={countySearch}
-                        setCountySearch={setCountySearch}
-                        countyProjectFilter={countyProjectFilter}
-                        setCountyProjectFilter={setCountyProjectFilter}
-                        selectedCounty={selectedCounty}
-                        setSelectedCounty={setSelectedCounty}
-                        setSelectedSubCounty={setSelectedSubCounty}
-                        setSelectedWard={setSelectedWard}
-                        filteredCountyData={filteredCountyData}
-                        topCountiesChartData={topCountiesChartData}
-                    />
+                    isCountyPerformanceLoading ? (
+                        <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
+                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
+                            <span className="text-sm font-semibold text-slate-500">Loading County Performance Data...</span>
+                        </div>
+                    ) : (
+                        <MaizeCountyPerformanceTab
+                            countySearch={countySearch}
+                            setCountySearch={setCountySearch}
+                            countyProjectFilter={countyProjectFilter}
+                            setCountyProjectFilter={setCountyProjectFilter}
+                            selectedCounty={selectedCounty}
+                            setSelectedCounty={setSelectedCounty}
+                            setSelectedSubCounty={setSelectedSubCounty}
+                            setSelectedWard={setSelectedWard}
+                            filteredCountyData={filteredCountyData}
+                            topCountiesChartData={topCountiesChartData}
+                            navcdpReached={navcdpReached}
+                            navcdpTarget={navcdpTarget}
+                            navcdpCountCounties={navcdpCountCounties}
+                            fsrpReached={fsrpReached}
+                            fsrpTarget={fsrpTarget}
+                            fsrpCountCounties={fsrpCountCounties}
+                        />
+                    )
                 )}
             </section>
         </div>
