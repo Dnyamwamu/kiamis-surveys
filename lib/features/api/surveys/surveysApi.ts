@@ -24,6 +24,21 @@ export interface MaizeSurveyCountyStats {
   counties_covered: number;
   avg_household_size: number;
   average_acreage: number;
+  average_acreage_total?: number;
+  total_maize_acreage?: number;
+  total_land_acreage?: number;
+  expected_yield_bags_per_acre?: number;
+  avg_daily_submissions_per_agripreneur?: number;
+  sunflower_interest_count?: number;
+  sunflower_interest_percent?: number;
+  already_registered_visited?: number;
+  new_farmers_visited?: number;
+  surveys_approved?: number;
+  surveys_pending?: number;
+  surveys_rejected?: number;
+  male_farmers_count?: number;
+  female_farmers_count?: number;
+  other_farmers_count?: number;
 }
 
 export interface MaizeSurveyCountyStatsQueryParams {
@@ -115,10 +130,24 @@ export interface InputPlantingDateRecord {
   fields: number;
 }
 
+export interface FertilizerUseRecord {
+  name: string;
+  value: number;
+  percentage: number;
+}
+
+export interface FertilizerApplicationRecord {
+  name: string;
+  value: number;
+  percentage: number;
+}
+
 export interface MaizeSurveyInputsResponse {
   seed_sources: InputSeedSourceRecord[];
   seed_varieties: InputSeedVarietyRecord[];
   planting_dates: InputPlantingDateRecord[];
+  fertilizer_use?: FertilizerUseRecord[];
+  fertilizer_application?: FertilizerApplicationRecord[];
 }
 
 export interface HealthPestPresenceRecord {
@@ -138,10 +167,25 @@ export interface HealthDiseaseSymptomRecord {
   percentage: number;
 }
 
+export interface MajorPestRecord {
+  pest: string;
+  incidence: number;
+  severity: "Low" | "Moderate" | "High";
+}
+
+export interface WeedLevelRecord {
+  name: string;
+  percentage: number;
+}
+
 export interface MaizeSurveyHealthResponse {
   pest_presence: HealthPestPresenceRecord[];
   nutrient_deficiency: HealthNutrientDeficiencyRecord[];
   disease_symptoms: HealthDiseaseSymptomRecord[];
+  major_pests?: MajorPestRecord[];
+  average_faw_damage?: number;
+  weed_levels?: WeedLevelRecord[];
+  dominant_weeds?: string[];
 }
 
 export interface YieldUseHistoricalYieldRecord {
@@ -164,11 +208,30 @@ export interface YieldUsePoorPerformanceCauseRecord {
   percentage: number;
 }
 
+export interface CopingStrategyRecord {
+  intervention: string;
+  percentage: number;
+}
+
+export interface PerformanceRatingRecord {
+  indicator: string;
+  rating: "Excellent" | "Good" | "Fair" | "Poor" | "Above Average" | "Average" | "Below Average";
+}
+
+export interface ProductionConstraintRecord {
+  constraint: string;
+  percentage: number;
+  severity: "High" | "Medium" | "Low";
+}
+
 export interface MaizeSurveyYieldUseResponse {
   historical_yields: YieldUseHistoricalYieldRecord[];
   maize_use: YieldUseMaizeUseRecord[];
   harvesting_months: YieldUseHarvestingMonthRecord[];
   poor_performance_causes: YieldUsePoorPerformanceCauseRecord[];
+  production_constraints?: ProductionConstraintRecord[];
+  coping_strategies?: CopingStrategyRecord[];
+  performance_ratings?: PerformanceRatingRecord[];
 }
 
 export interface CountyPerformanceRecord {

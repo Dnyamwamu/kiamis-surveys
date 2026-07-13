@@ -54,7 +54,7 @@ interface GrowthStageData {
 
 interface PlantingDateData {
     period: string;
-    Fields: number;
+    Percentage: number;
 }
 
 interface IrrigationData {
@@ -79,6 +79,13 @@ interface GrowthStageDetailed {
     irrigation: string;
 }
 
+interface PlantColorData {
+    name: string;
+    value: number;
+    percentage: number;
+    color: string;
+}
+
 interface MaizeGrowthTabProps {
     topCountiesAcreageData: CountyAcreageData[];
     sortedCountyMaizeAcreageData: CountyAcreageData[];
@@ -90,8 +97,10 @@ interface MaizeGrowthTabProps {
     activePlantingDateData: PlantingDateData[];
     activeIrrigationData: IrrigationData[];
     activeCropUniformityData: CropUniformityData[];
+    activePlantColorData: PlantColorData[];
     activeGrowthStageDetailedData: GrowthStageDetailed[];
     COLORS: string[];
+    averageAcreage: number;
 }
 
 export default function MaizeGrowthTab({
@@ -105,9 +114,15 @@ export default function MaizeGrowthTab({
     activePlantingDateData,
     activeIrrigationData,
     activeCropUniformityData,
+    activePlantColorData,
     activeGrowthStageDetailedData,
     COLORS,
+    averageAcreage,
 }: MaizeGrowthTabProps) {
+    const rainfedAcreage = sortedCountyMaizeAcreageData.reduce((sum, item) => sum + (item.rainfed || 0), 0);
+    const irrigatedAcreage = sortedCountyMaizeAcreageData.reduce((sum, item) => sum + (item.irrigated || 0), 0);
+    const totalGrowthCount = activeGrowthStageData.reduce((sum, item) => sum + (item.Count || 0), 0);
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Area Under Maize (County vs Acres) */}
@@ -122,10 +137,10 @@ export default function MaizeGrowthTab({
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Column 1: Horizontal Bar Chart of Top Counties */}
                         <div className="space-y-4">
-                            <h4 className="text-sm font-semibold text-slate-700">Top Counties by Maize Acreage</h4>
+                            <h4 className="text-sm font-semibold text-slate-700">Top 5 Counties by Maize Acreage</h4>
                             <div className="h-[300px]">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart
@@ -149,7 +164,40 @@ export default function MaizeGrowthTab({
                             </div>
                         </div>
 
-                        {/* Column 2: Scrollable Table of County vs Acres */}
+                        {/* Column 2: Area under Maize Production Summary Table */}
+                        <div className="space-y-4">
+                            <h4 className="text-sm font-semibold text-slate-700">Area under Maize Production</h4>
+                            <div className="border border-slate-200 rounded-xl overflow-hidden">
+                                <table className="w-full border-collapse text-left text-sm">
+                                    <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                                        <tr>
+                                            <th className="p-3 font-semibold text-left">Indicator</th>
+                                            <th className="p-3 font-semibold text-right">Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-200">
+                                        <tr className="hover:bg-slate-50/50 transition-colors">
+                                            <td className="p-3 font-medium text-slate-700 text-xs sm:text-sm">Total maize acreage assessed</td>
+                                            <td className="p-3 text-slate-800 font-bold text-right text-xs sm:text-sm font-mono">{totalMaizeAcreage.toLocaleString()} Acres</td>
+                                        </tr>
+                                        <tr className="hover:bg-slate-50/50 transition-colors">
+                                            <td className="p-3 font-medium text-slate-700 text-xs sm:text-sm">Rain-fed acreage</td>
+                                            <td className="p-3 text-slate-800 font-bold text-right text-xs sm:text-sm font-mono">{rainfedAcreage.toLocaleString()} Acres</td>
+                                        </tr>
+                                        <tr className="hover:bg-slate-50/50 transition-colors">
+                                            <td className="p-3 font-medium text-slate-700 text-xs sm:text-sm">Irrigated acreage</td>
+                                            <td className="p-3 text-slate-800 font-bold text-right text-xs sm:text-sm font-mono">{irrigatedAcreage.toLocaleString()} Acres</td>
+                                        </tr>
+                                        <tr className="hover:bg-slate-50/50 transition-colors">
+                                            <td className="p-3 font-medium text-slate-700 text-xs sm:text-sm">Average acreage per household</td>
+                                            <td className="p-3 text-slate-800 font-bold text-right text-xs sm:text-sm font-mono">{averageAcreage.toFixed(1)} Acres</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* Column 3: Scrollable Table of County vs Acres */}
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <h4 className="text-sm font-semibold text-slate-700">County Acreage</h4>
@@ -197,7 +245,7 @@ export default function MaizeGrowthTab({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Column 1: Horizontal Bar Chart of Top Counties */}
                         <div className="space-y-4">
-                            <h4 className="text-sm font-semibold text-slate-700">Top Counties by Sunflower Interest</h4>
+                            <h4 className="text-sm font-semibold text-slate-700">Top 5 Counties by Sunflower Interest</h4>
                             <div className="h-[300px]">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart
@@ -354,13 +402,29 @@ export default function MaizeGrowthTab({
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="stage" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Growth Stage', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
                                 <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Number of Farmers', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
-                                <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
+                                <Tooltip 
+                                    contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} 
+                                    formatter={(value: unknown) => {
+                                        const numVal = Number(value);
+                                        const percent = totalGrowthCount > 0 ? ((numVal / totalGrowthCount) * 100).toFixed(1) : "0.0";
+                                        return [`${numVal.toLocaleString()} (${percent}%)`, "Surveyed Fields"];
+                                    }}
+                                />
                                 <Legend verticalAlign="top" height={36} iconType="circle" />
                                 <Bar dataKey="Count" name="Surveyed Fields" fill="#10b981" radius={[6, 6, 0, 0]}>
                                     {activeGrowthStageData.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
-                                    <LabelList dataKey="Count" position="top" style={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
+                                    <LabelList 
+                                        dataKey="Count" 
+                                        position="top" 
+                                        style={{ fill: '#64748b', fontSize: 9, fontWeight: 600 }} 
+                                        formatter={(val: unknown) => {
+                                            const numVal = Number(val);
+                                            const percent = totalGrowthCount > 0 ? ((numVal / totalGrowthCount) * 100).toFixed(0) : "0";
+                                            return `${numVal.toLocaleString()} (${percent}%)`;
+                                        }} 
+                                    />
                                 </Bar>
                             </BarChart>
                         </ResponsiveContainer>
@@ -384,17 +448,20 @@ export default function MaizeGrowthTab({
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={activePlantingDateData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
                                 <defs>
-                                    <linearGradient id="colorFields" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
-                                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                    <linearGradient id="colorPercentage" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
+                                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                <XAxis dataKey="period" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Planting Period', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
-                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Fields Count', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
-                                <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
+                                <XAxis dataKey="period" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Planting Window', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `${val}%`} label={{ value: 'Percentage of Farmers', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
+                                <Tooltip 
+                                    contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
+                                    formatter={(val: unknown) => [`${val}%`, "Percentage of Farmers"]}
+                                />
                                 <Legend verticalAlign="top" height={36} iconType="circle" />
-                                <Area type="monotone" dataKey="Fields" name="Planted Fields" stroke="#3b82f6" strokeWidth={2.5} fillOpacity={1} fill="url(#colorFields)" />
+                                <Area type="monotone" dataKey="Percentage" name="Percentage of Farmers" stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#colorPercentage)" />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>
@@ -406,11 +473,10 @@ export default function MaizeGrowthTab({
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                         <Droplets className="w-5 h-5 text-blue-600" />
-                        Source of Water Summary
+                        Source of Water
                     </CardTitle>
                     <CardDescription>
-                        Summary of water sources used in the surveyed fields.
-                    </CardDescription>
+                        Distribution of water sources used by farmers for maize production.                    </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col sm:flex-row items-center justify-around gap-6">
                     <div className="w-[200px] h-[200px] shrink-0">
@@ -441,7 +507,7 @@ export default function MaizeGrowthTab({
                                     <span className="text-sm font-semibold text-slate-700">{item.name}</span>
                                 </div>
                                 <div className="text-right">
-                                    <span className="text-sm font-bold text-slate-800">{item.value.toLocaleString()} Acres</span>
+                                    <span className="text-sm font-bold text-slate-800">{item.value.toLocaleString()} farmers</span>
                                     <span className="text-xs text-slate-500 ml-2">({item.percentage}%)</span>
                                 </div>
                             </div>
@@ -495,6 +561,65 @@ export default function MaizeGrowthTab({
                                 </div>
                             </div>
                         ))}
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Crop Colour */}
+            <Card className="shadow-md border-slate-200">
+                <CardHeader>
+                    <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <Leaf className="w-5 h-5 text-emerald-600" />
+                        Crop Colour
+                    </CardTitle>
+                    <CardDescription>
+                        Visual color observation of maize crops across surveyed fields.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col sm:flex-row items-center justify-around gap-6">
+                    <div className="w-[200px] h-[200px] shrink-0">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={activePlantColorData}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={60}
+                                    outerRadius={80}
+                                    paddingAngle={5}
+                                    dataKey="value"
+                                >
+                                    {activePlantColorData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.color} />
+                                    ))}
+                                </Pie>
+                                <Tooltip 
+                                    contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} 
+                                    formatter={(value: unknown) => [`${Number(value).toLocaleString()} Fields`, "Observations"]}
+                                />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="w-full">
+                        <table className="w-full border-collapse text-left text-sm">
+                            <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                                <tr>
+                                    <th className="p-2 font-semibold text-left text-xs uppercase tracking-wider">Observation</th>
+                                    <th className="p-2 font-semibold text-right text-xs uppercase tracking-wider">Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-200">
+                                {activePlantColorData.map((item) => (
+                                    <tr key={item.name} className="hover:bg-slate-50/50 transition-colors">
+                                        <td className="p-2 font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-2">
+                                            <span className="w-3.5 h-3.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+                                            {item.name}
+                                        </td>
+                                        <td className="p-2 text-slate-600 font-mono text-right text-xs sm:text-sm font-semibold">{item.percentage.toFixed(1)}%</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </CardContent>
             </Card>

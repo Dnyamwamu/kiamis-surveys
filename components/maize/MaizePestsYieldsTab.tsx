@@ -60,12 +60,28 @@ interface PoorPerformanceCauses {
     color: string;
 }
 
+interface MajorPestData {
+    pest: string;
+    incidence: number;
+    severity: "Low" | "Moderate" | "High";
+}
+
+interface WeedLevelData {
+    name: string;
+    percentage: number;
+    color: string;
+}
+
 interface MaizePestsYieldsTabProps {
     activePestDiseaseData: PestDiseaseData[];
     activeDiseaseSymptomsData: DiseaseSymptomsData[];
     activeHistoricalYieldData: HistoricalYieldData[];
     activeMaizeUseData: MaizeUseData[];
     activePoorPerformanceCauses: PoorPerformanceCauses[];
+    activeMajorPests: MajorPestData[];
+    activeAverageFawDamage: number;
+    activeWeedLevels: WeedLevelData[];
+    activeDominantWeeds: string[];
 }
 
 export default function MaizePestsYieldsTab({
@@ -74,9 +90,111 @@ export default function MaizePestsYieldsTab({
     activeHistoricalYieldData,
     activeMaizeUseData,
     activePoorPerformanceCauses,
+    activeMajorPests,
+    activeAverageFawDamage,
+    activeWeedLevels,
+    activeDominantWeeds,
 }: MaizePestsYieldsTabProps) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Major Pests */}
+            <Card className="shadow-md border-slate-200">
+                <CardHeader>
+                    <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <AlertTriangle className="w-5 h-5 text-red-500" />
+                        Major Pests
+                    </CardTitle>
+                    <CardDescription>
+                        Incidence rate and severity profile of dominant maize crop pests.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="pb-6 space-y-6">
+                    <div className="border border-slate-100 rounded-xl overflow-hidden">
+                        <table className="w-full border-collapse text-left text-sm">
+                            <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                                <tr>
+                                    <th className="p-3 font-semibold text-left text-xs uppercase tracking-wider">Pest</th>
+                                    <th className="p-3 font-semibold text-right text-xs uppercase tracking-wider">Incidence (%)</th>
+                                    <th className="p-3 font-semibold text-right text-xs uppercase tracking-wider">Severity</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-200">
+                                {activeMajorPests.map((item) => (
+                                    <tr key={item.pest} className="hover:bg-slate-50/50 transition-colors">
+                                        <td className="p-3 font-bold text-slate-800 text-xs sm:text-sm">{item.pest}</td>
+                                        <td className="p-3 text-slate-600 font-mono text-right text-xs sm:text-sm font-semibold">{item.incidence.toFixed(1)}%</td>
+                                        <td className="p-3 text-right">
+                                            <span className={`inline-block px-2.5 py-1 text-xs font-semibold rounded-full border ${
+                                                item.severity === "High"
+                                                    ? "bg-red-50 text-red-700 border-red-200"
+                                                    : item.severity === "Moderate"
+                                                    ? "bg-amber-50 text-amber-700 border-amber-200"
+                                                    : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                            }`}>
+                                                {item.severity}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl flex items-center justify-between">
+                        <span className="text-sm font-bold text-slate-700">Average FAW Damage</span>
+                        <span className="text-lg font-extrabold text-red-600 font-mono">{activeAverageFawDamage.toFixed(1)}%</span>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Weed Infestation */}
+            <Card className="shadow-md border-slate-200">
+                <CardHeader>
+                    <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <AlertTriangle className="w-5 h-5 text-emerald-600" />
+                        Weed Infestation
+                    </CardTitle>
+                    <CardDescription>
+                        Severity distribution of weeds and identified dominant species.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="pb-6 space-y-6">
+                    <div className="border border-slate-100 rounded-xl overflow-hidden">
+                        <table className="w-full border-collapse text-left text-sm">
+                            <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                                <tr>
+                                    <th className="p-3 font-semibold text-left text-xs uppercase tracking-wider">Weed Level</th>
+                                    <th className="p-3 font-semibold text-right text-xs uppercase tracking-wider">Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-200">
+                                {activeWeedLevels.map((item) => (
+                                    <tr key={item.name} className="hover:bg-slate-50/50 transition-colors">
+                                        <td className="p-3 font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-2">
+                                            <span className="w-3.5 h-3.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+                                            {item.name}
+                                        </td>
+                                        <td className="p-3 text-slate-600 font-mono text-right text-xs sm:text-sm font-semibold">{item.percentage.toFixed(1)}%</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl space-y-2">
+                        <span className="text-xs uppercase font-bold text-slate-500 tracking-wider">Dominant weeds:</span>
+                        <ul className="grid grid-cols-2 gap-2 pl-2">
+                            {activeDominantWeeds.map((weed) => (
+                                <li key={weed} className="text-sm text-slate-700 flex items-center gap-2 font-medium">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                                    {weed}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </CardContent>
+            </Card>
+
             {/* Pest Pressure Distribution */}
             <Card className="shadow-md border-slate-200">
                 <CardHeader>
@@ -114,7 +232,7 @@ export default function MaizePestsYieldsTab({
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                         <HelpCircle className="w-5 h-5 text-emerald-600" />
-                        Disease Symptoms Distribution
+                        Diseases
                     </CardTitle>
                     <CardDescription>
                         Occurrence percentage of major maize diseases spotted during inspections.
@@ -141,16 +259,26 @@ export default function MaizePestsYieldsTab({
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="space-y-4 w-full">
-                        {activeDiseaseSymptomsData.map((item) => (
-                            <div key={item.name} className="flex items-center justify-between border-b border-slate-100 pb-2">
-                                <div className="flex items-center gap-2">
-                                    <span className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: item.color }} />
-                                    <span className="text-sm font-semibold text-slate-700">{item.name}</span>
-                                </div>
-                                <span className="text-sm font-bold text-slate-800">{item.percentage}%</span>
-                            </div>
-                        ))}
+                    <div className="w-full">
+                        <table className="w-full border-collapse text-left text-sm">
+                            <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                                <tr>
+                                    <th className="p-2 font-semibold text-left text-xs uppercase tracking-wider">Disease</th>
+                                    <th className="p-2 font-semibold text-right text-xs uppercase tracking-wider">Incidence (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-200">
+                                {activeDiseaseSymptomsData.map((item) => (
+                                    <tr key={item.name} className="hover:bg-slate-50/50 transition-colors">
+                                        <td className="p-2 font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-2">
+                                            <span className="w-3.5 h-3.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+                                            {item.name}
+                                        </td>
+                                        <td className="p-2 text-slate-600 font-mono text-right text-xs sm:text-sm font-semibold">{item.percentage.toFixed(1)}%</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </CardContent>
             </Card>

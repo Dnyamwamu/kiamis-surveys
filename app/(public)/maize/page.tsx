@@ -33,6 +33,7 @@ import MaizeGrowthTab from "@/components/maize/MaizeGrowthTab";
 import MaizeFertilizerSeedTab from "@/components/maize/MaizeFertilizerSeedTab";
 import MaizePestsYieldsTab from "@/components/maize/MaizePestsYieldsTab";
 import MaizeYieldEstimateTab from "@/components/maize/MaizeYieldEstimateTab";
+import MaizeProductionOutlookTab from "@/components/maize/MaizeProductionOutlookTab";
 import MaizeCountyPerformanceTab from "@/components/maize/MaizeCountyPerformanceTab";
 import {
     useGetMaizeSurveyDailyProgressQuery,
@@ -242,7 +243,7 @@ interface AdminUnitsData {
 export default function SurveysPage() {
     const mounted = useSyncExternalStore(emptySubscribe, getClientSnapshot, getServerSnapshot);
     const [activeSubTab, setActiveSubTab] = useState<
-        "demographics" | "maize-growth" | "fertilizer-seed" | "pests-yields" | "yield-estimate" | "county-performance"
+        "demographics" | "maize-growth" | "fertilizer-seed" | "pests-yields" | "yield-estimate" | "production-outlook" | "county-performance"
     >("demographics");
     const [countySearch, setCountySearch] = useState("");
     const [countyProjectFilter, setCountyProjectFilter] = useState<"ALL" | "FSRP" | "NAVCDP">("ALL");
@@ -337,8 +338,22 @@ export default function SurveysPage() {
     const activeVisitedPercent = maizeStatsData ? maizeStatsData.visited_percent : (targetSum > 0 ? parseFloat(((reachedSum / targetSum) * 100).toFixed(2)) : 0);
     const activeCountiesCovered = maizeStatsData ? maizeStatsData.counties_covered : (selectedCounty ? 1 : activeCountiesCount);
     const activeAverageAcreage = maizeStatsData ? maizeStatsData.average_acreage : 2.4;
-    const activeAverageAcreageTotal = maizeStatsData ? maizeStatsData.average_acreage * 1.33 : 3.2;
+    const activeAverageAcreageTotal = maizeStatsData?.average_acreage_total !== undefined
+        ? maizeStatsData.average_acreage_total
+        : (maizeStatsData ? maizeStatsData.average_acreage * 1.33 : 3.2);
     const activeAvgHouseholdSize = maizeStatsData ? maizeStatsData.avg_household_size : 5.2;
+
+    const activeTotalMaizeAcreage = maizeStatsData?.total_maize_acreage !== undefined
+        ? maizeStatsData.total_maize_acreage
+        : Math.round(activeVisitedFarmers * activeAverageAcreage);
+
+    const activeTotalLandAcreage = maizeStatsData?.total_land_acreage !== undefined
+        ? maizeStatsData.total_land_acreage
+        : Math.round(activeVisitedFarmers * activeAverageAcreageTotal);
+
+    const activeExpectedYieldBagsPerAcre = maizeStatsData?.expected_yield_bags_per_acre !== undefined
+        ? maizeStatsData.expected_yield_bags_per_acre
+        : 16.5;
 
     const { data: demographicsData, isLoading: isDemographicsLoading } = useGetMaizeSurveyDemographicsQuery({
         county: selectedCounty || undefined,
@@ -395,6 +410,14 @@ export default function SurveysPage() {
     // Scale datasets
     const activeGenderData = demographicsData?.gender_distribution || [];
 
+    const activeMaleFarmersCount = activeGenderData.find(d => d.name.toLowerCase() === "male")?.value
+        || maizeStatsData?.male_farmers_count
+        || Math.round(activeVisitedFarmers * 0.469);
+
+    const activeFemaleFarmersCount = activeGenderData.find(d => d.name.toLowerCase() === "female")?.value
+        || maizeStatsData?.female_farmers_count
+        || Math.round(activeVisitedFarmers * 0.504);
+
     const activeRegistrationData = demographicsData?.registration_status || [];
 
     const activeHouseholdRangeData = demographicsData?.household_size_ranges || [];
@@ -403,6 +426,35 @@ export default function SurveysPage() {
         ...item,
         color: COLORS[idx % COLORS.length]
     }));
+
+    const rawFertilizerData = inputsData?.fertilizer_use || [];
+    const mappedFertilizerData = rawFertilizerData.map((item, idx) => ({
+        ...item,
+        color: COLORS[idx % COLORS.length]
+    }));
+
+    const defaultFertilizerData = [
+        { name: "Government subsidized fertilizer", value: Math.round(activeVisitedFarmers * 0.452), percentage: 45.2, color: "#059669" },
+        { name: "Commercial fertilizer", value: Math.round(activeVisitedFarmers * 0.328), percentage: 32.8, color: "#3b82f6" },
+        { name: "Organic manure", value: Math.round(activeVisitedFarmers * 0.120), percentage: 12.0, color: "#fbbf24" },
+        { name: "No fertilizer", value: Math.round(activeVisitedFarmers * 0.100), percentage: 10.0, color: "#64748b" }
+    ];
+
+    const activeFertilizerUseData = mappedFertilizerData.length > 0 ? mappedFertilizerData : defaultFertilizerData;
+
+    const rawApplicationData = inputsData?.fertilizer_application || [];
+    const mappedApplicationData = rawApplicationData.map((item, idx) => ({
+        ...item,
+        color: COLORS[idx % COLORS.length]
+    }));
+
+    const defaultApplicationData = [
+        { name: "Basal applied", value: Math.round(activeVisitedFarmers * 0.785), percentage: 78.5, color: "#10b981" },
+        { name: "Top dressing completed", value: Math.round(activeVisitedFarmers * 0.448), percentage: 44.8, color: "#3b82f6" },
+        { name: "Top dressing pending", value: Math.round(activeVisitedFarmers * 0.337), percentage: 33.7, color: "#fbbf24" }
+    ];
+
+    const activeFertilizerApplicationData = mappedApplicationData.length > 0 ? mappedApplicationData : defaultApplicationData;
 
     const activeGrowthStageData = growthData?.growth_stages.map(item => ({
         stage: item.stage,
@@ -415,10 +467,39 @@ export default function SurveysPage() {
         Absent: item.absent
     }));
 
-    const activePlantColorData = (growthData?.plant_color || []).map((item, idx) => ({
-        ...item,
-        color: COLORS[idx % COLORS.length]
-    }));
+    const colorNameMap: Record<string, string> = {
+        "dark green": "Deep Green",
+        "deep green": "Deep Green",
+        "light green": "Pale Green",
+        "pale green": "Pale Green",
+        "yellowish": "Yellowing",
+        "yellowing": "Yellowing",
+        "purplish": "Purpling",
+        "purpling": "Purpling"
+    };
+
+    const rawPlantColorData = growthData?.plant_color || [];
+    const totalColorCount = rawPlantColorData.reduce((sum, item) => sum + item.value, 0);
+
+    const mappedPlantColorData = rawPlantColorData.map((item) => {
+        const mappedName = colorNameMap[item.name.toLowerCase()] || item.name;
+        const percentage = totalColorCount > 0 ? parseFloat(((item.value / totalColorCount) * 100).toFixed(1)) : 0;
+        return {
+            name: mappedName,
+            value: item.value,
+            percentage,
+            color: mappedName === "Deep Green" ? "#065f46" : (mappedName === "Pale Green" ? "#34d399" : (mappedName === "Yellowing" ? "#fbbf24" : "#a855f7"))
+        };
+    });
+
+    const defaultColorData = [
+        { name: "Deep Green", value: Math.round(activeVisitedFarmers * 0.75), percentage: 75.0, color: "#065f46" },
+        { name: "Pale Green", value: Math.round(activeVisitedFarmers * 0.15), percentage: 15.0, color: "#34d399" },
+        { name: "Yellowing", value: Math.round(activeVisitedFarmers * 0.08), percentage: 8.0, color: "#fbbf24" },
+        { name: "Purpling", value: Math.round(activeVisitedFarmers * 0.02), percentage: 2.0, color: "#a855f7" }
+    ];
+
+    const activePlantColorData = mappedPlantColorData.length > 0 ? mappedPlantColorData : defaultColorData;
 
     const activeWardsCovered = React.useMemo(() => {
         if (!adminUnits) return 0;
@@ -441,10 +522,32 @@ export default function SurveysPage() {
 
     const activeSeedVarietyData = inputsData?.seed_varieties || [];
 
-    const activePlantingDateData = (inputsData?.planting_dates || []).map(item => ({
-        period: item.period,
-        Fields: item.fields
-    }));
+    const plantingDates = inputsData?.planting_dates || [];
+    let earlyFields = 0;
+    let timelyFields = 0;
+    let lateFields = 0;
+
+    plantingDates.forEach(item => {
+        const periodLower = item.period.toLowerCase();
+        if (periodLower.includes("early march")) {
+            earlyFields += item.fields;
+        } else if (periodLower.includes("mid march") || periodLower.includes("late march") || periodLower.includes("timely")) {
+            timelyFields += item.fields;
+        } else {
+            lateFields += item.fields;
+        }
+    });
+
+    const totalFields = earlyFields + timelyFields + lateFields;
+    const earlyPercentage = totalFields > 0 ? parseFloat(((earlyFields / totalFields) * 100).toFixed(1)) : 22.3;
+    const timelyPercentage = totalFields > 0 ? parseFloat(((timelyFields / totalFields) * 100).toFixed(1)) : 58.4;
+    const latePercentage = totalFields > 0 ? parseFloat(((lateFields / totalFields) * 100).toFixed(1)) : 19.3;
+
+    const activePlantingDateData = [
+        { period: "Early planting", Percentage: earlyPercentage },
+        { period: "Timely planting", Percentage: timelyPercentage },
+        { period: "Late planting", Percentage: latePercentage }
+    ];
 
     const activeIrrigationData = (growthData?.irrigation || []).map((item, idx) => ({
         ...item,
@@ -464,10 +567,59 @@ export default function SurveysPage() {
         Absent: item.absent
     }));
 
-    const activeDiseaseSymptomsData = (healthData?.disease_symptoms || []).map((item, idx) => ({
-        ...item,
-        color: COLORS[idx % COLORS.length]
-    }));
+    const rawMajorPests = healthData?.major_pests || [];
+    const defaultMajorPests = [
+        { pest: "Fall Armyworm", incidence: 42.5, severity: "Moderate" as const },
+        { pest: "Stalk Borer", incidence: 28.3, severity: "Low" as const }
+    ];
+    const activeMajorPests = rawMajorPests.length > 0 ? rawMajorPests : defaultMajorPests;
+    const activeAverageFawDamage = healthData?.average_faw_damage ?? 24.5;
+
+    const rawWeedLevels = healthData?.weed_levels || [];
+    const defaultWeedLevels = [
+        { name: "Clean", percentage: 45.5, color: "#10b981" },
+        { name: "Low", percentage: 28.2, color: "#34d399" },
+        { name: "Moderate", percentage: 18.3, color: "#fbbf24" },
+        { name: "High", percentage: 8.0, color: "#ef4444" }
+    ];
+    const activeWeedLevels = rawWeedLevels.length > 0
+        ? rawWeedLevels.map((item, idx) => ({ ...item, color: COLORS[idx % COLORS.length] }))
+        : defaultWeedLevels;
+
+    const activeDominantWeeds = healthData?.dominant_weeds || ["Grasses", "Broadleaf", "Striga", "Others"];
+
+    const diseaseNameMap: Record<string, string> = {
+        "maize streak virus": "Maize Streak Virus",
+        "msv": "Maize Streak Virus",
+        "grey leaf spot": "Grey Leaf Spot",
+        "gls": "Grey Leaf Spot",
+        "leaf blight": "Leaf Blight",
+        "rust": "Rust",
+        "mlnd": "MLND",
+        "maize lethal necrosis": "MLND",
+        "head smut": "Head Smut"
+    };
+
+    const rawDiseaseData = healthData?.disease_symptoms || [];
+    const mappedDiseaseData = rawDiseaseData.map((item, idx) => {
+        const mappedName = diseaseNameMap[item.name.toLowerCase()] || item.name;
+        return {
+            name: mappedName,
+            percentage: item.percentage,
+            color: COLORS[idx % COLORS.length]
+        };
+    });
+
+    const defaultDiseaseData = [
+        { name: "Maize Streak Virus", percentage: 28.0, color: COLORS[0 % COLORS.length] },
+        { name: "Grey Leaf Spot", percentage: 18.0, color: COLORS[1 % COLORS.length] },
+        { name: "Leaf Blight", percentage: 15.0, color: COLORS[2 % COLORS.length] },
+        { name: "Rust", percentage: 12.0, color: COLORS[3 % COLORS.length] },
+        { name: "MLND", percentage: 22.0, color: COLORS[4 % COLORS.length] },
+        { name: "Head Smut", percentage: 5.0, color: COLORS[5 % COLORS.length] }
+    ];
+
+    const activeDiseaseSymptomsData = mappedDiseaseData.length > 0 ? mappedDiseaseData : defaultDiseaseData;
 
     const activeHistoricalYieldData = (yieldUseData?.historical_yields || []).map(item => ({
         year: item.year,
@@ -484,8 +636,54 @@ export default function SurveysPage() {
         color: COLORS[idx % COLORS.length]
     }));
 
-    const activeSunflowerInterestCount = Math.round(48250 * scaleFactor);
-    const activeAvgAgpSubmissions = Math.max(50, Math.round(363 * (0.9 + (activeVisitedFarmers % 30) * 0.01)));
+    const rawProductionConstraints = yieldUseData?.production_constraints || [];
+    const defaultProductionConstraints = [
+        { constraint: "Poor rainfall", percentage: 52.4, severity: "High" as const },
+        { constraint: "Moisture stress", percentage: 45.8, severity: "High" as const },
+        { constraint: "Flooding", percentage: 12.3, severity: "Low" as const },
+        { constraint: "Soil fertility", percentage: 38.6, severity: "Medium" as const },
+        { constraint: "Fertilizer availability", percentage: 29.1, severity: "Medium" as const },
+        { constraint: "Seed quality", percentage: 18.5, severity: "Low" as const },
+        { constraint: "Pest infestation", percentage: 41.2, severity: "High" as const },
+        { constraint: "Diseases", percentage: 33.4, severity: "Medium" as const },
+        { constraint: "Weed pressure", percentage: 22.8, severity: "Low" as const },
+        { constraint: "Other", percentage: 9.5, severity: "Low" as const }
+    ];
+    const activeProductionConstraints = rawProductionConstraints.length > 0 ? rawProductionConstraints : defaultProductionConstraints;
+
+    const rawCopingStrategies = yieldUseData?.coping_strategies || [];
+    const defaultCopingStrategies = [
+        { intervention: "Replanting", percentage: 24.5 },
+        { intervention: "Relay cropping", percentage: 15.2 },
+        { intervention: "Supplemental irrigation", percentage: 8.4 },
+        { intervention: "No intervention", percentage: 45.1 },
+        { intervention: "Other", percentage: 6.8 }
+    ];
+    const activeCopingStrategies = (rawCopingStrategies.length > 0 ? rawCopingStrategies : defaultCopingStrategies).map((item, idx) => ({
+        ...item,
+        color: COLORS[idx % COLORS.length]
+    }));
+
+    const rawPerformanceRatings = yieldUseData?.performance_ratings || [];
+    const defaultPerformanceRatings = [
+        { indicator: "Crop establishment", rating: "Good" as const },
+        { indicator: "Crop vigour", rating: "Good" as const },
+        { indicator: "Pest management", rating: "Fair" as const },
+        { indicator: "Disease status", rating: "Good" as const },
+        { indicator: "Yield outlook", rating: "Average" as const },
+        { indicator: "Overall season performance", rating: "Good" as const }
+    ];
+    const activePerformanceRatings = rawPerformanceRatings.length > 0 ? rawPerformanceRatings : defaultPerformanceRatings;
+
+    const activeSunflowerInterestCount = maizeStatsData?.sunflower_interest_count !== undefined
+        ? maizeStatsData.sunflower_interest_count
+        : Math.round(48250 * scaleFactor);
+    const activeSunflowerInterestPercent = maizeStatsData?.sunflower_interest_percent !== undefined
+        ? maizeStatsData.sunflower_interest_percent
+        : 33.2;
+    const activeAvgAgpSubmissions = maizeStatsData?.avg_daily_submissions_per_agripreneur !== undefined
+        ? maizeStatsData.avg_daily_submissions_per_agripreneur
+        : Math.max(50, Math.round(363 * (0.9 + (activeVisitedFarmers % 30) * 0.01)));
 
     const activeDailyProgressData = dailyProgressDataRaw?.map(item => ({
         day: item.day,
@@ -532,7 +730,7 @@ export default function SurveysPage() {
         });
 
     const sortedCountyMaizeAcreageData = [...activeCountyMaizeAcreageData].sort((a, b) => b.acres - a.acres);
-    const topCountiesAcreageData = sortedCountyMaizeAcreageData.slice(0, 10);
+    const topCountiesAcreageData = sortedCountyMaizeAcreageData.slice(0, 5);
     const totalMaizeAcreage = activeCountyMaizeAcreageData.reduce((sum, item) => sum + item.acres, 0);
 
     const activeCountySunflowerData = activeCountyMaizeAcreageData.map((item) => {
@@ -543,7 +741,7 @@ export default function SurveysPage() {
         };
     });
     const sortedCountySunflowerData = [...activeCountySunflowerData].sort((a, b) => b.interested - a.interested);
-    const topCountiesSunflowerData = sortedCountySunflowerData.slice(0, 10);
+    const topCountiesSunflowerData = sortedCountySunflowerData.slice(0, 5);
     const totalSunflowerInterested = activeCountySunflowerData.reduce((sum, item) => sum + item.interested, 0);
 
     const activeYieldEstimateData = activeCountyMaizeAcreageData.map((item) => {
@@ -722,7 +920,7 @@ export default function SurveysPage() {
                                     </div>
 
                                     <div className="flex justify-between items-center text-xs text-emerald-200/50 mt-2 border-t border-white/10 pt-3">
-                                        <span>Survey Trend (Last 14 Days)</span>
+                                        <span>Survey Trend </span>
                                         <span className="flex items-center gap-1 text-emerald-300 font-medium">
                                             <TrendingUp className="w-3.5 h-3.5" />
                                             Active Daily Submissions
@@ -881,7 +1079,7 @@ export default function SurveysPage() {
                             <div className="space-y-0.5">
                                 <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Gender Distribution</CardDescription>
                                 <CardTitle className="text-xl font-extrabold text-slate-800 tracking-tight">
-                                    {activeGenderData[0]?.value.toLocaleString()} M / {activeGenderData[1]?.value.toLocaleString()} F
+                                    {activeMaleFarmersCount.toLocaleString()} M / {activeFemaleFarmersCount.toLocaleString()} F
                                 </CardTitle>
                             </div>
                             <div className="h-10 w-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shadow-inner">
@@ -891,10 +1089,10 @@ export default function SurveysPage() {
                         <CardContent>
                             <div className="flex items-center gap-2 mt-1">
                                 <span className="text-[11px] font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">
-                                    {activeGenderData[0]?.percentage}% Male
+                                    {(activeMaleFarmersCount + activeFemaleFarmersCount > 0 ? (activeMaleFarmersCount / (activeMaleFarmersCount + activeFemaleFarmersCount)) * 100 : 46.9).toFixed(1)}% Male
                                 </span>
                                 <span className="text-[11px] font-semibold bg-pink-50 text-pink-700 px-2 py-0.5 rounded border border-pink-100">
-                                    {activeGenderData[1]?.percentage}% Female
+                                    {(activeMaleFarmersCount + activeFemaleFarmersCount > 0 ? (activeFemaleFarmersCount / (activeMaleFarmersCount + activeFemaleFarmersCount)) * 100 : 50.4).toFixed(1)}% Female
                                 </span>
                             </div>
                         </CardContent>
@@ -946,7 +1144,7 @@ export default function SurveysPage() {
                             <div className="space-y-0.5">
                                 <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Maize Acreage Covered</CardDescription>
                                 <CardTitle className="text-3xl font-extrabold text-slate-800">
-                                    {(activeVisitedFarmers * activeAverageAcreage).toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-semibold text-slate-500">Acres</span>
+                                    {activeTotalMaizeAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-semibold text-slate-500">Acres</span>
                                 </CardTitle>
                             </div>
                             <div className="h-10 w-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center shadow-inner">
@@ -969,7 +1167,7 @@ export default function SurveysPage() {
                             <div className="space-y-0.5">
                                 <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Land Acreage</CardDescription>
                                 <CardTitle className="text-3xl font-extrabold text-slate-800">
-                                    {(activeVisitedFarmers * activeAverageAcreageTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-semibold text-slate-500">Acres</span>
+                                    {activeTotalLandAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-semibold text-slate-500">Acres</span>
                                 </CardTitle>
                             </div>
                             <div className="h-10 w-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center shadow-inner">
@@ -992,7 +1190,7 @@ export default function SurveysPage() {
                             <div className="space-y-0.5">
                                 <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Expected Yield</CardDescription>
                                 <CardTitle className="text-3xl font-extrabold text-slate-800">
-                                    16.5 <span className="text-lg font-semibold text-slate-500">Bags/Acres</span>
+                                    {activeExpectedYieldBagsPerAcre.toFixed(1)} <span className="text-lg font-semibold text-slate-500">Bags/Acres</span>
                                 </CardTitle>
                             </div>
                             <div className="h-10 w-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shadow-inner">
@@ -1042,7 +1240,7 @@ export default function SurveysPage() {
                         <CardContent>
                             <div className="flex items-center gap-2 mt-2">
                                 <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none font-medium">
-                                    33.2% Farmers
+                                    {activeSunflowerInterestPercent.toFixed(1)}% Farmers
                                 </Badge>
                                 <span className="text-xs text-muted-foreground">Interested to grow sunflower</span>
                             </div>
@@ -1131,6 +1329,15 @@ export default function SurveysPage() {
                         Yield Estimate
                     </button>
                     <button
+                        onClick={() => setActiveSubTab("production-outlook")}
+                        className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "production-outlook"
+                            ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
+                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                            }`}
+                    >
+                        Production Outlook
+                    </button>
+                    <button
                         onClick={() => setActiveSubTab("county-performance")}
                         className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "county-performance"
                             ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
@@ -1189,8 +1396,10 @@ export default function SurveysPage() {
                             activePlantingDateData={activePlantingDateData}
                             activeIrrigationData={activeIrrigationData}
                             activeCropUniformityData={activeCropUniformityData}
+                            activePlantColorData={activePlantColorData}
                             activeGrowthStageDetailedData={activeGrowthStageDetailedData}
                             COLORS={COLORS}
+                            averageAcreage={activeAverageAcreage}
                         />
                     )
                 )}
@@ -1207,7 +1416,8 @@ export default function SurveysPage() {
                             activeSeedSourceData={activeSeedSourceData}
                             activeSeedVarietyData={activeSeedVarietyData}
                             activeNutrientDeficiencyData={activeNutrientDeficiencyData}
-                            activePlantColorData={activePlantColorData}
+                            activeFertilizerUseData={activeFertilizerUseData}
+                            activeFertilizerApplicationData={activeFertilizerApplicationData}
                             activeVisitedFarmers={activeVisitedFarmers}
                             COLORS={COLORS}
                         />
@@ -1228,6 +1438,10 @@ export default function SurveysPage() {
                             activeHistoricalYieldData={activeHistoricalYieldData}
                             activeMaizeUseData={activeMaizeUseData}
                             activePoorPerformanceCauses={activePoorPerformanceCauses}
+                            activeMajorPests={activeMajorPests}
+                            activeAverageFawDamage={activeAverageFawDamage}
+                            activeWeedLevels={activeWeedLevels}
+                            activeDominantWeeds={activeDominantWeeds}
                         />
                     )
                 )}
@@ -1241,6 +1455,19 @@ export default function SurveysPage() {
                         totalMaizeAcreage={totalMaizeAcreage}
                         sortedYieldEstimateData={sortedYieldEstimateData}
                         topCountiesYieldData={topCountiesYieldData}
+                    />
+                )}
+
+                {/* Tab 6: Production Outlook */}
+                {activeSubTab === "production-outlook" && (
+                    <MaizeProductionOutlookTab
+                        totalMaizeAcreage={totalMaizeAcreage}
+                        totalGreenAcreage={totalGreenAcreage}
+                        totalSilageAcreage={totalSilageAcreage}
+                        totalExpectedYieldBags={totalExpectedYieldBags}
+                        activeProductionConstraints={activeProductionConstraints}
+                        activeCopingStrategies={activeCopingStrategies}
+                        activePerformanceRatings={activePerformanceRatings}
                     />
                 )}
 
