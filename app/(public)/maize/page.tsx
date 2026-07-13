@@ -1057,47 +1057,49 @@ export default function SurveysPage() {
             <section className="container mx-auto px-6 max-w-7xl relative z-20">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Card 1: Farmers Reached */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Farmers Reached</CardDescription>
-                                <CardTitle className="text-3xl font-extrabold text-slate-800">
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-teal-500" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Farmers Reached</CardDescription>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
                                     {activeVisitedFarmers.toLocaleString()}
                                 </CardTitle>
                             </div>
-                            <div className="h-10 w-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner">
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 text-emerald-600 flex items-center justify-center border border-emerald-500/20 shadow-xs shrink-0">
                                 <Users className="w-5 h-5" />
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mt-2">
-                                <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none font-medium">
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="flex items-center gap-2">
+                                <Badge className="bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 border-none font-semibold text-[10px] py-0.5 px-2">
                                     {activeVisitedPercent}% of Target
                                 </Badge>
-                                <span className="text-xs text-muted-foreground">Active registrations</span>
+                                <span className="text-[11px] font-medium text-slate-500">Active registrations</span>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Card 2: Gender Distribution */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Gender Distribution</CardDescription>
-                                <CardTitle className="text-xl font-extrabold text-slate-800 tracking-tight">
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-blue-500/10 border border-slate-200/60 hover:border-blue-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 to-indigo-500" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Gender Distribution</CardDescription>
+                                <CardTitle className="text-xl font-black text-slate-800 tracking-tight leading-none py-1">
                                     {activeMaleFarmersCount.toLocaleString()} M / {activeFemaleFarmersCount.toLocaleString()} F
                                 </CardTitle>
                             </div>
-                            <div className="h-10 w-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shadow-inner">
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 text-blue-600 flex items-center justify-center border border-blue-500/20 shadow-xs shrink-0">
                                 <Activity className="w-5 h-5" />
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mt-1">
-                                <span className="text-[11px] font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className="text-[9px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-700 px-1.5 py-0.5 rounded border border-blue-500/10">
                                     {(activeMaleFarmersCount + activeFemaleFarmersCount > 0 ? (activeMaleFarmersCount / (activeMaleFarmersCount + activeFemaleFarmersCount)) * 100 : 46.9).toFixed(1)}% Male
                                 </span>
-                                <span className="text-[11px] font-semibold bg-pink-50 text-pink-700 px-2 py-0.5 rounded border border-pink-100">
+                                <span className="text-[9px] font-bold uppercase tracking-wider bg-pink-500/10 text-pink-700 px-1.5 py-0.5 rounded border border-pink-500/10">
                                     {(activeMaleFarmersCount + activeFemaleFarmersCount > 0 ? (activeFemaleFarmersCount / (activeMaleFarmersCount + activeFemaleFarmersCount)) * 100 : 50.4).toFixed(1)}% Female
                                 </span>
                             </div>
@@ -1105,182 +1107,202 @@ export default function SurveysPage() {
                     </Card>
 
                     {/* Card 3: Avg Household Size */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Avg Household Size</CardDescription>
-                                <CardTitle className="text-3xl font-extrabold text-slate-800">
-                                    {activeAvgHouseholdSize} <span className="text-lg font-semibold text-slate-500">Members</span>
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-indigo-500/10 border border-slate-200/60 hover:border-indigo-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-indigo-500 to-purple-500" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Avg Household Size</CardDescription>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
+                                    {activeAvgHouseholdSize} <span className="text-lg font-bold text-slate-400">Members</span>
                                 </CardTitle>
                             </div>
-                            <div className="h-10 w-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-inner">
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 text-indigo-600 flex items-center justify-center border border-indigo-500/20 shadow-xs shrink-0">
                                 <Users className="w-5 h-5" />
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mt-2">
-                                <span className="text-xs text-muted-foreground">Average size of surveyed households</span>
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[11px] font-medium text-slate-500">Average size of surveyed households</span>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Card 3: Target to Be Reached */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">KIAMIS Survey Target</CardDescription>
-                                <CardTitle className="text-3xl font-extrabold text-slate-800">
+                    {/* Card 4: Target to Be Reached */}
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-slate-500/10 border border-slate-200/60 hover:border-slate-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-slate-500 to-slate-700" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">KIAMIS Survey Target</CardDescription>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
                                     {activeVisitedTarget.toLocaleString()}
                                 </CardTitle>
                             </div>
-                            <div className="h-10 w-10 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center shadow-inner">
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-slate-500/10 to-slate-700/10 text-slate-600 flex items-center justify-center border border-slate-500/20 shadow-xs shrink-0">
                                 <Target className="w-5 h-5" />
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mt-2">
-                                <span className="text-xs text-muted-foreground">Maize farmers in KIAMIS</span>
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[11px] font-medium text-slate-500">Maize farmers in KIAMIS</span>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Card 4: Acreage Covered */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Maize Acreage Covered</CardDescription>
-                                <CardTitle className="text-3xl font-extrabold text-slate-800">
-                                    {activeTotalMaizeAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-semibold text-slate-500">Acres</span>
+                    {/* Card 5: Acreage Covered */}
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-green-500" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Maize Acreage Covered</CardDescription>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
+                                    {activeTotalMaizeAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-bold text-slate-400">Acres</span>
                                 </CardTitle>
                             </div>
-                            <div className="h-10 w-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center shadow-inner">
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-500/10 to-green-500/10 text-emerald-600 flex items-center justify-center border border-emerald-500/20 shadow-xs shrink-0">
                                 <Sprout className="w-5 h-5" />
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mt-2">
-                                <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 border-none font-medium">
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="flex items-center gap-2">
+                                <Badge className="bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 border-none font-semibold text-[10px] py-0.5 px-2">
                                     Rainfed Dominant
                                 </Badge>
-                                <span className="text-xs text-muted-foreground">Avg: {activeAverageAcreage} Acres / farm</span>
+                                <span className="text-[11px] font-medium text-slate-500">Avg: {activeAverageAcreage} Acres / farm</span>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Card 6: Total Land Acreage */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Land Acreage</CardDescription>
-                                <CardTitle className="text-3xl font-extrabold text-slate-800">
-                                    {activeTotalLandAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-semibold text-slate-500">Acres</span>
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-teal-500/10 border border-slate-200/60 hover:border-teal-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-teal-500 to-cyan-500" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Land Acreage</CardDescription>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
+                                    {activeTotalLandAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-bold text-slate-400">Acres</span>
                                 </CardTitle>
                             </div>
-                            <div className="h-10 w-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center shadow-inner">
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-teal-500/10 to-cyan-500/10 text-teal-600 flex items-center justify-center border border-teal-500/20 shadow-xs shrink-0">
                                 <Layers className="w-5 h-5" />
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mt-2">
-                                <Badge className="bg-teal-100 text-teal-700 hover:bg-teal-100 border-none font-medium">
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="flex items-center gap-2">
+                                <Badge className="bg-teal-500/10 text-teal-700 hover:bg-teal-500/15 border-none font-semibold text-[10px] py-0.5 px-2">
                                     Total Farm Holdings
                                 </Badge>
-                                <span className="text-xs text-muted-foreground">Avg: {activeAverageAcreageTotal} Acre / farm</span>
+                                <span className="text-[11px] font-medium text-slate-500">Avg: {activeAverageAcreageTotal} Acre / farm</span>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Card 5: Expected Yield */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Expected Yield</CardDescription>
-                                <CardTitle className="text-3xl font-extrabold text-slate-800">
-                                    {activeExpectedYieldBagsPerAcre.toFixed(1)} <span className="text-lg font-semibold text-slate-500">Bags/Acres</span>
+                    {/* Card 7: Expected Yield */}
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-amber-500/10 border border-slate-200/60 hover:border-amber-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-500 to-orange-500" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Expected Yield</CardDescription>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
+                                    {activeExpectedYieldBagsPerAcre.toFixed(1)} <span className="text-base font-bold text-slate-400">Bags/Acre</span>
                                 </CardTitle>
                             </div>
-                            <div className="h-10 w-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shadow-inner">
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 text-amber-600 flex items-center justify-center border border-amber-500/20 shadow-xs shrink-0">
                                 <TrendingUp className="w-5 h-5" />
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mt-2">
-                                <span className="text-xs text-muted-foreground">Expected 2026 average bags(90Kg)/acre</span>
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[11px] font-medium text-slate-500">Expected 2026 average bags (90Kg)/acre</span>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Card 8: Avg Submission by AGP */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Average Daily Submissions</CardDescription>
-                                <CardTitle className="text-3xl font-extrabold text-slate-800">
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-blue-500/10 border border-slate-200/60 hover:border-blue-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-sky-500 to-blue-500" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Average Daily Submissions</CardDescription>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
                                     {activeAvgAgpSubmissions.toLocaleString()}
                                 </CardTitle>
                             </div>
-                            <div className="h-10 w-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shadow-inner">
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-sky-500/10 to-blue-500/10 text-sky-600 flex items-center justify-center border border-sky-500/20 shadow-xs shrink-0">
                                 <ClipboardList className="w-5 h-5" />
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mt-2">
-                                <span className="text-xs text-muted-foreground">Per active field agripreneur</span>
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[11px] font-medium text-slate-500">Per active field agripreneur</span>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Card 7: Sunflower Interest */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Sunflower</CardDescription>
-                                <CardTitle className="text-3xl font-extrabold text-slate-800">
+                    {/* Card 9: Sunflower Interest */}
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-amber-400/10 border border-slate-200/60 hover:border-amber-400/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-400 to-yellow-500" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Sunflower</CardDescription>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
                                     {activeSunflowerInterestCount.toLocaleString()}
                                 </CardTitle>
                             </div>
-                            <div className="h-10 w-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shadow-inner">
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-amber-400/10 to-yellow-500/10 text-amber-600 flex items-center justify-center border border-amber-500/20 shadow-xs shrink-0">
                                 <Sun className="w-5 h-5" />
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mt-2">
-                                <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none font-medium">
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="flex items-center gap-2">
+                                <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none font-semibold text-[10px] py-0.5 px-2">
                                     {activeSunflowerInterestPercent.toFixed(1)}% Farmers
                                 </Badge>
-                                <span className="text-xs text-muted-foreground">Interested to grow sunflower</span>
+                                <span className="text-[11px] font-medium text-slate-500">Interested to grow sunflower</span>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Card 6: Maize Utilisation */}
-                    <Card className="shadow-lg border-slate-200/80 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between pb-1 space-y-0">
+                    {/* Card 10: Maize Utilisation */}
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-emerald-600" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-1 space-y-0 pt-4 px-5">
                             <div className="space-y-0.5">
-                                <CardDescription className="text-xs font-semibold uppercase tracking-wider text-slate-500">Maize Utilisation</CardDescription>
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Maize Utilisation</CardDescription>
                             </div>
-                            <div className="h-10 w-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner">
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 text-emerald-600 flex items-center justify-center border border-emerald-500/20 shadow-xs shrink-0">
                                 <CheckCircle className="w-5 h-5" />
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex flex-col gap-1.5 mt-2">
-                                <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-1">
-                                    <span className="text-slate-500 font-medium">Family Consumption:</span>
-                                    <span className="font-bold text-slate-700">55%</span>
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="space-y-2.5 mt-2">
+                                <div>
+                                    <div className="flex justify-between text-[11px] font-bold text-slate-600 mb-0.5">
+                                        <span>Consumption</span>
+                                        <span>55%</span>
+                                    </div>
+                                    <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                        <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: "55%" }} />
+                                    </div>
                                 </div>
-                                <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-1">
-                                    <span className="text-slate-500 font-medium">Commercial Sale:</span>
-                                    <span className="font-bold text-slate-700">30%</span>
+                                <div>
+                                    <div className="flex justify-between text-[11px] font-bold text-slate-600 mb-0.5">
+                                        <span>Commercial</span>
+                                        <span>30%</span>
+                                    </div>
+                                    <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                        <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: "30%" }} />
+                                    </div>
                                 </div>
-                                <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-1">
-                                    <span className="text-slate-500 font-medium">Animal Feed:</span>
-                                    <span className="font-bold text-slate-700">15%</span>
+                                <div>
+                                    <div className="flex justify-between text-[11px] font-bold text-slate-600 mb-0.5">
+                                        <span>Animal Feed</span>
+                                        <span>15%</span>
+                                    </div>
+                                    <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                        <div className="bg-amber-500 h-1.5 rounded-full" style={{ width: "15%" }} />
+                                    </div>
                                 </div>
                             </div>
-                            <p className="text-[10px] text-slate-400 mt-3">
-                                Distribution of maize usage by surveyed smallholder farming households.
-                            </p>
                         </CardContent>
                     </Card>
                 </div>

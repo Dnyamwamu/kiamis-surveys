@@ -24,21 +24,21 @@ export interface MaizeSurveyCountyStats {
   counties_covered: number;
   avg_household_size: number;
   average_acreage: number;
-  average_acreage_total?: number;
-  total_maize_acreage?: number;
-  total_land_acreage?: number;
-  expected_yield_bags_per_acre?: number;
-  avg_daily_submissions_per_agripreneur?: number;
-  sunflower_interest_count?: number;
-  sunflower_interest_percent?: number;
-  already_registered_visited?: number;
-  new_farmers_visited?: number;
-  surveys_approved?: number;
-  surveys_pending?: number;
-  surveys_rejected?: number;
-  male_farmers_count?: number;
-  female_farmers_count?: number;
-  other_farmers_count?: number;
+  average_acreage_total: number;
+  total_maize_acreage: number;
+  total_land_acreage: number;
+  expected_yield_bags_per_acre: number;
+  avg_daily_submissions_per_agripreneur: number;
+  sunflower_interest_count: number;
+  sunflower_interest_percent: number;
+  already_registered_visited: number;
+  new_farmers_visited: number;
+  surveys_approved: number;
+  surveys_pending: number;
+  surveys_rejected: number;
+  male_farmers_count: number;
+  female_farmers_count: number;
+  other_farmers_count: number;
 }
 
 export interface MaizeSurveyCountyStatsQueryParams {
