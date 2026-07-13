@@ -223,6 +223,22 @@ export default function SurveysPage() {
     const [selectedSubCounty, setSelectedSubCounty] = useState("");
     const [selectedWard, setSelectedWard] = useState("");
 
+    const [adminUnits, setAdminUnits] = useState<any | null>(null);
+
+    React.useEffect(() => {
+        fetch("/admin_units.json")
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to load admin units");
+                return res.json();
+            })
+            .then((data) => {
+                setAdminUnits(data);
+            })
+            .catch((err) => {
+                console.error("Error loading admin units in page.tsx:", err);
+            });
+    }, []);
+
     const { data: countyPerformanceDataRaw, isLoading: isCountyPerformanceLoading } = useGetMaizeSurveyCountyPerformanceQuery({
         page_size: 100,
     });
@@ -376,6 +392,25 @@ export default function SurveysPage() {
         ...item,
         color: COLORS[idx % COLORS.length]
     }));
+
+    const activeWardsCovered = React.useMemo(() => {
+        if (!adminUnits) return 0;
+        if (selectedWard) return 1;
+        if (selectedSubCounty) {
+            return adminUnits.wards.filter(
+                (w: any) => w.subcounty.toLowerCase() === selectedSubCounty.toLowerCase()
+            ).length;
+        }
+        if (selectedCounty) {
+            return adminUnits.wards.filter(
+                (w: any) => w.county.toLowerCase() === selectedCounty.toLowerCase()
+            ).length;
+        }
+        const projectCounties = filteredLocationData.map(c => c.county.toLowerCase());
+        return adminUnits.wards.filter(
+            (w: any) => projectCounties.includes(w.county.toLowerCase())
+        ).length;
+    }, [adminUnits, selectedCounty, selectedSubCounty, selectedWard, filteredLocationData]);
 
     const activeSeedVarietyData = inputsData?.seed_varieties || [];
 
@@ -1100,6 +1135,10 @@ export default function SurveysPage() {
                             setSelectedCounty={setSelectedCounty}
                             setSelectedSubCounty={setSelectedSubCounty}
                             setSelectedWard={setSelectedWard}
+                            activeVisitedFarmers={activeVisitedFarmers}
+                            activeVisitedTarget={activeVisitedTarget}
+                            activeWardsCovered={activeWardsCovered}
+                            activeAverageAcreage={activeAverageAcreage}
                         />
                     )
                 )}

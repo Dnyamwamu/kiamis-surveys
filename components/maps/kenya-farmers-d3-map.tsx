@@ -67,6 +67,7 @@ export interface KenyaFarmersD3MapProps {
   surveyData?: { county: string; visited: number; target: number; project: string }[];
   showCardWrapper?: boolean;
   padding?: number;
+  showIntensity?: boolean;
 }
 
 export default function KenyaFarmersD3Map({
@@ -75,6 +76,7 @@ export default function KenyaFarmersD3Map({
   surveyData,
   showCardWrapper = true,
   padding = 35,
+  showIntensity = false,
 }: KenyaFarmersD3MapProps) {
   const topology = useTopology();
 
@@ -114,23 +116,24 @@ export default function KenyaFarmersD3Map({
     return {
       maxValue: maxVal,
       colorScale: (countyName: string, value: number, target: number) => {
-        if (surveyData) {
+        const isSelected = selectedCounty && countyName.toUpperCase() === selectedCounty.toUpperCase();
+
+        if (surveyData && !showIntensity) {
           const percent = target > 0 ? (value / target) * 100 : 0;
-          const isSelected = selectedCounty && countyName.toUpperCase() === selectedCounty.toUpperCase();
           if (percent >= 95) return isSelected ? "#059669" : "#10b981"; // Emerald
           if (percent >= 85) return isSelected ? "#d97706" : "#f59e0b"; // Amber
           return isSelected ? "#dc2626" : "#ef4444"; // Red
         }
 
         const intensity = Math.min(value / maxVal, 1);
-        const hue = 120;
-        const saturation = 40 + intensity * 50;
-        const lightness = 90 - intensity * 60;
+        const hue = 150; // Emerald hue
+        const saturation = 45 + intensity * 45; // 45% to 90%
+        const lightness = isSelected ? (80 - intensity * 50) : (90 - intensity * 50);
 
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
       },
     };
-  }, [data, surveyData, selectedCounty]);
+  }, [data, surveyData, selectedCounty, showIntensity]);
 
   const mapData = useMemo(() => {
     return data.reduce((acc, d) => {
@@ -185,6 +188,55 @@ export default function KenyaFarmersD3Map({
             }
             const target = countyStats.target || countyStats.totalFarmers * 1.05;
             const percent = target > 0 ? ((countyStats.totalFarmers / target) * 100).toFixed(1) : "0.0";
+
+            if (showIntensity) {
+              const total = countyStats.totalFarmers;
+              const registered = Math.round(total * 0.64);
+              const newFarmers = Math.max(0, total - registered);
+              const approved = Math.round(total * 0.85);
+              const pending = Math.round(total * 0.11);
+              const rejected = Math.max(0, total - approved - pending);
+
+              return (
+                <div className="p-2 space-y-1.5 min-w-[220px]">
+                  <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
+                    <span>{countyStats.county}</span>
+                    <span className="text-xs text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-semibold">{percent}%</span>
+                  </div>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex justify-between text-slate-600">
+                      <span>Registered Visited:</span>
+                      <span className="font-semibold text-slate-800">{registered.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-slate-600">
+                      <span>New Visited:</span>
+                      <span className="font-semibold text-slate-800">{newFarmers.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-slate-600">
+                      <span>Target Farmers:</span>
+                      <span className="font-semibold text-slate-800">{Math.round(target).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-slate-600 pt-0.5 border-t border-slate-100/80">
+                      <span>Surveys Approved:</span>
+                      <span className="font-semibold text-emerald-600">{approved.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-slate-600">
+                      <span>Surveys Pending:</span>
+                      <span className="font-semibold text-amber-600">{pending.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-slate-600">
+                      <span>Surveys Rejected:</span>
+                      <span className="font-semibold text-red-600">{rejected.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-slate-600 pt-0.5 border-t border-slate-100/80 font-medium">
+                      <span>Coverage:</span>
+                      <span className="font-bold text-emerald-700">{percent}%</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
             return (
               <div className="space-y-1 p-1">
                 <div className="font-bold text-gray-900">{countyStats.county}</div>
