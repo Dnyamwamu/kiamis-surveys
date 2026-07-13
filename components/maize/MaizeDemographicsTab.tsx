@@ -149,8 +149,8 @@ export default function MaizeDemographicsTab({
                                         <span className="text-xs text-slate-500 font-semibold order-1 md:order-3">
                                             0
                                         </span>
-                                        <div 
-                                            className="h-3 w-48 md:w-3 md:h-48 rounded-full border border-slate-200 bg-gradient-to-r md:bg-gradient-to-t from-[#e1f5ec] to-[#0a9c54] order-2" 
+                                        <div
+                                            className="h-3 w-48 md:w-3 md:h-48 rounded-full border border-slate-200 bg-gradient-to-r md:bg-gradient-to-t from-[#e1f5ec] to-[#0a9c54] order-2"
                                         />
                                         <span className="text-xs text-slate-500 font-semibold order-3 md:order-1">
                                             {maxReached.toLocaleString()}
@@ -201,11 +201,10 @@ export default function MaizeDemographicsTab({
                                             setSelectedSubCounty("");
                                             setSelectedWard("");
                                         }}
-                                        className={`p-3 rounded-lg border text-left transition-all cursor-pointer ${
-                                            isSelected
+                                        className={`p-3 rounded-lg border text-left transition-all cursor-pointer ${isSelected
                                                 ? "bg-emerald-50 border-emerald-500 shadow-sm"
                                                 : "bg-slate-50 hover:bg-slate-100/80 border-slate-100 hover:border-slate-200"
-                                        }`}
+                                            }`}
                                     >
                                         <div className="flex items-center justify-between mb-1">
                                             <span className={`text-sm font-bold ${isSelected ? "text-emerald-950" : "text-slate-800"}`}>
@@ -246,10 +245,10 @@ export default function MaizeDemographicsTab({
                 <CardContent>
                     <div className="h-[320px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={activeDailyProgressData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+                            <BarChart data={activeDailyProgressData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="day" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Date / Day', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
-                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Farmers Visited', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
+                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Farmers Visited', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
                                 <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
                                 <Legend verticalAlign="top" height={36} iconType="circle" />
                                 <Bar dataKey="Visited" name="Farmers Reached" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={45}>
@@ -457,7 +456,7 @@ export default function MaizeDemographicsTab({
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                         <Users className="w-5 h-5 text-emerald-600" />
-                        KIAMIS Registered vs New Farmers
+                        Maize Farmers Reached
                     </CardTitle>
                     <CardDescription>
                         Comparison between farmers pre-existing in KIAMIS vs new ones discovered/registered during the survey.
@@ -515,10 +514,10 @@ export default function MaizeDemographicsTab({
                 <CardContent>
                     <div className="h-[200px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={activeHouseholdRangeData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+                            <BarChart data={activeHouseholdRangeData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="range" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Household Size Range', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
-                                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} label={{ value: 'Farmers Count', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
+                                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} label={{ value: 'Farmers Count', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
                                 <Tooltip
                                     contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                                     formatter={(value: unknown) => [
@@ -556,7 +555,7 @@ export default function MaizeDemographicsTab({
                             <BarChart data={activeTargetComparisonData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Category', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
-                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Farmers Count', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
+                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Farmers Count', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
                                 <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
                                 <Legend verticalAlign="top" height={36} iconType="circle" />
                                 <Bar dataKey="Surveyed" fill="#10b981" radius={[8, 8, 0, 0]} maxBarSize={120}>

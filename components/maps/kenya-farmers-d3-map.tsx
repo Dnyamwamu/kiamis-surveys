@@ -67,6 +67,7 @@ export interface KenyaFarmersD3MapProps {
   surveyData?: { county: string; visited: number; target: number; project: string }[];
   showCardWrapper?: boolean;
   padding?: number;
+  yOffset?: number;
   showIntensity?: boolean;
 }
 
@@ -75,7 +76,8 @@ export default function KenyaFarmersD3Map({
   onCountySelect,
   surveyData,
   showCardWrapper = true,
-  padding = 35,
+  padding = 75,
+  yOffset = 35,
   showIntensity = false,
 }: KenyaFarmersD3MapProps) {
   const topology = useTopology();
@@ -180,6 +182,7 @@ export default function KenyaFarmersD3Map({
           topology={topology}
           data={mapData}
           padding={padding}
+          yOffset={yOffset}
           tooltipContents={(regionKey) => {
             const countyName = regionKey.toUpperCase();
             const countyStats = countyStatsMap.get(countyName);
@@ -294,6 +297,7 @@ export default function KenyaFarmersD3Map({
               topology={topology}
               data={mapData}
               padding={padding}
+              yOffset={yOffset}
               tooltipContents={(regionKey) => {
                 const countyName = regionKey.toUpperCase();
                 const countyStats = countyStatsMap.get(countyName);

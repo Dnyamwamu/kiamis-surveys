@@ -350,10 +350,10 @@ export default function MaizeGrowthTab({
                 <CardContent>
                     <div className="h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={activeGrowthStageData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+                            <BarChart data={activeGrowthStageData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="stage" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Growth Stage', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
-                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Number of Farmers', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
+                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Number of Farmers', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
                                 <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
                                 <Legend verticalAlign="top" height={36} iconType="circle" />
                                 <Bar dataKey="Count" name="Surveyed Fields" fill="#10b981" radius={[6, 6, 0, 0]}>
@@ -382,7 +382,7 @@ export default function MaizeGrowthTab({
                 <CardContent>
                     <div className="h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={activePlantingDateData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+                            <AreaChart data={activePlantingDateData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
                                 <defs>
                                     <linearGradient id="colorFields" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
@@ -391,7 +391,7 @@ export default function MaizeGrowthTab({
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="period" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Planting Period', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
-                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Fields Count', angle: -90, position: 'insideLeft', offset: 15, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={60} />
+                                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Fields Count', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
                                 <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
                                 <Legend verticalAlign="top" height={36} iconType="circle" />
                                 <Area type="monotone" dataKey="Fields" name="Planted Fields" stroke="#3b82f6" strokeWidth={2.5} fillOpacity={1} fill="url(#colorFields)" />
