@@ -212,6 +212,33 @@ const emptySubscribe = () => () => { };
 const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
 
+interface AdminUnitCounty {
+    county_id: number | string;
+    county: string;
+}
+
+interface AdminUnitSubCounty {
+    subcounty_id: number | string;
+    subcounty: string;
+    county: string;
+    county_id: number | string;
+}
+
+interface AdminUnitWard {
+    ward_id: number | string;
+    ward: string;
+    subcounty: string;
+    county: string;
+    subcounty_id: number | string;
+    county_id: number | string;
+}
+
+interface AdminUnitsData {
+    counties: AdminUnitCounty[];
+    subcounties: AdminUnitSubCounty[];
+    wards: AdminUnitWard[];
+}
+
 export default function SurveysPage() {
     const mounted = useSyncExternalStore(emptySubscribe, getClientSnapshot, getServerSnapshot);
     const [activeSubTab, setActiveSubTab] = useState<
@@ -223,7 +250,7 @@ export default function SurveysPage() {
     const [selectedSubCounty, setSelectedSubCounty] = useState("");
     const [selectedWard, setSelectedWard] = useState("");
 
-    const [adminUnits, setAdminUnits] = useState<any | null>(null);
+    const [adminUnits, setAdminUnits] = useState<AdminUnitsData | null>(null);
 
     React.useEffect(() => {
         fetch("/admin_units.json")
@@ -398,17 +425,17 @@ export default function SurveysPage() {
         if (selectedWard) return 1;
         if (selectedSubCounty) {
             return adminUnits.wards.filter(
-                (w: any) => w.subcounty.toLowerCase() === selectedSubCounty.toLowerCase()
+                (w) => w.subcounty.toLowerCase() === selectedSubCounty.toLowerCase()
             ).length;
         }
         if (selectedCounty) {
             return adminUnits.wards.filter(
-                (w: any) => w.county.toLowerCase() === selectedCounty.toLowerCase()
+                (w) => w.county.toLowerCase() === selectedCounty.toLowerCase()
             ).length;
         }
         const projectCounties = filteredLocationData.map(c => c.county.toLowerCase());
         return adminUnits.wards.filter(
-            (w: any) => projectCounties.includes(w.county.toLowerCase())
+            (w) => projectCounties.includes(w.county.toLowerCase())
         ).length;
     }, [adminUnits, selectedCounty, selectedSubCounty, selectedWard, filteredLocationData]);
 
