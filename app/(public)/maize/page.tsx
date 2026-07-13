@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useSyncExternalStore } from "react";
+import React, { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -32,8 +32,9 @@ import MaizeDemographicsTab from "@/components/maize/MaizeDemographicsTab";
 import MaizeGrowthTab from "@/components/maize/MaizeGrowthTab";
 import MaizeFertilizerSeedTab from "@/components/maize/MaizeFertilizerSeedTab";
 import MaizePestsYieldsTab from "@/components/maize/MaizePestsYieldsTab";
-import MaizeYieldEstimateTab from "@/components/maize/MaizeYieldEstimateTab";
 import MaizeProductionOutlookTab from "@/components/maize/MaizeProductionOutlookTab";
+import MaizeCropEstablishmentTab from "@/components/maize/MaizeCropEstablishmentTab";
+import MaizePerformanceTab from "@/components/maize/MaizePerformanceTab";
 import MaizeCountyPerformanceTab from "@/components/maize/MaizeCountyPerformanceTab";
 import {
     useGetMaizeSurveyDailyProgressQuery,
@@ -243,13 +244,15 @@ interface AdminUnitsData {
 export default function SurveysPage() {
     const mounted = useSyncExternalStore(emptySubscribe, getClientSnapshot, getServerSnapshot);
     const [activeSubTab, setActiveSubTab] = useState<
-        "demographics" | "maize-growth" | "fertilizer-seed" | "pests-yields" | "yield-estimate" | "production-outlook" | "county-performance"
-    >("demographics");
+        "general" | "crop-establishment" | "crop-growth" | "input-use" | "pests-diseases-weeds" | "production-outlook" | "performance"
+    >("general");
     const [countySearch, setCountySearch] = useState("");
     const [countyProjectFilter, setCountyProjectFilter] = useState<"ALL" | "FSRP" | "NAVCDP">("ALL");
     const [selectedCounty, setSelectedCounty] = useState("");
     const [selectedSubCounty, setSelectedSubCounty] = useState("");
     const [selectedWard, setSelectedWard] = useState("");
+
+
 
     const [adminUnits, setAdminUnits] = useState<AdminUnitsData | null>(null);
 
@@ -520,7 +523,10 @@ export default function SurveysPage() {
         ).length;
     }, [adminUnits, selectedCounty, selectedSubCounty, selectedWard, filteredLocationData]);
 
-    const activeSeedVarietyData = inputsData?.seed_varieties || [];
+    const activeSeedVarietyData = (inputsData?.seed_varieties || []).map((item, idx) => ({
+        ...item,
+        color: COLORS[idx % COLORS.length]
+    }));
 
     const plantingDates = inputsData?.planting_dates || [];
     let earlyFields = 0;
@@ -1281,56 +1287,56 @@ export default function SurveysPage() {
             </section>
 
             {/* Main Tabs Selection */}
-            <section className="py-8 container mx-auto px-6 max-w-7xl">
-                <div className="flex flex-wrap items-center justify-center bg-white border border-slate-200 rounded-xl p-1.5 shadow-sm max-w-5xl mx-auto mb-8 gap-1">
+            <section className="sticky top-0 z-40 bg-slate-50/95 backdrop-blur-md py-6 border-b border-slate-200/50 container mx-auto px-6 max-w-7xl">
+                <div className="flex flex-wrap items-center justify-center mb-4 bg-white border border-slate-200 rounded-xl p-1.5 shadow-sm max-w-5xl mx-auto gap-1">
                     <button
-                        onClick={() => setActiveSubTab("demographics")}
-                        className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "demographics"
+                        onClick={() => setActiveSubTab("general")}
+                        className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "general"
                             ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
                             : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                             }`}
                     >
-                        General & Demographics
+                        General
                     </button>
                     <button
-                        onClick={() => setActiveSubTab("maize-growth")}
-                        className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "maize-growth"
+                        onClick={() => setActiveSubTab("crop-establishment")}
+                        className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "crop-establishment"
                             ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
                             : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                             }`}
                     >
-                        Maize Growth
+                        Crop Establishment
                     </button>
                     <button
-                        onClick={() => setActiveSubTab("fertilizer-seed")}
-                        className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "fertilizer-seed"
+                        onClick={() => setActiveSubTab("crop-growth")}
+                        className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "crop-growth"
                             ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
                             : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                             }`}
                     >
-                        Fertilizer & Seed
+                        Crop Growth
                     </button>
                     <button
-                        onClick={() => setActiveSubTab("pests-yields")}
-                        className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "pests-yields"
+                        onClick={() => setActiveSubTab("input-use")}
+                        className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "input-use"
                             ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
                             : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                             }`}
                     >
-                        Pests, Diseases & Yields
+                        Input use Assessment
                     </button>
                     <button
-                        onClick={() => setActiveSubTab("yield-estimate")}
-                        className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "yield-estimate"
+                        onClick={() => setActiveSubTab("pests-diseases-weeds")}
+                        className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "pests-diseases-weeds"
                             ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
                             : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                             }`}
                     >
-                        Yield Estimate
+                        Pest, Disease and Weed Situation
                     </button>
                     <button
                         onClick={() => setActiveSubTab("production-outlook")}
-                        className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "production-outlook"
+                        className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "production-outlook"
                             ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
                             : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                             }`}
@@ -1338,83 +1344,135 @@ export default function SurveysPage() {
                         Production Outlook
                     </button>
                     <button
-                        onClick={() => setActiveSubTab("county-performance")}
-                        className={`flex-1 min-w-[150px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "county-performance"
+                        onClick={() => setActiveSubTab("performance")}
+                        className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "performance"
                             ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
                             : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                             }`}
                     >
-                        County Performance
+                        Performance
                     </button>
                 </div>
 
-                {/* Tab 1: General & Demographics */}
-                {activeSubTab === "demographics" && (
-                    isDemographicsLoading || isDailyProgressLoading || isCountyPerformanceLoading || isMaizeStatsLoading ? (
+                {/* Tab 1: General (Assessment Coverage & Demographics) */}
+                {activeSubTab === "general" && (
+                    <div className="space-y-12">
+                        {/* a. Demographics & Activity */}
+                        <div className="space-y-6">
+                            <div className="border-b border-slate-200 pb-2">
+                                <h2 className="text-2xl font-black text-slate-800 tracking-tight">Demographics & Activity</h2>
+                                <p className="text-sm text-slate-500 mt-1">Demographics analysis of visited farming households, age profiles, and gender splits.</p>
+                            </div>
+                            {isDemographicsLoading || isDailyProgressLoading || isMaizeStatsLoading ? (
+                                <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
+                                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
+                                    <span className="text-sm font-semibold text-slate-500">Loading Demographics Data...</span>
+                                </div>
+                            ) : (
+                                <MaizeDemographicsTab
+                                    activeDailyProgressData={activeDailyProgressData}
+                                    activeGenderData={activeGenderData}
+                                    activeRegistrationData={activeRegistrationData}
+                                    activeHouseholdRangeData={activeHouseholdRangeData}
+                                    activeTargetComparisonData={activeTargetComparisonData}
+                                    COLORS={COLORS}
+                                    filteredCountyData={filteredCountyData}
+                                    liveCountyPerformanceData={liveCountyPerformanceData}
+                                    selectedCounty={selectedCounty}
+                                    setSelectedCounty={setSelectedCounty}
+                                    setSelectedSubCounty={setSelectedSubCounty}
+                                    setSelectedWard={setSelectedWard}
+                                    activeVisitedFarmers={activeVisitedFarmers}
+                                    activeVisitedTarget={activeVisitedTarget}
+                                    activeWardsCovered={activeWardsCovered}
+                                    activeAverageAcreage={activeAverageAcreage}
+                                />
+                            )}
+                        </div>
+                        {/* b. Assessment Coverage */}
+                        <div className="space-y-6">
+                            <div className="border-b border-slate-200 pb-2">
+                                <h2 className="text-2xl font-black text-slate-800 tracking-tight">Assessment Coverage</h2>
+                                <p className="text-sm text-slate-500 mt-1">County-level progress, target allocations, and survey coverage ledger.</p>
+                            </div>
+                            {isCountyPerformanceLoading ? (
+                                <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
+                                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
+                                    <span className="text-sm font-semibold text-slate-500">Loading Assessment Coverage...</span>
+                                </div>
+                            ) : (
+                                <MaizeCountyPerformanceTab
+                                    countySearch={countySearch}
+                                    setCountySearch={setCountySearch}
+                                    countyProjectFilter={countyProjectFilter}
+                                    setCountyProjectFilter={setCountyProjectFilter}
+                                    selectedCounty={selectedCounty}
+                                    setSelectedCounty={setSelectedCounty}
+                                    setSelectedSubCounty={setSelectedSubCounty}
+                                    setSelectedWard={setSelectedWard}
+                                    filteredCountyData={filteredCountyData}
+                                    topCountiesChartData={topCountiesChartData}
+                                    navcdpReached={navcdpReached}
+                                    navcdpTarget={navcdpTarget}
+                                    navcdpCountCounties={navcdpCountCounties}
+                                    fsrpReached={fsrpReached}
+                                    fsrpTarget={fsrpTarget}
+                                    fsrpCountCounties={fsrpCountCounties}
+                                />
+                            )}
+                        </div>
+
+
+                    </div>
+                )}
+
+                {/* Tab 2: Crop Establishment */}
+                {activeSubTab === "crop-establishment" && (
+                    isGrowthLoading || isInputsLoading ? (
                         <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
                             <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
-                            <span className="text-sm font-semibold text-slate-500">Loading Demographics Data...</span>
+                            <span className="text-sm font-semibold text-slate-500">Loading Crop Establishment Data...</span>
                         </div>
                     ) : (
-                        <MaizeDemographicsTab
-                            activeDailyProgressData={activeDailyProgressData}
-                            activeGenderData={activeGenderData}
-                            activeRegistrationData={activeRegistrationData}
-                            activeHouseholdRangeData={activeHouseholdRangeData}
-                            activeTargetComparisonData={activeTargetComparisonData}
+                        <MaizeCropEstablishmentTab
+                            topCountiesAcreageData={topCountiesAcreageData}
+                            sortedCountyMaizeAcreageData={sortedCountyMaizeAcreageData}
+                            totalMaizeAcreage={totalMaizeAcreage}
+                            activePlantingDateData={activePlantingDateData}
+                            activeSeedSourceData={activeSeedSourceData}
+                            activeSeedVarietyData={activeSeedVarietyData}
                             COLORS={COLORS}
-                            filteredCountyData={filteredCountyData}
-                            liveCountyPerformanceData={liveCountyPerformanceData}
-                            selectedCounty={selectedCounty}
-                            setSelectedCounty={setSelectedCounty}
-                            setSelectedSubCounty={setSelectedSubCounty}
-                            setSelectedWard={setSelectedWard}
-                            activeVisitedFarmers={activeVisitedFarmers}
-                            activeVisitedTarget={activeVisitedTarget}
-                            activeWardsCovered={activeWardsCovered}
-                            activeAverageAcreage={activeAverageAcreage}
                         />
                     )
                 )}
 
-                {/* Tab 2: Maize Growth */}
-                {activeSubTab === "maize-growth" && (
-                    isGrowthLoading || isGrowthDetailedLoading || isInputsLoading ? (
+                {/* Tab 3: Crop Growth */}
+                {activeSubTab === "crop-growth" && (
+                    isGrowthLoading || isGrowthDetailedLoading ? (
                         <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
                             <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
                             <span className="text-sm font-semibold text-slate-500">Loading Crop Growth Data...</span>
                         </div>
                     ) : (
                         <MaizeGrowthTab
-                            topCountiesAcreageData={topCountiesAcreageData}
-                            sortedCountyMaizeAcreageData={sortedCountyMaizeAcreageData}
-                            totalMaizeAcreage={totalMaizeAcreage}
-                            topCountiesSunflowerData={topCountiesSunflowerData}
-                            sortedCountySunflowerData={sortedCountySunflowerData}
-                            totalSunflowerInterested={totalSunflowerInterested}
                             activeGrowthStageData={activeGrowthStageData}
-                            activePlantingDateData={activePlantingDateData}
-                            activeIrrigationData={activeIrrigationData}
                             activeCropUniformityData={activeCropUniformityData}
                             activePlantColorData={activePlantColorData}
                             activeGrowthStageDetailedData={activeGrowthStageDetailedData}
                             COLORS={COLORS}
-                            averageAcreage={activeAverageAcreage}
                         />
                     )
                 )}
 
-                {/* Tab 3: Fertilizer & Seed */}
-                {activeSubTab === "fertilizer-seed" && (
+                {/* Tab 4: Input use Assessment */}
+                {activeSubTab === "input-use" && (
                     isInputsLoading || isGrowthLoading || isHealthLoading ? (
                         <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
                             <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
-                            <span className="text-sm font-semibold text-slate-500">Loading Fertilizer & Seed Data...</span>
+                            <span className="text-sm font-semibold text-slate-500">Loading Input Assessment Data...</span>
                         </div>
                     ) : (
                         <MaizeFertilizerSeedTab
-                            activeSeedSourceData={activeSeedSourceData}
-                            activeSeedVarietyData={activeSeedVarietyData}
                             activeNutrientDeficiencyData={activeNutrientDeficiencyData}
                             activeFertilizerUseData={activeFertilizerUseData}
                             activeFertilizerApplicationData={activeFertilizerApplicationData}
@@ -1424,12 +1482,12 @@ export default function SurveysPage() {
                     )
                 )}
 
-                {/* Tab 4: Pests, Diseases & Yields */}
-                {activeSubTab === "pests-yields" && (
+                {/* Tab 5: Pest, Disease and Weed Situation */}
+                {activeSubTab === "pests-diseases-weeds" && (
                     isHealthLoading || isYieldUseLoading ? (
                         <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
                             <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
-                            <span className="text-sm font-semibold text-slate-500">Loading Pests, Diseases & Yields Data...</span>
+                            <span className="text-sm font-semibold text-slate-500">Loading Pest, Disease & Weed Data...</span>
                         </div>
                     ) : (
                         <MaizePestsYieldsTab
@@ -1446,18 +1504,6 @@ export default function SurveysPage() {
                     )
                 )}
 
-                {/* Tab 5: Yield Estimate */}
-                {activeSubTab === "yield-estimate" && (
-                    <MaizeYieldEstimateTab
-                        totalExpectedYieldBags={totalExpectedYieldBags}
-                        totalGreenAcreage={totalGreenAcreage}
-                        totalSilageAcreage={totalSilageAcreage}
-                        totalMaizeAcreage={totalMaizeAcreage}
-                        sortedYieldEstimateData={sortedYieldEstimateData}
-                        topCountiesYieldData={topCountiesYieldData}
-                    />
-                )}
-
                 {/* Tab 6: Production Outlook */}
                 {activeSubTab === "production-outlook" && (
                     <MaizeProductionOutlookTab
@@ -1471,33 +1517,14 @@ export default function SurveysPage() {
                     />
                 )}
 
-                {/* Tab 6: County Performance */}
-                {activeSubTab === "county-performance" && (
-                    isCountyPerformanceLoading ? (
-                        <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
-                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
-                            <span className="text-sm font-semibold text-slate-500">Loading County Performance Data...</span>
-                        </div>
-                    ) : (
-                        <MaizeCountyPerformanceTab
-                            countySearch={countySearch}
-                            setCountySearch={setCountySearch}
-                            countyProjectFilter={countyProjectFilter}
-                            setCountyProjectFilter={setCountyProjectFilter}
-                            selectedCounty={selectedCounty}
-                            setSelectedCounty={setSelectedCounty}
-                            setSelectedSubCounty={setSelectedSubCounty}
-                            setSelectedWard={setSelectedWard}
-                            filteredCountyData={filteredCountyData}
-                            topCountiesChartData={topCountiesChartData}
-                            navcdpReached={navcdpReached}
-                            navcdpTarget={navcdpTarget}
-                            navcdpCountCounties={navcdpCountCounties}
-                            fsrpReached={fsrpReached}
-                            fsrpTarget={fsrpTarget}
-                            fsrpCountCounties={fsrpCountCounties}
-                        />
-                    )
+                {/* Tab 7: Performance */}
+                {activeSubTab === "performance" && (
+                    <MaizePerformanceTab
+                        totalExpectedYieldBags={totalExpectedYieldBags}
+                        totalMaizeAcreage={totalMaizeAcreage}
+                        activeVisitedFarmers={activeVisitedFarmers}
+                        activePerformanceRatings={activePerformanceRatings}
+                    />
                 )}
             </section>
         </div>

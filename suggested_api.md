@@ -288,7 +288,7 @@ Returns prevalence of pests (e.g., Fall Armyworm), nutrient deficiency visual sy
 
 ### 8. Yield Outcomes & Maize Utilization
 
-Returns historical yield levels, crop usage distributions (consumption vs. marketing), harvest cycles, and constraints on production.
+Returns historical yield levels, crop usage distributions (consumption vs. marketing), harvest cycles, constraints on production, coping strategies, and overall performance ratings.
 
 - **RTK Query Hook**: `useGetMaizeSurveyYieldUseQuery`
 - **Method**: `GET`
