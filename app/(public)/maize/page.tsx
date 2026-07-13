@@ -299,8 +299,8 @@ export default function SurveysPage() {
     if (selectedCounty) {
         const match = filteredLocationData.find(item => item.county.toLowerCase() === selectedCounty.toLowerCase());
         if (match) {
-            reachedSum = match.visited;
-            targetSum = match.target;
+            reachedSum = match.visited || 0;
+            targetSum = (match.target as number | null) || 0;
             activeCountiesCount = 1;
         }
 
@@ -319,8 +319,8 @@ export default function SurveysPage() {
     } else {
         // Sum all counties matching project
         filteredLocationData.forEach((item) => {
-            reachedSum += item.visited;
-            targetSum += item.target;
+            reachedSum += item.visited || 0;
+            targetSum += (item.target as number | null) || 0;
             if (item.visited > 0) activeCountiesCount++;
         });
     }
@@ -334,7 +334,7 @@ export default function SurveysPage() {
 
     // Set active stats
     const activeVisitedFarmers = maizeStatsData ? maizeStatsData.visited_farmers : reachedSum;
-    const activeVisitedTarget = maizeStatsData ? maizeStatsData.target : targetSum;
+    const activeVisitedTarget = (maizeStatsData ? maizeStatsData.target : targetSum) || 0;
     const activeVisitedPercent = maizeStatsData ? maizeStatsData.visited_percent : (targetSum > 0 ? parseFloat(((reachedSum / targetSum) * 100).toFixed(2)) : 0);
     const activeCountiesCovered = maizeStatsData ? maizeStatsData.counties_covered : (selectedCounty ? 1 : activeCountiesCount);
     const activeAverageAcreage = maizeStatsData ? maizeStatsData.average_acreage : 2.4;
