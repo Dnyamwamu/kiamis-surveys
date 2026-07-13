@@ -136,48 +136,47 @@ export default function MaizeDemographicsTab({
                     </div>
                 </CardHeader>
                 <CardContent className="bg-slate-50/50 min-h-[500px] p-4 flex flex-col lg:flex-row gap-6">
-                    <div className="flex-1 flex flex-col justify-between">
-                        <KenyaFarmersD3Map
-                            showCardWrapper={false}
-                            selectedCounty={selectedCounty}
-                            onCountySelect={(county) => {
-                                setSelectedCounty(county);
-                                setSelectedSubCounty("");
-                                setSelectedWard("");
-                            }}
-                            surveyData={filteredCountyData}
-                            showIntensity={true}
-                        />
-
-                        {/* Map Legend Overlay */}
+                    <div className="flex-1 flex flex-col md:flex-row gap-6 items-center">
+                        {/* Map Legend (Left) */}
                         {(() => {
                             const maxReached = filteredCountyData.length > 0 ? Math.max(...filteredCountyData.map(d => d.visited)) : 0;
                             return (
-                                <div className="mt-4 flex flex-col items-center gap-2 p-3 bg-white rounded-xl border border-slate-200/80 shadow-xs w-full max-w-md mx-auto">
-                                    <div className="text-xs font-semibold text-slate-600">
-                                        Reached Farmers Density (Intensity)
+                                <div className="flex flex-col items-center gap-3 p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs w-full md:w-32 md:h-[400px] justify-between shrink-0">
+                                    <div className="text-[10px] font-bold text-slate-500 text-center uppercase tracking-wider">
+                                        Density
                                     </div>
-                                    <div className="flex items-center gap-2.5 w-full">
-                                        <span className="text-xs text-slate-500 font-semibold whitespace-nowrap">
+                                    <div className="flex flex-row md:flex-col gap-3 items-center justify-center w-full md:h-full my-2">
+                                        <span className="text-xs text-slate-500 font-semibold order-1 md:order-3">
                                             0
                                         </span>
                                         <div 
-                                            className="flex-1 h-3 rounded-full border border-slate-200" 
-                                            style={{
-                                                background: "linear-gradient(to right, hsl(150, 45%, 90%), hsl(150, 90%, 40%))"
-                                            }}
+                                            className="h-3 w-48 md:w-3 md:h-48 rounded-full border border-slate-200 bg-gradient-to-r md:bg-gradient-to-t from-[#e1f5ec] to-[#0a9c54] order-2" 
                                         />
-                                        <span className="text-xs text-slate-500 font-semibold whitespace-nowrap">
+                                        <span className="text-xs text-slate-500 font-semibold order-3 md:order-1">
                                             {maxReached.toLocaleString()}
                                         </span>
                                     </div>
-                                    <div className="flex justify-between w-full text-[10px] text-slate-400 font-bold px-2">
-                                        <span>Low Reached Count</span>
-                                        <span>High Reached Count</span>
+                                    <div className="text-[9px] text-slate-400 font-bold text-center leading-tight">
+                                        Reached Farmers
                                     </div>
                                 </div>
                             );
                         })()}
+
+                        {/* Map (Right) */}
+                        <div className="flex-1 w-full">
+                            <KenyaFarmersD3Map
+                                showCardWrapper={false}
+                                selectedCounty={selectedCounty}
+                                onCountySelect={(county) => {
+                                    setSelectedCounty(county);
+                                    setSelectedSubCounty("");
+                                    setSelectedWard("");
+                                }}
+                                surveyData={filteredCountyData}
+                                showIntensity={true}
+                            />
+                        </div>
                     </div>
 
                     {/* Scrollable County performance list */}

@@ -204,6 +204,10 @@ export default function KenyaFarmersD3Map({
                     <span className="text-xs text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-semibold">{percent}%</span>
                   </div>
                   <div className="space-y-1 text-xs">
+                    <div className="flex justify-between text-slate-700 font-bold border-b border-slate-100/80 pb-1 mb-1">
+                      <span>Total Reached:</span>
+                      <span className="text-slate-900">{total.toLocaleString()}</span>
+                    </div>
                     <div className="flex justify-between text-slate-600">
                       <span>Registered Visited:</span>
                       <span className="font-semibold text-slate-800">{registered.toLocaleString()}</span>
@@ -241,7 +245,7 @@ export default function KenyaFarmersD3Map({
               <div className="space-y-1 p-1">
                 <div className="font-bold text-gray-900">{countyStats.county}</div>
                 <div className="text-xs text-gray-700">
-                  Reached: <span className="font-semibold text-green-700">{countyStats.totalFarmers.toLocaleString()}</span>
+                  Total Reached: <span className="font-semibold text-green-700">{countyStats.totalFarmers.toLocaleString()}</span>
                 </div>
                 {surveyData ? (
                   <>

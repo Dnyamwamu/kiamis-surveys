@@ -155,35 +155,41 @@ export default function MaizeCountyPerformanceTab({
                             )}
                         </div>
                     </CardHeader>
-                    <CardContent className="bg-slate-50/50 min-h-[480px] p-4 flex flex-col justify-between">
-                        <KenyaFarmersD3Map
-                            showCardWrapper={false}
-                            selectedCounty={selectedCounty}
-                            onCountySelect={(county) => {
-                                setSelectedCounty(county);
-                                setSelectedSubCounty("");
-                                setSelectedWard("");
-                            }}
-                            surveyData={filteredCountyData}
-                        />
-
-                        {/* Map Legend Overlay */}
-                        <div className="mt-4 flex flex-wrap items-center justify-center gap-6 p-3 bg-white rounded-xl border border-slate-200/80 shadow-xs text-xs font-semibold text-slate-600">
-                            <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 rounded-full bg-emerald-500" />
+                    <CardContent className="bg-slate-50/50 min-h-[480px] p-4 flex flex-col md:flex-row gap-6 items-center">
+                        {/* Map Legend Overlay (Left) */}
+                        <div className="flex flex-col gap-3 p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs text-xs font-semibold text-slate-600 w-full md:w-48 shrink-0">
+                            <div className="text-xs font-bold text-slate-800 border-b border-slate-100 pb-2">
+                                Completion Rate
+                            </div>
+                            <div className="flex items-center gap-2.5">
+                                <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 shrink-0" />
                                 <span>95%+ Completion</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 rounded-full bg-amber-500" />
+                            <div className="flex items-center gap-2.5">
+                                <span className="w-3.5 h-3.5 rounded-full bg-amber-500 shrink-0" />
                                 <span>85% - 95% Completion</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 rounded-full bg-red-500" />
+                            <div className="flex items-center gap-2.5">
+                                <span className="w-3.5 h-3.5 rounded-full bg-red-500 shrink-0" />
                                 <span>&lt;85% Completion</span>
                             </div>
-                            <div className="text-[10px] text-slate-400 border-l border-slate-200 pl-4">
+                            <div className="text-[9px] text-slate-400 border-t border-slate-100 pt-2 mt-1 leading-normal">
                                 Click region to filter dashboard. Use scroll to zoom, drag to pan.
                             </div>
+                        </div>
+
+                        {/* Map (Right) */}
+                        <div className="flex-1 w-full">
+                            <KenyaFarmersD3Map
+                                showCardWrapper={false}
+                                selectedCounty={selectedCounty}
+                                onCountySelect={(county) => {
+                                    setSelectedCounty(county);
+                                    setSelectedSubCounty("");
+                                    setSelectedWard("");
+                                }}
+                                surveyData={filteredCountyData}
+                            />
                         </div>
                     </CardContent>
                 </Card>
