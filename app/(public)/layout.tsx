@@ -160,7 +160,7 @@ export default function PublicLayout({
                   href="/maize"
                   className={getLinkClass("/maize")}
                 >
-                  Maize Survey Assessment Report
+                  Maize Performance Assessment Report
                 </Link>
                 <Link
                   href="/about"
@@ -224,7 +224,7 @@ export default function PublicLayout({
                 className={getMobileLinkClass("/maize")}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Maize Survey Assessment Report
+                Maize Performance Assessment Report
               </Link>
 
               <Link

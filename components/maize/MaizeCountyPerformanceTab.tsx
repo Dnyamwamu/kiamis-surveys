@@ -188,7 +188,7 @@ export default function MaizeCountyPerformanceTab({
                                             <th className="p-4 font-semibold">Project</th>
                                             <th className="p-4 font-semibold text-right">Farmers Reached</th>
                                             <th className="p-4 font-semibold text-right">Target</th>
-                                            <th className="p-4 font-semibold text-right">Completion Rate</th>
+                                            <th className="p-4 font-semibold text-right">Coverage Rate</th>
                                             <th className="p-4 font-semibold w-40">Progress</th>
                                         </tr>
                                     </thead>

@@ -853,7 +853,7 @@ export default function SurveysPage() {
             + "Metric,Value\n"
             + `Farmers Visited,${activeVisitedFarmers}\n`
             + `Target Farmers,${activeVisitedTarget}\n`
-            + `Completion Rate,${activeVisitedPercent}%\n`
+            + `Coverage Rate,${activeVisitedPercent}%\n`
             + `Counties Covered,${activeCountiesCovered}\n`
             + `Average Household Size,${activeAvgHouseholdSize}\n`
             + `Average Acreage under Maize,${activeAverageAcreage} acres\n`;
@@ -879,11 +879,10 @@ export default function SurveysPage() {
                                 Long Rains Assessment
                             </Badge>
                             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-emerald-100 via-teal-50 to-white bg-clip-text text-transparent">
-                                Maize Survey Assessment Report
+                                Maize Performance Assessment Report
                             </h1>
                             <p className="text-lg text-emerald-100/80 leading-relaxed mb-6">
-                                Comprehensive data and analytics from the long rains maize crop establishment, growth, input status, pests pressure, and yield forecasts across Kenya.
-                            </p>
+                                A high-level summary of the current maize season, highlighting crop performance, growth status and production outlook.                            </p>
                             <div className="flex flex-wrap items-center gap-4 text-sm text-emerald-200/70">
                                 <span className="flex items-center gap-1.5">
                                     <Calendar className="w-4 h-4 text-emerald-400" />
@@ -907,7 +906,7 @@ export default function SurveysPage() {
                                 <div className="relative bg-white/10 backdrop-blur-xl border border-white/15 shadow-2xl rounded-3xl p-6 overflow-hidden">
                                     <div className="flex justify-between items-start mb-6">
                                         <div>
-                                            <span className="text-emerald-300 text-xs font-semibold uppercase tracking-wider">Field Surveys</span>
+                                            <span className="text-emerald-300 text-xs font-semibold uppercase tracking-wider">Maize Farmers Reached</span>
                                             <h4 className="text-3xl font-extrabold text-white mt-1">
                                                 {activeVisitedFarmers.toLocaleString()}
                                             </h4>
@@ -968,7 +967,7 @@ export default function SurveysPage() {
                                         <CheckCircle className="w-4 h-4 text-blue-400" />
                                     </div>
                                     <div>
-                                        <span className="text-[10px] text-slate-400 block font-medium">Completion Rate</span>
+                                        <span className="text-[10px] text-slate-400 block font-medium">Coverage Rate</span>
                                         <span className="text-xs font-bold text-white">
                                             {activeVisitedPercent}%
                                         </span>
@@ -1090,7 +1089,7 @@ export default function SurveysPage() {
                                 <Badge className="bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 border-none font-semibold text-[10px] py-0.5 px-2">
                                     {activeVisitedPercent}% of Target
                                 </Badge>
-                                <span className="text-[11px] font-medium text-slate-500">Active registrations</span>
+                                <span className="text-[11px] font-medium text-slate-500">Current Farmer Assessment Progress</span>
                             </div>
                         </CardContent>
                     </Card>
@@ -1117,6 +1116,7 @@ export default function SurveysPage() {
                                 <span className="text-[9px] font-bold uppercase tracking-wider bg-pink-500/10 text-pink-700 px-1.5 py-0.5 rounded border border-pink-500/10">
                                     {(activeMaleFarmersCount + activeFemaleFarmersCount > 0 ? (activeFemaleFarmersCount / (activeMaleFarmersCount + activeFemaleFarmersCount)) * 100 : 50.4).toFixed(1)}% Female
                                 </span>
+                                <span className="text-[11px] font-medium text-slate-500">of the farmers reached</span>
                             </div>
                         </CardContent>
                     </Card>
@@ -1143,7 +1143,7 @@ export default function SurveysPage() {
                     </Card>
 
                     {/* Card 4: Target to Be Reached */}
-                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-slate-500/10 border border-slate-200/60 hover:border-slate-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                    {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-slate-500/10 border border-slate-200/60 hover:border-slate-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-slate-500 to-slate-700" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
@@ -1161,7 +1161,7 @@ export default function SurveysPage() {
                                 <span className="text-[11px] font-medium text-slate-500">Maize farmers in KIAMIS</span>
                             </div>
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
                     {/* Card 5: Acreage Covered */}
                     <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
@@ -1170,7 +1170,8 @@ export default function SurveysPage() {
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
                                 <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Maize Acreage Covered</CardDescription>
                                 <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
-                                    {activeTotalMaizeAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-lg font-bold text-slate-400">Acres</span>
+                                    {activeTotalMaizeAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                                    <span className="text-sm font-bold text-slate-400">  Acres</span>
                                 </CardTitle>
                             </div>
                             <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-500/10 to-green-500/10 text-emerald-600 flex items-center justify-center border border-emerald-500/20 shadow-xs shrink-0">
@@ -1180,15 +1181,15 @@ export default function SurveysPage() {
                         <CardContent className="px-5 pb-4 pt-1">
                             <div className="flex items-center gap-2">
                                 <Badge className="bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 border-none font-semibold text-[10px] py-0.5 px-2">
-                                    Rainfed Dominant
+                                    {(activeTotalLandAcreage > 0 ? (activeTotalMaizeAcreage / activeTotalLandAcreage) * 100 : 0).toFixed(1)}% of Total Farm Land  <span className="text-black font-bold">({activeTotalLandAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} Acres) </span>
                                 </Badge>
-                                <span className="text-[11px] font-medium text-slate-500">Avg: {activeAverageAcreage} Acres / farm</span>
+                                {/* <span className="text-[11px] font-medium text-slate-500">Avg: {activeAverageAcreage} Acres / farm</span> */}
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Card 6: Total Land Acreage */}
-                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-teal-500/10 border border-slate-200/60 hover:border-teal-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                    {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-teal-500/10 border border-slate-200/60 hover:border-teal-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-teal-500 to-cyan-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
@@ -1209,7 +1210,7 @@ export default function SurveysPage() {
                                 <span className="text-[11px] font-medium text-slate-500">Avg: {activeAverageAcreageTotal} Acre / farm</span>
                             </div>
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
                     {/* Card 7: Expected Yield */}
                     <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-amber-500/10 border border-slate-200/60 hover:border-amber-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
@@ -1227,7 +1228,7 @@ export default function SurveysPage() {
                         </CardHeader>
                         <CardContent className="px-5 pb-4 pt-1">
                             <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-medium text-slate-500">Expected 2026 average bags (90Kg)/acre</span>
+                                <span className="text-[11px] font-medium text-slate-500">Expected yield for the year 2026 average bags (90Kg)/acre</span>
                             </div>
                         </CardContent>
                     </Card>
@@ -1258,9 +1259,9 @@ export default function SurveysPage() {
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-400 to-yellow-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
-                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Sunflower</CardDescription>
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Interested in growing Sunflower</CardDescription>
                                 <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
-                                    {activeSunflowerInterestCount.toLocaleString()}
+                                    {activeSunflowerInterestCount.toLocaleString()} <span className="text-base font-bold text-slate-400">Farmers</span>
                                 </CardTitle>
                             </div>
                             <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-amber-400/10 to-yellow-500/10 text-amber-600 flex items-center justify-center border border-amber-500/20 shadow-xs shrink-0">
@@ -1272,7 +1273,7 @@ export default function SurveysPage() {
                                 <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none font-semibold text-[10px] py-0.5 px-2">
                                     {activeSunflowerInterestPercent.toFixed(1)}% Farmers
                                 </Badge>
-                                <span className="text-[11px] font-medium text-slate-500">Interested to grow sunflower</span>
+                                <span className="text-[11px] font-medium text-slate-500">of  {activeVisitedFarmers.toLocaleString()} surveyed farmers</span>
                             </div>
                         </CardContent>
                     </Card>

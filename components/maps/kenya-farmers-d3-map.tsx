@@ -326,7 +326,7 @@ export default function KenyaFarmersD3Map({
             {/* Color Scale Legend */}
             <div className="flex flex-col items-center lg:items-start border border-gray-100 p-4 rounded-xl bg-gray-50/40">
               <h4 className="text-sm font-semibold mb-3 text-gray-900">
-                {surveyData ? "Completion Rate" : "Farmer Population Density"}
+                {surveyData ? "Coverage Rate" : "Farmer Population Density"}
               </h4>
               <div className="flex flex-col gap-2 w-full">
                 {surveyData ? (
