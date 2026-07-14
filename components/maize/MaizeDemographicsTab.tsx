@@ -228,8 +228,8 @@ export default function MaizeDemographicsTab({
                                             setSelectedWard("");
                                         }}
                                         className={`p-3 rounded-lg border text-left transition-all cursor-pointer ${isSelected
-                                                ? "bg-emerald-50 border-emerald-500 shadow-sm"
-                                                : "bg-slate-50 hover:bg-slate-100/80 border-slate-100 hover:border-slate-200"
+                                            ? "bg-emerald-50 border-emerald-500 shadow-sm"
+                                            : "bg-slate-50 hover:bg-slate-100/80 border-slate-100 hover:border-slate-200"
                                             }`}
                                     >
                                         <div className="flex items-center justify-between mb-1">
@@ -265,7 +265,7 @@ export default function MaizeDemographicsTab({
                         Daily Assessment Progress
                     </CardTitle>
                     <CardDescription>
-                        Tracking the daily volume of farmers visited by field agripreneurs over the last 30 days.
+                        Tracking the daily volume of farmers visited by field agripreneurs over a period of time.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -636,7 +636,7 @@ export default function MaizeDemographicsTab({
                         {/* Summary Metrics Panel */}
                         <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-5">
                             <h4 className="text-sm font-bold text-slate-800 border-b border-slate-200 pb-2">Storage Summary Stats</h4>
-                            
+
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                                     <span className="text-xs font-semibold text-slate-500">Total Bags in Storage</span>

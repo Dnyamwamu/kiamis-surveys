@@ -1128,7 +1128,7 @@ export default function SurveysPage() {
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
                                 <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Avg Household Size</CardDescription>
                                 <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
-                                    {activeAvgHouseholdSize} <span className="text-lg font-bold text-slate-400">Members</span>
+                                    {Math.round(activeAvgHouseholdSize)} <span className="text-lg font-bold text-slate-400">Members</span>
                                 </CardTitle>
                             </div>
                             <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 text-indigo-600 flex items-center justify-center border border-indigo-500/20 shadow-xs shrink-0">
