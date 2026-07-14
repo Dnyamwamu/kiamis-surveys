@@ -184,7 +184,7 @@ export default function MaizePestsYieldsTab({
                     <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl space-y-2">
                         <span className="text-xs uppercase font-bold text-slate-500 tracking-wider">Dominant weeds:</span>
                         <ul className="grid grid-cols-2 gap-2 pl-2">
-                            {activeDominantWeeds.map((weed) => (
+                            {activeDominantWeeds.slice(0, 5).map((weed) => (
                                 <li key={weed} className="text-sm text-slate-700 flex items-center gap-2 font-medium">
                                     <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
                                     {weed}

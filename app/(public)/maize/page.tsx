@@ -1062,8 +1062,8 @@ export default function SurveysPage() {
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
                                 <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Farmers Reached</CardDescription>
-                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
-                                    {activeVisitedFarmers.toLocaleString()}
+                                <CardTitle className="text-2xl font-black text-slate-800 tracking-tight leading-none">
+                                    {activeVisitedFarmers.toLocaleString()} <span className="text-xs font-bold text-slate-400">/ {activeVisitedTarget.toLocaleString()}</span>
                                 </CardTitle>
                             </div>
                             <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 text-emerald-600 flex items-center justify-center border border-emerald-500/20 shadow-xs shrink-0">
