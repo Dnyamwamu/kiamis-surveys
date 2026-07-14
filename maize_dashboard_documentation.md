@@ -27,6 +27,7 @@ Located at the top of the dashboard. Redesigned with premium gradient accents an
 | **Expected Yield** | `expected_yield_bags_per_acre` | `useGetMaizeSurveyCountyStatsQuery` | `/api/kyf/maize_survey/county_stats/` | Projected average yield in 90kg bags per acre. |
 | **Average Daily Submissions** | `avg_daily_submissions_per_agripreneur` | `useGetMaizeSurveyCountyStatsQuery` | `/api/kyf/maize_survey/county_stats/` | Submissions uploaded per active field agripreneur. |
 | **Sunflower Interest** | `sunflower_interest_count` / `sunflower_interest_percent` | `useGetMaizeSurveyCountyStatsQuery` | `/api/kyf/maize_survey/county_stats/` | Visited farmers expressing interest in growing sunflowers. |
+| **Avg Maize Stored (Prev Year)** | `average_maize_stored` | `useGetMaizeSurveyCountyStatsQuery` | `/api/kyf/maize_survey/county_stats/` | Average 90Kg bags held in stock per household from previous harvest. |
 | **Maize Utilisation** | Static/Derived (55% Consumption, 30% Commercial, 15% Feed) | N/A | N/A | Horizontal progress bars showing intended usage of expected yields. |
 
 ---

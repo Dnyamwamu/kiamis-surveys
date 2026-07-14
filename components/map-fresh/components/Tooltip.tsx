@@ -1,5 +1,6 @@
 import styles from './Tooltip.module.css';
 import { useMousePosition } from '../utils/useMousePosition';
+import { createPortal } from 'react-dom';
 
 interface Props {
   color?: string | null;
@@ -11,11 +12,11 @@ export const Tooltip: React.FC<Props> = (props) => {
 
   const mousePosition = useMousePosition();
 
-  if (!mousePosition || children == null) {
+  if (!mousePosition || children == null || typeof window === 'undefined') {
     return null;
   }
 
-  return (
+  return createPortal(
     <div
       className={styles.tooltip}
       style={{
@@ -25,6 +26,7 @@ export const Tooltip: React.FC<Props> = (props) => {
       }}
     >
       {children}
-    </div>
+    </div>,
+    document.body
   );
 };

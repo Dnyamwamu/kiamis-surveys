@@ -39,6 +39,7 @@ export interface MaizeSurveyCountyStats {
   male_farmers_count: number;
   female_farmers_count: number;
   other_farmers_count: number;
+  average_maize_stored: number;
 }
 
 export interface MaizeSurveyCountyStatsQueryParams {

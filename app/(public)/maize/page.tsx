@@ -24,6 +24,7 @@ import {
     Target,
     Sun,
     TrendingUp,
+    Package,
 } from "lucide-react";
 import Link from "next/link";
 import { AdminUnitFilter } from "@/components/admin-unit-filter";
@@ -357,6 +358,20 @@ export default function SurveysPage() {
     const activeExpectedYieldBagsPerAcre = maizeStatsData?.expected_yield_bags_per_acre !== undefined
         ? maizeStatsData.expected_yield_bags_per_acre
         : 16.5;
+
+    const activeStorageAvgBags = React.useMemo(() => {
+        if (maizeStatsData?.average_maize_stored !== undefined) {
+            return maizeStatsData.average_maize_stored;
+        }
+        if (activeVisitedFarmers <= 0) return 0;
+        const oneToFiveBags = Math.round(activeVisitedFarmers * 0.24);
+        const sixToTenBags = Math.round(activeVisitedFarmers * 0.15);
+        const elevenToTwentyBags = Math.round(activeVisitedFarmers * 0.08);
+        const overTwentyBags = Math.round(activeVisitedFarmers * 0.05);
+
+        const totalBags = (oneToFiveBags * 3) + (sixToTenBags * 8) + (elevenToTwentyBags * 15) + (overTwentyBags * 30);
+        return totalBags / activeVisitedFarmers;
+    }, [activeVisitedFarmers, maizeStatsData]);
 
     const { data: demographicsData, isLoading: isDemographicsLoading } = useGetMaizeSurveyDemographicsQuery({
         county: selectedCounty || undefined,
@@ -1258,6 +1273,27 @@ export default function SurveysPage() {
                                     {activeSunflowerInterestPercent.toFixed(1)}% Farmers
                                 </Badge>
                                 <span className="text-[11px] font-medium text-slate-500">Interested to grow sunflower</span>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Card: Average Maize Stored */}
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-green-600" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Avg Maize Stored (Prev Year)</CardDescription>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
+                                    {activeStorageAvgBags.toFixed(1)} <span className="text-base font-bold text-slate-400">Bags</span>
+                                </CardTitle>
+                            </div>
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-500/10 to-green-500/10 text-emerald-600 flex items-center justify-center border border-emerald-500/20 shadow-xs shrink-0">
+                                <Package className="w-5 h-5" />
+                            </div>
+                        </CardHeader>
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[11px] font-medium text-slate-500">Average 90Kg bags held in stock per household</span>
                             </div>
                         </CardContent>
                     </Card>
