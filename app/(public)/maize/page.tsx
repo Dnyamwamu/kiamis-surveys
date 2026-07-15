@@ -341,9 +341,10 @@ export default function SurveysPage() {
             familyConsumption: 174519.61,
             commercialSale: 251554.32,
             animalFeeds: 10020.79,
-            familyConsumptionPct: 55.0,
-            commercialSalePct: 30.0,
-            animalFeedsPct: 15.0,
+            familyConsumptionPct: 40.0,
+            commercialSalePct: 57.7,
+            animalFeedsPct: 2.3,
+            totalBags: 436094.72,
         };
 
         const apiUtil = maizeStatsData?.maize_utilization;
@@ -363,6 +364,7 @@ export default function SurveysPage() {
             familyConsumptionPct: parseFloat(((familyConsumption / total) * 100).toFixed(1)),
             commercialSalePct: parseFloat(((commercialSale / total) * 100).toFixed(1)),
             animalFeedsPct: parseFloat(((animalFeeds / total) * 100).toFixed(1)),
+            totalBags: total,
         };
     }, [maizeStatsData]);
 
@@ -1322,7 +1324,7 @@ export default function SurveysPage() {
                     </Card>
 
                     {/* Card: Average Maize Stored */}
-                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                    {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-green-600" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
@@ -1340,14 +1342,17 @@ export default function SurveysPage() {
                                 <span className="text-[11px] font-medium text-slate-500">Average 90Kg bags held in stock per household</span>
                             </div>
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
                     {/* Card 10: Maize Utilisation */}
                     <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-emerald-600" />
                         <CardHeader className="flex flex-row items-center justify-between pb-1 space-y-0 pt-4 px-5">
-                            <div className="space-y-0.5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
                                 <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Maize Utilisation</CardDescription>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
+                                    {Math.round(activeMaizeUtilization.totalBags).toLocaleString()} <span className="text-base font-bold text-slate-400">Bags</span>
+                                </CardTitle>
                             </div>
                             <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 text-emerald-600 flex items-center justify-center border border-emerald-500/20 shadow-xs shrink-0">
                                 <CheckCircle className="w-5 h-5" />
@@ -1357,7 +1362,7 @@ export default function SurveysPage() {
                             <div className="space-y-2.5 mt-2">
                                 <div>
                                     <div className="flex justify-between text-[11px] font-bold text-slate-600 mb-0.5">
-                                        <span>Consumption</span>
+                                        <span>Family Consumption</span>
                                         <span>{activeMaizeUtilization.familyConsumptionPct}% ({Math.round(activeMaizeUtilization.familyConsumption).toLocaleString()} Bags)</span>
                                     </div>
                                     <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
@@ -1366,7 +1371,7 @@ export default function SurveysPage() {
                                 </div>
                                 <div>
                                     <div className="flex justify-between text-[11px] font-bold text-slate-600 mb-0.5">
-                                        <span>Commercial</span>
+                                        <span>Commercial Sale</span>
                                         <span>{activeMaizeUtilization.commercialSalePct}% ({Math.round(activeMaizeUtilization.commercialSale).toLocaleString()} Bags)</span>
                                     </div>
                                     <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
