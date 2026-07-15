@@ -86,23 +86,27 @@ export default function MaizeCountyPerformanceTab({
     const sortedCountyData = React.useMemo(() => {
         const data = [...filteredCountyData];
         data.sort((a, b) => {
-            let valA: any = a[sortField];
-            let valB: any = b[sortField];
+            let valA: string | number;
+            let valB: string | number;
 
             if (sortField === "coverage") {
                 valA = a.visited / (a.target || 1);
                 valB = b.visited / (b.target || 1);
+            } else {
+                valA = a[sortField];
+                valB = b[sortField];
             }
 
-            if (typeof valA === "string") {
+            if (typeof valA === "string" && typeof valB === "string") {
                 return sortOrder === "asc"
                     ? valA.localeCompare(valB)
                     : valB.localeCompare(valA);
-            } else {
+            } else if (typeof valA === "number" && typeof valB === "number") {
                 return sortOrder === "asc"
                     ? valA - valB
                     : valB - valA;
             }
+            return 0;
         });
         return data;
     }, [filteredCountyData, sortField, sortOrder]);
