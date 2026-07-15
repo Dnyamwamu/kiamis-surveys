@@ -27,8 +27,8 @@ import {
     Cell,
     PieChart,
     Pie,
-    LineChart,
     Line,
+    ComposedChart,
 } from "recharts";
 
 interface YieldEstimateData {
@@ -75,7 +75,7 @@ export default function MaizeYieldEstimateTab({
                     </CardHeader>
                     <CardContent>
                         <div className="text-xs text-slate-500">
-                            Calculated on area under maize less silage acreage at an average outlook of <strong className="text-emerald-700">16.5 Bags/Acre</strong>.
+                            Calculated on area under maize less silage acreage at an average outlook of <strong className="text-emerald-700">20.0 Bags/Acre</strong>.
                         </div>
                     </CardContent>
                 </Card>
@@ -201,13 +201,13 @@ export default function MaizeYieldEstimateTab({
                     <CardContent>
                         <div className="h-[250px]">
                             <ResponsiveContainer width="100%" height="100%">
-                                <LineChart
+                                <ComposedChart
                                     data={[
-                                        { year: "2022", Yield: 12.8 },
-                                        { year: "2023", Yield: 14.2 },
-                                        { year: "2024", Yield: 15.6 },
-                                        { year: "2025", Yield: 14.8 },
-                                        { year: "2026 (Exp)", Yield: 16.5 }
+                                        { year: "2022", Yield: 5 },
+                                        { year: "2023", Yield: 6 },
+                                        { year: "2024", Yield: 4 },
+                                        { year: "2025", Yield: 5 },
+                                        { year: "2026 (Exp)", Yield: 20 }
                                     ]}
                                     margin={{ top: 20, right: 30, left: 10, bottom: 20 }}
                                 >
@@ -216,10 +216,11 @@ export default function MaizeYieldEstimateTab({
                                     <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Yield (Bags / Acre)', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
                                     <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
                                     <Legend verticalAlign="top" height={36} iconType="circle" />
-                                    <Line type="monotone" dataKey="Yield" name="Yield Outlook" stroke="#fbbf24" strokeWidth={3} dot={{ fill: "#fbbf24", strokeWidth: 2, r: 6 }} activeDot={{ r: 8 }} isAnimationActive={false}>
+                                    <Bar dataKey="Yield" name="Yield (Bags/Acre)" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={35} />
+                                    <Line type="monotone" dataKey="Yield" name="Yield Trend" stroke="#fbbf24" strokeWidth={3} dot={{ fill: "#fbbf24", strokeWidth: 2, r: 6 }} activeDot={{ r: 8 }}>
                                         <LabelList dataKey="Yield" position="top" style={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} formatter={(val: unknown) => `${val} Bags`} />
                                     </Line>
-                                </LineChart>
+                                </ComposedChart>
                             </ResponsiveContainer>
                         </div>
                     </CardContent>

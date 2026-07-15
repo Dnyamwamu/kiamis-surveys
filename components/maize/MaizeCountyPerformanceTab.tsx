@@ -167,10 +167,10 @@ export default function MaizeCountyPerformanceTab({
                     <CardHeader>
                         <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                             <BarChart3 className="w-5 h-5 text-emerald-600" />
-                            Top 10 Counties (By Reached)
+                            Top 10 Counties (By Reach)
                         </CardTitle>
                         <CardDescription>
-                            Highest performing counties showing farmers reached vs target for the selected sponsor.
+                            Highest performing counties showing farmers reached vs target.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>

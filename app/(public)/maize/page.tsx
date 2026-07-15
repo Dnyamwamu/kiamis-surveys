@@ -389,7 +389,7 @@ export default function SurveysPage() {
 
     const activeExpectedYieldBagsPerAcre = maizeStatsData?.expected_yield_bags_per_acre !== undefined
         ? maizeStatsData.expected_yield_bags_per_acre
-        : 16.5;
+        : 20.0;
 
     const activeStorageAvgBags = React.useMemo(() => {
         if (maizeStatsData?.average_maize_stored !== undefined) {
@@ -687,10 +687,20 @@ export default function SurveysPage() {
 
     const activeDiseaseSymptomsData = mappedDiseaseData.length > 0 ? mappedDiseaseData : defaultDiseaseData;
 
-    const activeHistoricalYieldData = (yieldUseData?.historical_yields || []).map(item => ({
-        year: item.year,
-        Yield: item.yield
-    }));
+    const defaultHistoricalYieldData = [
+        { year: "2022", Yield: 5 },
+        { year: "2023", Yield: 6 },
+        { year: "2024", Yield: 4 },
+        { year: "2025", Yield: 5 },
+        { year: "2026 (Exp)", Yield: 20 }
+    ];
+
+    const activeHistoricalYieldData = yieldUseData?.historical_yields && yieldUseData.historical_yields.length > 0
+        ? yieldUseData.historical_yields.map(item => ({
+            year: item.year,
+            Yield: item.yield
+        }))
+        : defaultHistoricalYieldData;
 
     const activeMaizeUseData = (yieldUseData?.maize_use || []).map((item, idx) => ({
         ...item,
@@ -815,7 +825,7 @@ export default function SurveysPage() {
         const silage_acres = Math.round(maize_acres * 0.08);
         const green_acres = Math.round(maize_acres * 0.12);
         const dry_grain_acres = maize_acres - silage_acres - green_acres;
-        const expected_yield_outlook = 16.5; // Bags/Acre
+        const expected_yield_outlook = 20.0; // Bags/Acre
         const total_expected_yield = Math.round((maize_acres - silage_acres) * expected_yield_outlook);
 
         // 5c. Maize use breakdown
@@ -1450,7 +1460,7 @@ export default function SurveysPage() {
                     >
                         Production Outlook
                     </button>
-                    <button
+                    {/* <button
                         onClick={() => setActiveSubTab("performance")}
                         className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeSubTab === "performance"
                             ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/10"
@@ -1458,7 +1468,7 @@ export default function SurveysPage() {
                             }`}
                     >
                         Performance
-                    </button>
+                    </button> */}
                 </div>
 
                 {/* Tab 1: General (Assessment Coverage & Demographics) */}

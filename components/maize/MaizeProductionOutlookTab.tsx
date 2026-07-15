@@ -30,6 +30,7 @@ import {
     LabelList,
     BarChart,
     Bar,
+    ComposedChart,
 } from "recharts";
 
 
@@ -152,9 +153,9 @@ export default function MaizeProductionOutlookTab({
                                         <Cell key={`cell-${index}`} fill={entry.color} />
                                     ))}
                                 </Pie>
-                                <Tooltip 
-                                    contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} 
-                                    formatter={(val: unknown) => [`${Number(val).toLocaleString()} Acres`, "Acreage"]} 
+                                <Tooltip
+                                    contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
+                                    formatter={(val: unknown) => [`${Number(val).toLocaleString()} Acres`, "Acreage"]}
                                 />
                                 <Legend verticalAlign="bottom" height={36} iconType="circle" />
                             </PieChart>
@@ -212,16 +213,16 @@ export default function MaizeProductionOutlookTab({
                             </thead>
                             <tbody className="divide-y divide-slate-200">
                                 <tr className="hover:bg-slate-50/50 transition-colors">
-                                    <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">Average expected yield (Bags/Acre)</td>
-                                    <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">16.5</td>
+                                    <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">Average expected yield (Bags/Acre) (E09)</td>
+                                    <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">20.0</td>
                                 </tr>
                                 <tr className="hover:bg-slate-50/50 transition-colors">
                                     <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">Expected total production (Bags)</td>
                                     <td className="p-3 text-emerald-700 font-mono text-right text-xs sm:text-sm font-bold">{totalExpectedYieldBags.toLocaleString()}</td>
                                 </tr>
                                 <tr className="hover:bg-slate-50/50 transition-colors">
-                                    <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">Previous year&apos;s yield (Bags/Acre)</td>
-                                    <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">14.8</td>
+                                    <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">Previous year&apos;s yield (Bags/Acre) (E13)</td>
+                                    <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">5.0</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -242,16 +243,16 @@ export default function MaizeProductionOutlookTab({
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Line Chart */}
+                        {/* Composed Chart (Bar + Line) */}
                         <div className="h-[250px]">
                             <ResponsiveContainer width="100%" height="100%">
-                                <LineChart
+                                <ComposedChart
                                     data={[
-                                        { year: "2022", Yield: 12.8 },
-                                        { year: "2023", Yield: 14.2 },
-                                        { year: "2024", Yield: 15.6 },
-                                        { year: "2025", Yield: 14.8 },
-                                        { year: "2026 (Proj)", Yield: 16.5 }
+                                        { year: "2022", Yield: 5 },
+                                        { year: "2023", Yield: 6 },
+                                        { year: "2024", Yield: 4 },
+                                        { year: "2025", Yield: 5 },
+                                        { year: "2026 (Exp)", Yield: 20 }
                                     ]}
                                     margin={{ top: 20, right: 30, left: 10, bottom: 20 }}
                                 >
@@ -259,10 +260,12 @@ export default function MaizeProductionOutlookTab({
                                     <XAxis dataKey="year" stroke="#94a3b8" fontSize={12} tickLine={false} />
                                     <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Yield (Bags / Acre)', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
                                     <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
-                                    <Line type="monotone" dataKey="Yield" name="Average Yield" stroke="#10b981" strokeWidth={3} dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }} activeDot={{ r: 8 }} isAnimationActive={false}>
+                                    <Legend verticalAlign="top" height={36} iconType="circle" />
+                                    <Bar dataKey="Yield" name="Yield (Bags/Acre)" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={35} />
+                                    <Line type="monotone" dataKey="Yield" name="Yield Trend" stroke="#10b981" strokeWidth={3} dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }} activeDot={{ r: 8 }}>
                                         <LabelList dataKey="Yield" position="top" style={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} formatter={(val: unknown) => `${val} Bags`} />
                                     </Line>
-                                </LineChart>
+                                </ComposedChart>
                             </ResponsiveContainer>
                         </div>
 
@@ -278,23 +281,23 @@ export default function MaizeProductionOutlookTab({
                                 <tbody className="divide-y divide-slate-200">
                                     <tr className="hover:bg-slate-50/50 transition-colors">
                                         <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">2022</td>
-                                        <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">12.8</td>
+                                        <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">5.0</td>
                                     </tr>
                                     <tr className="hover:bg-slate-50/50 transition-colors">
                                         <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">2023</td>
-                                        <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">14.2</td>
+                                        <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">6.0</td>
                                     </tr>
                                     <tr className="hover:bg-slate-50/50 transition-colors">
                                         <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">2024</td>
-                                        <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">15.6</td>
+                                        <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">4.0</td>
                                     </tr>
                                     <tr className="hover:bg-slate-50/50 transition-colors">
                                         <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">2025</td>
-                                        <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">14.8</td>
+                                        <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">5.0</td>
                                     </tr>
                                     <tr className="hover:bg-slate-50/50 transition-colors bg-emerald-50/20">
-                                        <td className="p-3 font-bold text-emerald-800 text-xs sm:text-sm">2026 (Projected)</td>
-                                        <td className="p-3 text-emerald-700 font-mono text-right text-xs sm:text-sm font-extrabold">16.5</td>
+                                        <td className="p-3 font-bold text-emerald-800 text-xs sm:text-sm">2026 Expected</td>
+                                        <td className="p-3 text-emerald-700 font-mono text-right text-xs sm:text-sm font-extrabold">20.0</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -339,9 +342,9 @@ export default function MaizeProductionOutlookTab({
                                     <Cell fill="#ec4899" />
                                     <Cell fill="#64748b" />
                                 </Pie>
-                                <Tooltip 
-                                    contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} 
-                                    formatter={(val: unknown) => [`${Math.round(Number(val)).toLocaleString()} Bags`, "Volume"]} 
+                                <Tooltip
+                                    contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
+                                    formatter={(val: unknown) => [`${Math.round(Number(val)).toLocaleString()} Bags`, "Volume"]}
                                 />
                             </PieChart>
                         </ResponsiveContainer>
@@ -481,13 +484,12 @@ export default function MaizeProductionOutlookTab({
                                         <td className="p-2 font-bold text-slate-800 text-xs sm:text-sm">{item.constraint}</td>
                                         <td className="p-2 text-slate-600 font-mono text-right text-xs sm:text-sm font-semibold">{item.percentage.toFixed(1)}%</td>
                                         <td className="p-2 text-right">
-                                            <span className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full border ${
-                                                item.severity === "High"
+                                            <span className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full border ${item.severity === "High"
                                                     ? "bg-red-50 text-red-700 border-red-200"
                                                     : item.severity === "Medium"
-                                                    ? "bg-amber-50 text-amber-700 border-amber-200"
-                                                    : "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                            }`}>
+                                                        ? "bg-amber-50 text-amber-700 border-amber-200"
+                                                        : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                                }`}>
                                                 {item.severity}
                                             </span>
                                         </td>
@@ -580,15 +582,14 @@ export default function MaizeProductionOutlookTab({
                                     <tr key={item.indicator} className="hover:bg-slate-50/50 transition-colors">
                                         <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">{item.indicator}</td>
                                         <td className="p-3 text-right">
-                                            <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full border ${
-                                                item.rating === "Excellent" || item.rating === "Above Average"
+                                            <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full border ${item.rating === "Excellent" || item.rating === "Above Average"
                                                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                                     : item.rating === "Good" || item.rating === "Average"
-                                                    ? "bg-blue-50 text-blue-700 border-blue-200"
-                                                    : item.rating === "Fair"
-                                                    ? "bg-amber-50 text-amber-700 border-amber-200"
-                                                    : "bg-red-50 text-red-700 border-red-200"
-                                            }`}>
+                                                        ? "bg-blue-50 text-blue-700 border-blue-200"
+                                                        : item.rating === "Fair"
+                                                            ? "bg-amber-50 text-amber-700 border-amber-200"
+                                                            : "bg-red-50 text-red-700 border-red-200"
+                                                }`}>
                                                 {item.rating}
                                             </span>
                                         </td>

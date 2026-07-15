@@ -27,8 +27,8 @@ import {
     Cell,
     PieChart,
     Pie,
-    LineChart,
     Line,
+    ComposedChart,
 } from "recharts";
 
 interface PestDiseaseData {
@@ -297,16 +297,17 @@ export default function MaizePestsYieldsTab({
                 <CardContent>
                     <div className="h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={activeHistoricalYieldData} margin={{ top: 20, right: 30, left: 10, bottom: 20 }}>
+                            <ComposedChart data={activeHistoricalYieldData} margin={{ top: 20, right: 30, left: 10, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
                                 <XAxis dataKey="year" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Year', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
                                 <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Yield (Bags / Acre)', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
                                 <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
                                 <Legend verticalAlign="top" height={36} iconType="circle" />
-                                <Line type="monotone" dataKey="Yield" name="Maize Yield" stroke="#10b981" strokeWidth={3} dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }} activeDot={{ r: 8 }} isAnimationActive={false}>
+                                <Bar dataKey="Yield" name="Yield (Bags/Acre)" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={35} />
+                                <Line type="monotone" dataKey="Yield" name="Yield Trend" stroke="#10b981" strokeWidth={3} dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }} activeDot={{ r: 8 }}>
                                     <LabelList dataKey="Yield" position="top" style={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} formatter={(val: unknown) => `${val} Bags`} />
                                 </Line>
-                            </LineChart>
+                            </ComposedChart>
                         </ResponsiveContainer>
                     </div>
                 </CardContent>
