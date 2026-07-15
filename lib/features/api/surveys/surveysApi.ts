@@ -68,9 +68,32 @@ export interface HouseholdSizeRange {
 
 export interface MaizeSurveyDemographics {
   gender_distribution: GenderDistribution[];
+  age_distribution?: AgeDistribution[];
   registration_status: RegistrationStatus[];
   household_size_ranges: HouseholdSizeRange[];
+  storage_distribution?: StorageDistribution[];
+  storage_summary?: StorageSummary;
 }
+
+export interface AgeDistribution {
+  range: string;
+  value: number;
+  percentage?: number;
+}
+
+
+export interface StorageDistribution {
+  range: string;
+  value: number;
+  percentage?: number;
+}
+
+export interface StorageSummary {
+  total_bags: number;
+  average_bags: number;
+  with_storage_percentage: number;
+}
+
 
 export interface DailyProgressRecord {
   day: string;

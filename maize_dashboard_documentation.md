@@ -76,12 +76,8 @@ Manages the overview, geographical progress, and basic demographics of surveyed 
 - **Endpoint**: `/api/kyf/maize_survey/demographics/`
 - **Data Fields**: `household_size_ranges` (range, value)
 
-#### F. Maize Stocks in Storage (Bar Chart & Summary Stats Panel)
 
-- **Description**: Displays the number of bags currently in storage from the previous year's harvest, along with stock averages.
-- **API Hook**: Dynamically calculated in `MaizeDemographicsTab.tsx` using `activeVisitedFarmers`.
-
-#### G. County-wise Performance (Table)
+#### F. County-wise Performance (Table)
 
 - **Description**: Tabular progress report listing reached and target farmers per county.
 - **API Hook**: `useGetMaizeSurveyCountyPerformanceQuery`
@@ -225,19 +221,27 @@ Forecasts crop yield volume, constraints, and coping methods.
 - **Endpoint**: `/api/kyf/maize_survey/yield_use/`
 - **Data Fields**: `historical_yields` (year, yield)
 
-#### C. Production Constraints (Bar Chart)
+#### C. Maize Stocks in Storage (Bar Chart & Summary Stats Panel)
+
+- **Description**: Displays the number of bags currently in storage from the previous year's harvest, along with stock averages.
+- **API Hook**: `useGetMaizeSurveyDemographicsQuery`
+- **Endpoint**: `/api/kyf/maize_survey/demographics/`
+- **Data Fields**: `storage_distribution` (range, value, percentage), `storage_summary` (total_bags, average_bags, with_storage_percentage) (falls back to local dynamic calculation if not available).
+
+#### D. Production Constraints (Bar Chart)
 
 - **Description**: Yield limiting factors (Poor rainfall, Soil fertility, Pests, Input costs) colored by severity level (High, Medium, Low).
 - **API Hook**: `useGetMaizeSurveyYieldUseQuery`
 - **Endpoint**: `/api/kyf/maize_survey/yield_use/`
 - **Data Fields**: `production_constraints` (constraint, percentage, severity)
 
-#### D. Coping Strategies (Pie Chart)
+#### E. Coping Strategies (Pie Chart)
 
 - **Description**: Practices employed by farmers to mitigate stress (e.g. Replanting, Relay cropping, Supplemental irrigation).
 - **API Hook**: `useGetMaizeSurveyYieldUseQuery`
 - **Endpoint**: `/api/kyf/maize_survey/yield_use/`
 - **Data Fields**: `coping_strategies` (intervention, percentage)
+
 
 ---
 

@@ -10,10 +10,13 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-    Search,
     Compass,
     ClipboardList,
     BarChart3,
+    Activity,
+    ArrowUpDown,
+    ArrowUp,
+    ArrowDown,
 } from "lucide-react";
 import {
     ResponsiveContainer,
@@ -41,11 +44,12 @@ interface ChartData {
     Target: number;
 }
 
+interface DailyProgressData {
+    day: string;
+    Visited: number;
+}
+
 interface MaizeCountyPerformanceTabProps {
-    countySearch: string;
-    setCountySearch: (val: string) => void;
-    countyProjectFilter: "ALL" | "NAVCDP" | "FSRP";
-    setCountyProjectFilter: (val: "ALL" | "NAVCDP" | "FSRP") => void;
     selectedCounty: string;
     setSelectedCounty: (val: string) => void;
     setSelectedSubCounty: (val: string) => void;
@@ -58,13 +62,10 @@ interface MaizeCountyPerformanceTabProps {
     fsrpReached: number;
     fsrpTarget: number;
     fsrpCountCounties: number;
+    activeDailyProgressData: DailyProgressData[];
 }
 
 export default function MaizeCountyPerformanceTab({
-    countySearch,
-    setCountySearch,
-    countyProjectFilter,
-    setCountyProjectFilter,
     selectedCounty,
     setSelectedCounty,
     setSelectedSubCounty,
@@ -77,60 +78,87 @@ export default function MaizeCountyPerformanceTab({
     fsrpReached,
     fsrpTarget,
     fsrpCountCounties,
+    activeDailyProgressData,
 }: MaizeCountyPerformanceTabProps) {
+    const [sortField, setSortField] = React.useState<"county" | "visited" | "target" | "coverage">("county");
+    const [sortOrder, setSortOrder] = React.useState<"asc" | "desc">("asc");
+
+    const sortedCountyData = React.useMemo(() => {
+        const data = [...filteredCountyData];
+        data.sort((a, b) => {
+            let valA: any = a[sortField];
+            let valB: any = b[sortField];
+
+            if (sortField === "coverage") {
+                valA = a.visited / (a.target || 1);
+                valB = b.visited / (b.target || 1);
+            }
+
+            if (typeof valA === "string") {
+                return sortOrder === "asc"
+                    ? valA.localeCompare(valB)
+                    : valB.localeCompare(valA);
+            } else {
+                return sortOrder === "asc"
+                    ? valA - valB
+                    : valB - valA;
+            }
+        });
+        return data;
+    }, [filteredCountyData, sortField, sortOrder]);
+
+    const handleSort = (field: "county" | "visited" | "target" | "coverage") => {
+        if (sortField === field) {
+            setSortOrder(prev => prev === "asc" ? "desc" : "asc");
+        } else {
+            setSortField(field);
+            setSortOrder(field === "county" ? "asc" : "desc");
+        }
+    };
+
+    const renderSortIcon = (field: "county" | "visited" | "target" | "coverage") => {
+        if (sortField !== field) {
+            return <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 opacity-40 ml-1 shrink-0" />;
+        }
+        return sortOrder === "asc"
+            ? <ArrowUp className="w-3.5 h-3.5 text-emerald-600 font-bold ml-1 shrink-0" />
+            : <ArrowDown className="w-3.5 h-3.5 text-emerald-600 font-bold ml-1 shrink-0" />;
+    };
     return (
         <div className="space-y-8 animate-in fade-in-50 duration-300">
-            {/* Filters bar */}
-            <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                <div className="relative w-full md:w-80">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input
-                        type="text"
-                        placeholder="Search county..."
-                        value={countySearch}
-                        onChange={(e) => setCountySearch(e.target.value)}
-                        className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-slate-50/50"
-                    />
-                </div>
-
-                <div className="flex items-center gap-2 w-full md:w-auto">
-                    <span className="text-sm font-medium text-slate-500 shrink-0">Category by Project:</span>
-                    <div className="flex bg-slate-100 p-1 rounded-lg w-full md:w-auto">
-                        <button
-                            onClick={() => setCountyProjectFilter("ALL")}
-                            className={`flex-1 md:flex-none text-xs font-semibold py-1.5 px-3 rounded-md transition-all ${countyProjectFilter === "ALL"
-                                ? "bg-white text-slate-800 shadow-xs"
-                                : "text-slate-600 hover:text-slate-900"
-                                }`}
-                        >
-                            All
-                        </button>
-                        <button
-                            onClick={() => setCountyProjectFilter("NAVCDP")}
-                            className={`flex-1 md:flex-none text-xs font-semibold py-1.5 px-3 rounded-md transition-all ${countyProjectFilter === "NAVCDP"
-                                ? "bg-white text-slate-800 shadow-xs"
-                                : "text-slate-600 hover:text-slate-900"
-                                }`}
-                        >
-                            NAVCDP
-                        </button>
-                        <button
-                            onClick={() => setCountyProjectFilter("FSRP")}
-                            className={`flex-1 md:flex-none text-xs font-semibold py-1.5 px-3 rounded-md transition-all ${countyProjectFilter === "FSRP"
-                                ? "bg-white text-slate-800 shadow-xs"
-                                : "text-slate-600 hover:text-slate-900"
-                                }`}
-                        >
-                            FSRP
-                        </button>
-                    </div>
-                </div>
-            </div>
 
 
 
             {/* Top 10 chart */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Daily Assessment Progress */}
+                <Card className="shadow-md border-slate-200 lg:col-span-3">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <Activity className="w-5 h-5 text-emerald-600" />
+                            Daily Assessment Progress
+                        </CardTitle>
+                        <CardDescription>
+                            Track the daily number of farmers visited by field agripreneurs over time.                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-[320px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={activeDailyProgressData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis dataKey="day" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Date / Day', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
+                                    <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Farmers Visited', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
+                                    <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
+                                    <Legend verticalAlign="top" height={36} iconType="circle" />
+                                    <Bar dataKey="Visited" name="Farmers Reached" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={45}>
+                                        <LabelList dataKey="Visited" position="top" style={{ fill: '#64748b', fontSize: 9, fontWeight: 600 }} formatter={(val: unknown) => Number(val).toLocaleString()} />
+                                    </Bar>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </CardContent>
+                </Card>
+
                 <Card className="shadow-md border-slate-200 lg:col-span-3">
                     <CardHeader>
                         <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -175,7 +203,7 @@ export default function MaizeCountyPerformanceTab({
                             All Counties Performance Registry ({filteredCountyData.length})
                         </CardTitle>
                         <CardDescription>
-                            Complete searchable table of reached farmers, targets, and percentage completion.
+                            Table of reached farmers, targets, and percentage coverage.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -184,19 +212,41 @@ export default function MaizeCountyPerformanceTab({
                                 <table className="w-full border-collapse text-left text-sm">
                                     <thead className="sticky top-0 bg-slate-100 text-slate-700 font-bold border-b border-slate-200 z-10">
                                         <tr>
-                                            <th className="p-4 font-semibold">County</th>
+                                            <th className="p-4 font-semibold w-12">#</th>
+                                            <th className="p-4 font-semibold cursor-pointer select-none hover:bg-slate-200/40 transition-colors" onClick={() => handleSort("county")}>
+                                                <div className="flex items-center">
+                                                    County
+                                                    {renderSortIcon("county")}
+                                                </div>
+                                            </th>
                                             <th className="p-4 font-semibold">Project</th>
-                                            <th className="p-4 font-semibold text-right">Farmers Reached</th>
-                                            <th className="p-4 font-semibold text-right">Target</th>
-                                            <th className="p-4 font-semibold text-right">Coverage Rate</th>
+                                            <th className="p-4 font-semibold text-right cursor-pointer select-none hover:bg-slate-200/40 transition-colors" onClick={() => handleSort("visited")}>
+                                                <div className="flex items-center justify-end">
+                                                    Farmers Reached
+                                                    {renderSortIcon("visited")}
+                                                </div>
+                                            </th>
+                                            <th className="p-4 font-semibold text-right cursor-pointer select-none hover:bg-slate-200/40 transition-colors" onClick={() => handleSort("target")}>
+                                                <div className="flex items-center justify-end">
+                                                    Target
+                                                    {renderSortIcon("target")}
+                                                </div>
+                                            </th>
+                                            <th className="p-4 font-semibold text-right cursor-pointer select-none hover:bg-slate-200/40 transition-colors" onClick={() => handleSort("coverage")}>
+                                                <div className="flex items-center justify-end">
+                                                    Coverage Rate
+                                                    {renderSortIcon("coverage")}
+                                                </div>
+                                            </th>
                                             <th className="p-4 font-semibold w-40">Progress</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-200">
-                                        {filteredCountyData.map((item) => {
+                                        {sortedCountyData.map((item, index) => {
                                             const percent = parseFloat(((item.visited / item.target) * 100).toFixed(1));
                                             return (
                                                 <tr key={item.county} className="hover:bg-slate-50/50 transition-colors">
+                                                    <td className="p-4 font-bold text-slate-800 uppercase">{index + 1}</td>
                                                     <td className="p-4 font-bold text-slate-800 uppercase">{item.county}</td>
                                                     <td className="p-4">
                                                         <Badge className={

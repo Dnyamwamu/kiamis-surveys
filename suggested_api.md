@@ -66,9 +66,11 @@ Returns overall KPIs for visited farmers, targets, and average acreages based on
 
 ---
 
-### 2. Demographics Distribution
+### 2. Demographics & Activity
 
-Returns demographics data (gender breakdown, pre-existing vs. new registrations, and household size ranges).
+Demographics analysis of visited farming households, age profiles, and gender splits.
+
+Returns demographics data (gender splits, age profiles, pre-existing vs. new registrations, household size ranges, and maize stocks in storage from the previous year's harvest).
 
 - **RTK Query Hook**: `useGetMaizeSurveyDemographicsQuery`
 - **Method**: `GET`
@@ -82,7 +84,13 @@ Returns demographics data (gender breakdown, pre-existing vs. new registrations,
       { "name": "Female", "value": 1097, "percentage": 50.4 },
       { "name": "Other", "value": 58, "percentage": 2.7 }
     ],
+    "age_distribution": [
+      { "range": "Youth (18 - 35 yrs)", "value": 31962, "percentage": 22.0 },
+      { "range": "Middle Aged (36 - 60 yrs)", "value": 84262, "percentage": 58.0 },
+      { "range": "Senior (60+ yrs)", "value": 29056, "percentage": 20.0 }
+    ],
     "registration_status": [
+
       { "name": "Registered Farmers", "value": 112500, "percentage": 77.4 },
       { "name": "New Farmers", "value": 32780, "percentage": 22.6 }
     ],
@@ -91,8 +99,21 @@ Returns demographics data (gender breakdown, pre-existing vs. new registrations,
       { "range": "4 - 6 members", "value": 68520 },
       { "range": "7 - 9 members", "value": 26810 },
       { "range": "10+ members", "value": 11710 }
-    ]
+    ],
+    "storage_distribution": [
+      { "range": "0 bags", "value": 69734, "percentage": 48.0 },
+      { "range": "1 - 5 bags", "value": 34867, "percentage": 24.0 },
+      { "range": "6 - 10 bags", "value": 21792, "percentage": 15.0 },
+      { "range": "11 - 20 bags", "value": 11622, "percentage": 8.0 },
+      { "range": "20+ bags", "value": 7264, "percentage": 5.0 }
+    ],
+    "storage_summary": {
+      "total_bags": 257320,
+      "average_bags": 1.77,
+      "with_storage_percentage": 52.0
+    }
   }
+
   ```
 
 ---

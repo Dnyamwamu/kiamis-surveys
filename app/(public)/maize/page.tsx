@@ -247,7 +247,7 @@ export default function SurveysPage() {
     const [activeSubTab, setActiveSubTab] = useState<
         "general" | "crop-establishment" | "crop-growth" | "input-use" | "pests-diseases-weeds" | "production-outlook" | "performance"
     >("general");
-    const [countySearch, setCountySearch] = useState("");
+
     const [countyProjectFilter, setCountyProjectFilter] = useState<"ALL" | "FSRP" | "NAVCDP">("ALL");
     const [selectedCounty, setSelectedCounty] = useState("");
     const [selectedSubCounty, setSelectedSubCounty] = useState("");
@@ -439,6 +439,19 @@ export default function SurveysPage() {
     const activeRegistrationData = demographicsData?.registration_status || [];
 
     const activeHouseholdRangeData = demographicsData?.household_size_ranges || [];
+
+    const activeStorageDataProp = React.useMemo(() => {
+        if (demographicsData?.storage_distribution && demographicsData?.storage_summary) {
+            return {
+                chartData: demographicsData.storage_distribution,
+                totalBags: demographicsData.storage_summary.total_bags,
+                avgBags: demographicsData.storage_summary.average_bags,
+                withStoragePct: demographicsData.storage_summary.with_storage_percentage,
+            };
+        }
+        return undefined;
+    }, [demographicsData]);
+
 
     const activeSeedSourceData = (inputsData?.seed_sources || []).map((item, idx) => ({
         ...item,
@@ -811,14 +824,13 @@ export default function SurveysPage() {
 
     // Filter county performance data
     const filteredCountyData = liveCountyPerformanceData.filter((item) => {
-        const matchesSearch = item.county.toLowerCase().includes(countySearch.toLowerCase());
         const matchesProject =
             countyProjectFilter === "ALL" ||
             item.project === countyProjectFilter;
         const matchesCounty =
             !selectedCounty ||
             item.county.toLowerCase() === selectedCounty.toLowerCase();
-        return matchesSearch && matchesProject && matchesCounty;
+        return matchesProject && matchesCounty;
     });
 
     // Get top 10 counties for the bar chart based on current project filter
@@ -1076,8 +1088,8 @@ export default function SurveysPage() {
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
                                 <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Farmers Reached</CardDescription>
-                                <CardTitle className="text-2xl font-black text-slate-800 tracking-tight leading-none">
-                                    {activeVisitedFarmers.toLocaleString()} <span className="text-xs font-bold text-slate-400">/ {activeVisitedTarget.toLocaleString()}</span>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
+                                    {activeVisitedFarmers.toLocaleString()} <span className="text-xs font-bold text-slate-400"></span>
                                 </CardTitle>
                             </div>
                             <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 text-emerald-600 flex items-center justify-center border border-emerald-500/20 shadow-xs shrink-0">
@@ -1087,9 +1099,9 @@ export default function SurveysPage() {
                         <CardContent className="px-5 pb-4 pt-1">
                             <div className="flex items-center gap-2">
                                 <Badge className="bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 border-none font-semibold text-[10px] py-0.5 px-2">
-                                    {activeVisitedPercent}% of Target
+                                    {activeVisitedPercent}% coverage
                                 </Badge>
-                                <span className="text-[11px] font-medium text-slate-500">Current Farmer Assessment Progress</span>
+                                <span className="text-[11px] font-medium text-slate-500"> of Targeted Maize Farmers <span className="text-sm font-bold text-black">({activeVisitedTarget.toLocaleString()})</span></span>
                             </div>
                         </CardContent>
                     </Card>
@@ -1168,7 +1180,7 @@ export default function SurveysPage() {
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-green-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
-                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Maize Acreage Covered</CardDescription>
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Area Under Maize</CardDescription>
                                 <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
                                     {activeTotalMaizeAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                                     <span className="text-sm font-bold text-slate-400">  Acres</span>
@@ -1179,11 +1191,12 @@ export default function SurveysPage() {
                             </div>
                         </CardHeader>
                         <CardContent className="px-5 pb-4 pt-1">
+
                             <div className="flex items-center gap-2">
                                 <Badge className="bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 border-none font-semibold text-[10px] py-0.5 px-2">
-                                    {(activeTotalLandAcreage > 0 ? (activeTotalMaizeAcreage / activeTotalLandAcreage) * 100 : 0).toFixed(1)}% of Total Farm Land  <span className="text-black font-bold">({activeTotalLandAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} Acres) </span>
+                                    {(activeTotalLandAcreage > 0 ? (activeTotalMaizeAcreage / activeTotalLandAcreage) * 100 : 0).toFixed(1)}%
                                 </Badge>
-                                {/* <span className="text-[11px] font-medium text-slate-500">Avg: {activeAverageAcreage} Acres / farm</span> */}
+                                <span className="text-[11px] font-medium text-slate-500">of Total Registered Land <span className="text-xm font-bold text-black">({activeTotalLandAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} Acres) </span></span>
                             </div>
                         </CardContent>
                     </Card>
@@ -1259,7 +1272,7 @@ export default function SurveysPage() {
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-400 to-yellow-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
-                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Interested in growing Sunflower</CardDescription>
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Interested in Growing Sunflower</CardDescription>
                                 <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
                                     {activeSunflowerInterestCount.toLocaleString()} <span className="text-base font-bold text-slate-400">Farmers</span>
                                 </CardTitle>
@@ -1271,9 +1284,9 @@ export default function SurveysPage() {
                         <CardContent className="px-5 pb-4 pt-1">
                             <div className="flex items-center gap-2">
                                 <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none font-semibold text-[10px] py-0.5 px-2">
-                                    {activeSunflowerInterestPercent.toFixed(1)}% Farmers
+                                    {activeSunflowerInterestPercent.toFixed(1)}%
                                 </Badge>
-                                <span className="text-[11px] font-medium text-slate-500">of  {activeVisitedFarmers.toLocaleString()} surveyed farmers</span>
+                                <span className="text-[11px] font-medium text-slate-500">of Surveyed Farmers <span className="text-sm font-bold text-black">({activeVisitedFarmers.toLocaleString()})</span></span>
                             </div>
                         </CardContent>
                     </Card>
@@ -1416,12 +1429,42 @@ export default function SurveysPage() {
                 {/* Tab 1: General (Assessment Coverage & Demographics) */}
                 {activeSubTab === "general" && (
                     <div className="space-y-12">
-                        {/* a. Demographics & Activity */}
+                        {/* a. Assessment Coverage Progress */}
+                        <div className="space-y-6">
+                            <div className="border-b border-slate-200 pb-2">
+                                <h2 className="text-2xl font-black text-slate-800 tracking-tight">Assessment Coverage Progress</h2>
+                                <p className="text-sm text-slate-500 mt-1">Track county-level progress, target allocations, and survey coverage.</p>
+                            </div>
+                            {isCountyPerformanceLoading ? (
+                                <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
+                                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
+                                    <span className="text-sm font-semibold text-slate-500">Loading Assessment Coverage...</span>
+                                </div>
+                            ) : (
+                                <MaizeCountyPerformanceTab
+                                    selectedCounty={selectedCounty}
+                                    setSelectedCounty={setSelectedCounty}
+                                    setSelectedSubCounty={setSelectedSubCounty}
+                                    setSelectedWard={setSelectedWard}
+                                    filteredCountyData={filteredCountyData}
+                                    topCountiesChartData={topCountiesChartData}
+                                    navcdpReached={navcdpReached}
+                                    navcdpTarget={navcdpTarget}
+                                    navcdpCountCounties={navcdpCountCounties}
+                                    fsrpReached={fsrpReached}
+                                    fsrpTarget={fsrpTarget}
+                                    fsrpCountCounties={fsrpCountCounties}
+                                    activeDailyProgressData={activeDailyProgressData}
+                                />
+                            )}
+                        </div>
+                        {/* b. Demographics & Activity */}
                         <div className="space-y-6">
                             <div className="border-b border-slate-200 pb-2">
                                 <h2 className="text-2xl font-black text-slate-800 tracking-tight">Demographics & Activity</h2>
                                 <p className="text-sm text-slate-500 mt-1">Demographics analysis of visited farming households, age profiles, and gender splits.</p>
                             </div>
+
                             {isDemographicsLoading || isDailyProgressLoading || isMaizeStatsLoading ? (
                                 <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
                                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
@@ -1429,7 +1472,6 @@ export default function SurveysPage() {
                                 </div>
                             ) : (
                                 <MaizeDemographicsTab
-                                    activeDailyProgressData={activeDailyProgressData}
                                     activeGenderData={activeGenderData}
                                     activeRegistrationData={activeRegistrationData}
                                     activeHouseholdRangeData={activeHouseholdRangeData}
@@ -1446,40 +1488,10 @@ export default function SurveysPage() {
                                     activeWardsCovered={activeWardsCovered}
                                     activeAverageAcreage={activeAverageAcreage}
                                 />
+
                             )}
                         </div>
-                        {/* b. Assessment Coverage */}
-                        <div className="space-y-6">
-                            <div className="border-b border-slate-200 pb-2">
-                                <h2 className="text-2xl font-black text-slate-800 tracking-tight">Assessment Coverage</h2>
-                                <p className="text-sm text-slate-500 mt-1">County-level progress, target allocations, and survey coverage ledger.</p>
-                            </div>
-                            {isCountyPerformanceLoading ? (
-                                <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
-                                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
-                                    <span className="text-sm font-semibold text-slate-500">Loading Assessment Coverage...</span>
-                                </div>
-                            ) : (
-                                <MaizeCountyPerformanceTab
-                                    countySearch={countySearch}
-                                    setCountySearch={setCountySearch}
-                                    countyProjectFilter={countyProjectFilter}
-                                    setCountyProjectFilter={setCountyProjectFilter}
-                                    selectedCounty={selectedCounty}
-                                    setSelectedCounty={setSelectedCounty}
-                                    setSelectedSubCounty={setSelectedSubCounty}
-                                    setSelectedWard={setSelectedWard}
-                                    filteredCountyData={filteredCountyData}
-                                    topCountiesChartData={topCountiesChartData}
-                                    navcdpReached={navcdpReached}
-                                    navcdpTarget={navcdpTarget}
-                                    navcdpCountCounties={navcdpCountCounties}
-                                    fsrpReached={fsrpReached}
-                                    fsrpTarget={fsrpTarget}
-                                    fsrpCountCounties={fsrpCountCounties}
-                                />
-                            )}
-                        </div>
+
 
 
                     </div>
@@ -1573,8 +1585,11 @@ export default function SurveysPage() {
                         activeProductionConstraints={activeProductionConstraints}
                         activeCopingStrategies={activeCopingStrategies}
                         activePerformanceRatings={activePerformanceRatings}
+                        activeVisitedFarmers={activeVisitedFarmers}
+                        activeStorageDataProp={activeStorageDataProp}
                     />
                 )}
+
 
                 {/* Tab 7: Performance */}
                 {activeSubTab === "performance" && (
