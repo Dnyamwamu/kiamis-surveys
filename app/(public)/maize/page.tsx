@@ -336,6 +336,36 @@ export default function SurveysPage() {
         ward: selectedWard || undefined,
     });
 
+    const activeMaizeUtilization = React.useMemo(() => {
+        const defaultUtil = {
+            familyConsumption: 174519.61,
+            commercialSale: 251554.32,
+            animalFeeds: 10020.79,
+            familyConsumptionPct: 55.0,
+            commercialSalePct: 30.0,
+            animalFeedsPct: 15.0,
+        };
+
+        const apiUtil = maizeStatsData?.maize_utilization;
+        if (!apiUtil) return defaultUtil;
+
+        const familyConsumption = apiUtil.family_consumption || 0;
+        const commercialSale = apiUtil.commercial_sale || 0;
+        const animalFeeds = apiUtil.animal_feeds || 0;
+
+        const total = familyConsumption + commercialSale + animalFeeds;
+        if (total <= 0) return defaultUtil;
+
+        return {
+            familyConsumption,
+            commercialSale,
+            animalFeeds,
+            familyConsumptionPct: parseFloat(((familyConsumption / total) * 100).toFixed(1)),
+            commercialSalePct: parseFloat(((commercialSale / total) * 100).toFixed(1)),
+            animalFeedsPct: parseFloat(((animalFeeds / total) * 100).toFixed(1)),
+        };
+    }, [maizeStatsData]);
+
     // Set active stats
     const activeVisitedFarmers = maizeStatsData ? maizeStatsData.visited_farmers : reachedSum;
     const activeVisitedTarget = (maizeStatsData ? maizeStatsData.target : targetSum) || 0;
@@ -1328,28 +1358,28 @@ export default function SurveysPage() {
                                 <div>
                                     <div className="flex justify-between text-[11px] font-bold text-slate-600 mb-0.5">
                                         <span>Consumption</span>
-                                        <span>55%</span>
+                                        <span>{activeMaizeUtilization.familyConsumptionPct}% ({Math.round(activeMaizeUtilization.familyConsumption).toLocaleString()} Bags)</span>
                                     </div>
                                     <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                                        <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: "55%" }} />
+                                        <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: `${activeMaizeUtilization.familyConsumptionPct}%` }} />
                                     </div>
                                 </div>
                                 <div>
                                     <div className="flex justify-between text-[11px] font-bold text-slate-600 mb-0.5">
                                         <span>Commercial</span>
-                                        <span>30%</span>
+                                        <span>{activeMaizeUtilization.commercialSalePct}% ({Math.round(activeMaizeUtilization.commercialSale).toLocaleString()} Bags)</span>
                                     </div>
                                     <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                                        <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: "30%" }} />
+                                        <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: `${activeMaizeUtilization.commercialSalePct}%` }} />
                                     </div>
                                 </div>
                                 <div>
                                     <div className="flex justify-between text-[11px] font-bold text-slate-600 mb-0.5">
                                         <span>Animal Feed</span>
-                                        <span>15%</span>
+                                        <span>{activeMaizeUtilization.animalFeedsPct}% ({Math.round(activeMaizeUtilization.animalFeeds).toLocaleString()} Bags)</span>
                                     </div>
                                     <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                                        <div className="bg-amber-500 h-1.5 rounded-full" style={{ width: "15%" }} />
+                                        <div className="bg-amber-500 h-1.5 rounded-full" style={{ width: `${activeMaizeUtilization.animalFeedsPct}%` }} />
                                     </div>
                                 </div>
                             </div>

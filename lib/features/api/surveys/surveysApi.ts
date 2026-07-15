@@ -13,6 +13,12 @@ export interface CountySurveySummary {
   phosphorus_deficiency_cases: number
 }
 
+export interface MaizeUtilization {
+  family_consumption: number
+  commercial_sale: number
+  animal_feeds: number
+}
+
 export interface CountySurveySummaryResponse {
   results: CountySurveySummary[]
 }
@@ -40,6 +46,7 @@ export interface MaizeSurveyCountyStats {
   female_farmers_count: number;
   other_farmers_count: number;
   average_maize_stored: number;
+  maize_utilization?: MaizeUtilization;
 }
 
 export interface MaizeSurveyCountyStatsQueryParams {
