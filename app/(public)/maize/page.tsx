@@ -1474,36 +1474,7 @@ export default function SurveysPage() {
                 {/* Tab 1: General (Assessment Coverage & Demographics) */}
                 {activeSubTab === "general" && (
                     <div className="space-y-12">
-                        {/* a. Assessment Coverage Progress */}
-                        <div className="space-y-6">
-                            <div className="border-b border-slate-200 pb-2">
-                                <h2 className="text-2xl font-black text-slate-800 tracking-tight">Assessment Coverage Progress</h2>
-                                <p className="text-sm text-slate-500 mt-1">Track county-level progress, target allocations, and survey coverage.</p>
-                            </div>
-                            {isCountyPerformanceLoading ? (
-                                <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
-                                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
-                                    <span className="text-sm font-semibold text-slate-500">Loading Assessment Coverage...</span>
-                                </div>
-                            ) : (
-                                <MaizeCountyPerformanceTab
-                                    selectedCounty={selectedCounty}
-                                    setSelectedCounty={setSelectedCounty}
-                                    setSelectedSubCounty={setSelectedSubCounty}
-                                    setSelectedWard={setSelectedWard}
-                                    filteredCountyData={filteredCountyData}
-                                    topCountiesChartData={topCountiesChartData}
-                                    navcdpReached={navcdpReached}
-                                    navcdpTarget={navcdpTarget}
-                                    navcdpCountCounties={navcdpCountCounties}
-                                    fsrpReached={fsrpReached}
-                                    fsrpTarget={fsrpTarget}
-                                    fsrpCountCounties={fsrpCountCounties}
-                                    activeDailyProgressData={activeDailyProgressData}
-                                />
-                            )}
-                        </div>
-                        {/* b. Demographics & Activity */}
+                        {/* a. Demographics & Activity */}
                         <div className="space-y-6">
                             <div className="border-b border-slate-200 pb-2">
                                 <h2 className="text-2xl font-black text-slate-800 tracking-tight">Demographics & Activity</h2>
@@ -1536,6 +1507,36 @@ export default function SurveysPage() {
 
                             )}
                         </div>
+                        {/* b. Assessment Coverage Progress */}
+                        <div className="space-y-6">
+                            <div className="border-b border-slate-200 pb-2">
+                                <h2 className="text-2xl font-black text-slate-800 tracking-tight">Assessment Coverage Progress</h2>
+                                <p className="text-sm text-slate-500 mt-1">Track county-level progress, target allocations, and survey coverage.</p>
+                            </div>
+                            {isCountyPerformanceLoading ? (
+                                <div className="flex flex-col items-center justify-center py-20 gap-3 border border-slate-200 rounded-2xl bg-white shadow-xs">
+                                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
+                                    <span className="text-sm font-semibold text-slate-500">Loading Assessment Coverage...</span>
+                                </div>
+                            ) : (
+                                <MaizeCountyPerformanceTab
+                                    selectedCounty={selectedCounty}
+                                    setSelectedCounty={setSelectedCounty}
+                                    setSelectedSubCounty={setSelectedSubCounty}
+                                    setSelectedWard={setSelectedWard}
+                                    filteredCountyData={filteredCountyData}
+                                    topCountiesChartData={topCountiesChartData}
+                                    navcdpReached={navcdpReached}
+                                    navcdpTarget={navcdpTarget}
+                                    navcdpCountCounties={navcdpCountCounties}
+                                    fsrpReached={fsrpReached}
+                                    fsrpTarget={fsrpTarget}
+                                    fsrpCountCounties={fsrpCountCounties}
+                                    activeDailyProgressData={activeDailyProgressData}
+                                />
+                            )}
+                        </div>
+
 
 
 
