@@ -1125,7 +1125,7 @@ export default function SurveysPage() {
             <section className="container mx-auto px-6 max-w-7xl relative z-20">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Card 1: Farmers Reached */}
-                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                    {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-teal-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
@@ -1146,10 +1146,10 @@ export default function SurveysPage() {
                                 <span className="text-[11px] font-medium text-slate-500"> of Targeted Maize Farmers <span className="text-sm font-bold text-black">({activeVisitedTarget.toLocaleString()})</span></span>
                             </div>
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
                     {/* Card 2: Gender Distribution */}
-                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-blue-500/10 border border-slate-200/60 hover:border-blue-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                    {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-blue-500/10 border border-slate-200/60 hover:border-blue-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 to-indigo-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
@@ -1173,16 +1173,18 @@ export default function SurveysPage() {
                                 <span className="text-[11px] font-medium text-slate-500">of the farmers reached</span>
                             </div>
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
-                    {/* Card 3: Avg Household Size */}
+
+
+                    {/* Card: Combined Farmers Reached & Avg Household Size */}
                     <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-indigo-500/10 border border-slate-200/60 hover:border-indigo-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-indigo-500 to-purple-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
-                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Avg Household Size</CardDescription>
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Farmers Reached </CardDescription>
                                 <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
-                                    {Math.round(activeAvgHouseholdSize)} <span className="text-lg font-bold text-slate-400">Members</span>
+                                    {activeVisitedFarmers.toLocaleString()} <span className="text-xs font-bold text-slate-400">Farmers</span>
                                 </CardTitle>
                             </div>
                             <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 text-indigo-600 flex items-center justify-center border border-indigo-500/20 shadow-xs shrink-0">
@@ -1190,9 +1192,50 @@ export default function SurveysPage() {
                             </div>
                         </CardHeader>
                         <CardContent className="px-5 pb-4 pt-1">
-                            <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-medium text-slate-500">Average size of surveyed households</span>
+                            <div className="space-y-2 mb-3">
+                                <div className="flex items-center justify-between text-[11px] font-medium text-slate-500">
+                                    <span className="flex items-center gap-1">
+                                        <span className="w-2 h-2 rounded-full bg-blue-500" />
+                                        Male: {activeMaleFarmersCount.toLocaleString()} ({((activeMaleFarmersCount / (activeMaleFarmersCount + activeFemaleFarmersCount || 1)) * 100).toFixed(1)}%)
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                        <span className="w-2 h-2 rounded-full bg-pink-500" />
+                                        Female: {activeFemaleFarmersCount.toLocaleString()} ({((activeFemaleFarmersCount / (activeMaleFarmersCount + activeFemaleFarmersCount || 1)) * 100).toFixed(1)}%)
+                                    </span>
+                                </div>
+                                <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden flex">
+                                    <div className="bg-blue-500 h-1.5" style={{ width: `${(activeMaleFarmersCount / (activeMaleFarmersCount + activeFemaleFarmersCount || 1)) * 100}%` }} />
+                                    <div className="bg-pink-500 h-1.5 flex-1" />
+                                </div>
                             </div>
+                            <div className="space-y-2 mb-2">
+                                <div className="flex items-center justify-between text-[11px] font-medium text-slate-500">
+                                    <span className="flex items-center gap-1">
+                                        <span className="w-2 h-2 rounded-full bg-indigo-500" />
+                                        Avg Household Size: <span className="font-bold text-slate-700">{activeAvgHouseholdSize.toFixed()} Members</span>
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div className="space-y-2 mb-2">
+                                <div className="flex items-center justify-between text-[11px] font-medium text-slate-500">
+                                    <span className="flex items-center gap-1">
+                                        <span className="w-2 h-2 rounded-full bg-indigo-500" />
+                                        Number of maize farmers: <span className="font-bold text-slate-700">{activeVisitedTarget.toLocaleString()}</span>
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div className="space-y-2 mb-2">
+                                <div className="flex items-center justify-between text-[11px] font-medium text-slate-500">
+                                    <span className="flex items-center gap-1">
+                                        <span className="w-2 h-2 rounded-full bg-indigo-500" />
+                                        Interested in growing Sunflower: <span className="font-bold text-slate-700">{activeSunflowerInterestCount.toLocaleString()}</span>
+                                    </span>
+                                </div>
+
+                            </div>
+
                         </CardContent>
                     </Card>
 
@@ -1218,7 +1261,7 @@ export default function SurveysPage() {
                     </Card> */}
 
                     {/* Card 5: Acreage Covered */}
-                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                    {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-green-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
@@ -1239,6 +1282,39 @@ export default function SurveysPage() {
                                     {(activeTotalLandAcreage > 0 ? (activeTotalMaizeAcreage / activeTotalLandAcreage) * 100 : 0).toFixed(1)}%
                                 </Badge>
                                 <span className="text-[11px] font-medium text-slate-500">of Total Registered Land <span className="text-xm font-bold text-black">({activeTotalLandAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} Acres) </span></span>
+                            </div>
+                        </CardContent>
+                    </Card> */}
+
+                    {/* Card: Combined Area Under Maize & Expected Yield */}
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-amber-500" />
+                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
+                            <div className="space-y-1 max-w-[calc(100%-3rem)]">
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Area Under Maize (Surveyed)</CardDescription>
+                                <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
+                                    {activeTotalMaizeAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-xs font-bold text-slate-400">Acres</span>
+                                </CardTitle>
+                            </div>
+                            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-500/10 to-amber-500/10 text-emerald-600 flex items-center justify-center border border-emerald-500/20 shadow-xs shrink-0">
+                                <Sprout className="w-5 h-5" />
+                            </div>
+                        </CardHeader>
+                        <CardContent className="px-5 pb-4 pt-1">
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between text-[11px] font-medium text-slate-500">
+                                    <span className="flex items-center gap-1">
+                                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                                        Total Registered Land: <span className="font-bold text-slate-700">{activeTotalLandAcreage.toLocaleString(undefined, { maximumFractionDigits: 0 })} Acres</span>
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between text-[11px] font-medium text-slate-500">
+                                    <span className="flex items-center gap-1">
+                                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                                        Exp. Yield: <span className="font-bold text-slate-700">{activeExpectedYieldBagsPerAcre.toFixed(1)} Bags/Acre</span>
+                                    </span>
+                                </div>
+
                             </div>
                         </CardContent>
                     </Card>
@@ -1268,7 +1344,7 @@ export default function SurveysPage() {
                     </Card> */}
 
                     {/* Card 7: Expected Yield */}
-                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-amber-500/10 border border-slate-200/60 hover:border-amber-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                    {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-amber-500/10 border border-slate-200/60 hover:border-amber-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-500 to-orange-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
@@ -1286,10 +1362,10 @@ export default function SurveysPage() {
                                 <span className="text-[11px] font-medium text-slate-500">Expected yield for the year 2026 average bags (90Kg)/acre</span>
                             </div>
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
                     {/* Card 8: Avg Submission by AGP */}
-                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-blue-500/10 border border-slate-200/60 hover:border-blue-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                    {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-blue-500/10 border border-slate-200/60 hover:border-blue-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-sky-500 to-blue-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
@@ -1307,10 +1383,10 @@ export default function SurveysPage() {
                                 <span className="text-[11px] font-medium text-slate-500">Per active field agripreneur</span>
                             </div>
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
                     {/* Card 9: Sunflower Interest */}
-                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-amber-400/10 border border-slate-200/60 hover:border-amber-400/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                    {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-amber-400/10 border border-slate-200/60 hover:border-amber-400/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-400 to-yellow-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
@@ -1331,7 +1407,7 @@ export default function SurveysPage() {
                                 <span className="text-[11px] font-medium text-slate-500">of Surveyed Farmers <span className="text-sm font-bold text-black">({activeVisitedFarmers.toLocaleString()})</span></span>
                             </div>
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
                     {/* Card: Average Maize Stored */}
                     {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-emerald-500/10 border border-slate-200/60 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
