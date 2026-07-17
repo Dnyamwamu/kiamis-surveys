@@ -47,6 +47,7 @@ import {
     useGetMaizeSurveyYieldUseQuery,
     useGetMaizeSurveyCountyPerformanceQuery,
     useGetMaizeSurveyCountyStatsQuery,
+    useGetMaizeSurveyApStatsQuery,
 } from "@/lib/features/api/surveys/surveysApi";
 
 import {
@@ -454,6 +455,13 @@ export default function SurveysPage() {
         ward: selectedWard || undefined,
     });
 
+    const { data: apStatsData, isLoading: isApStatsLoading } = useGetMaizeSurveyApStatsQuery({
+        county: selectedCounty || undefined,
+        project: countyProjectFilter === "ALL" ? undefined : countyProjectFilter,
+        subcounty: selectedSubCounty || undefined,
+        ward: selectedWard || undefined,
+    });
+
     // Calculate dynamic scale factor
     const scaleFactor = activeVisitedFarmers / 145280;
 
@@ -760,6 +768,10 @@ export default function SurveysPage() {
     const activeAvgAgpSubmissions = maizeStatsData?.avg_daily_submissions_per_agripreneur !== undefined
         ? maizeStatsData.avg_daily_submissions_per_agripreneur
         : Math.max(50, Math.round(363 * (0.9 + (activeVisitedFarmers % 30) * 0.01)));
+
+    const activeAgripreneursCount = apStatsData?.count !== undefined
+        ? apStatsData.count
+        : Math.round(4421 * scaleFactor) || 4421;
 
     const activeDailyProgressData = dailyProgressDataRaw?.map(item => ({
         day: item.day,
@@ -1364,14 +1376,14 @@ export default function SurveysPage() {
                         </CardContent>
                     </Card> */}
 
-                    {/* Card 8: Avg Submission by AGP */}
-                    {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-blue-500/10 border border-slate-200/60 hover:border-blue-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
+                    {/* Card 8: Active Agripreneurs */}
+                    <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-blue-500/10 border border-slate-200/60 hover:border-blue-500/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
                         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-sky-500 to-blue-500" />
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-5">
                             <div className="space-y-1 max-w-[calc(100%-3rem)]">
-                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Average Daily Submissions</CardDescription>
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Active Agripreneurs</CardDescription>
                                 <CardTitle className="text-3xl font-black text-slate-800 tracking-tight leading-none">
-                                    {activeAvgAgpSubmissions.toLocaleString()}
+                                    {isApStatsLoading ? "..." : activeAgripreneursCount.toLocaleString()}
                                 </CardTitle>
                             </div>
                             <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-sky-500/10 to-blue-500/10 text-sky-600 flex items-center justify-center border border-sky-500/20 shadow-xs shrink-0">
@@ -1380,10 +1392,12 @@ export default function SurveysPage() {
                         </CardHeader>
                         <CardContent className="px-5 pb-4 pt-1">
                             <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-medium text-slate-500">Per active field agripreneur</span>
+                                <span className="text-[11px] font-medium text-slate-500">
+                                    Avg. Daily Submissions: <span className="font-bold text-slate-700">{activeAvgAgpSubmissions.toLocaleString()}</span>
+                                </span>
                             </div>
                         </CardContent>
-                    </Card> */}
+                    </Card>
 
                     {/* Card 9: Sunflower Interest */}
                     {/* <Card className="relative overflow-hidden shadow-sm hover:shadow-md hover:shadow-amber-400/10 border border-slate-200/60 hover:border-amber-400/30 hover:-translate-y-0.5 transition-all duration-300 bg-white">
@@ -1553,7 +1567,7 @@ export default function SurveysPage() {
                         {/* a. Demographics & Activity */}
                         <div className="space-y-6">
                             <div className="border-b border-slate-200 pb-2">
-                                <h2 className="text-2xl font-black text-slate-800 tracking-tight">Demographics & Activity</h2>
+                                <h2 className="text-2xl font-black text-slate-800 tracking-tight">Demographics</h2>
                                 <p className="text-sm text-slate-500 mt-1">Demographics analysis of visited farming households, age profiles, and gender splits.</p>
                             </div>
 

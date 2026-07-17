@@ -280,6 +280,35 @@ export interface MaizeSurveyCountyPerformanceResponse {
   results: CountyPerformanceRecord[];
 }
 
+export interface AgripreneurStat {
+  id_number: string;
+  phone_number: string;
+  agripreneur_name: string;
+  county: string;
+  subcounty: string;
+  ward: string;
+  total_submitted: number;
+  approved: number;
+  pending: number;
+  rejected: number;
+}
+
+export interface MaizeSurveyApStatsResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: AgripreneurStat[];
+}
+
+export interface MaizeSurveyApStatsQueryParams {
+  page?: number;
+  page_size?: number;
+  county?: string;
+  project?: string;
+  subcounty?: string;
+  ward?: string;
+}
+
 export const surveysApi = createApi({
   reducerPath: "surveysApi",
   baseQuery: fetchBaseQuery({
@@ -501,6 +530,27 @@ export const surveysApi = createApi({
         };
       },
     }),
+
+    getMaizeSurveyApStats: builder.query<
+      MaizeSurveyApStatsResponse,
+      MaizeSurveyApStatsQueryParams
+    >({
+      query: ({ page = 1, page_size = 100, county, project, subcounty, ward } = {}) => {
+        const queryParams = new URLSearchParams({
+          page: page.toString(),
+          page_size: page_size.toString(),
+        });
+        if (county) queryParams.append("county", county);
+        if (project) queryParams.append("project", project);
+        if (subcounty) queryParams.append("subcounty", subcounty);
+        if (ward) queryParams.append("ward", ward);
+
+        return {
+          url: `kyf/maize_survey/ap_stats/?${queryParams.toString()}`,
+          method: "GET",
+        };
+      },
+    }),
   }),
 })
 
@@ -525,4 +575,6 @@ export const {
   useLazyGetMaizeSurveyYieldUseQuery,
   useGetMaizeSurveyCountyPerformanceQuery,
   useLazyGetMaizeSurveyCountyPerformanceQuery,
+  useGetMaizeSurveyApStatsQuery,
+  useLazyGetMaizeSurveyApStatsQuery,
 } = surveysApi
