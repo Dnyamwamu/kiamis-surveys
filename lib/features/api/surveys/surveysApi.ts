@@ -309,6 +309,65 @@ export interface MaizeSurveyApStatsQueryParams {
   ward?: string;
 }
 
+export interface AgripreneurDetails {
+  id: number;
+  agripreneur_name: string;
+  system_county: string;
+  system_ward: string;
+  is_county_official: boolean;
+  system_subcounty: string;
+  id_number: string;
+  app_county: number | null;
+  app_subcounty: number | null;
+  app_ward: number | null;
+  app_sublocation: number | null;
+  app_location: number | null;
+  app_county_name: string;
+  app_subcounty_name: string;
+  app_sublocation_name: string;
+  app_location_name: string;
+  gender: string;
+  pwd: boolean;
+  email: string;
+  system_phone: string;
+  created_at: string;
+  ea_assignment: any;
+  cluster_assignment: any;
+  zone_assignment: {
+    zone_id: number;
+    zone_name: string;
+    zone_code: string;
+  } | null;
+  is_ranked: boolean;
+  ranking_details: any;
+  availability: {
+    is_available: boolean;
+    county_approval: string;
+    ba_approval: string;
+  };
+  qualification: string;
+  phone_number: string;
+  county: string;
+  subcounty: string;
+  ward: string;
+  age_bracket: string;
+  updated_at: string;
+  otp: string;
+  application: number;
+}
+
+export interface AgripreneursResponse {
+  count: number;
+  total_pages: number;
+  current_page: number;
+  page_size: number;
+  data: {
+    status: number;
+    data_count: number;
+    data: AgripreneurDetails[];
+  };
+}
+
 export const surveysApi = createApi({
   reducerPath: "surveysApi",
   baseQuery: fetchBaseQuery({
@@ -551,6 +610,13 @@ export const surveysApi = createApi({
         };
       },
     }),
+
+    getAgripreneurs: builder.query<AgripreneursResponse, void>({
+      query: () => ({
+        url: "enum/agripreneur/",
+        method: "GET",
+      }),
+    }),
   }),
 })
 
@@ -577,4 +643,6 @@ export const {
   useLazyGetMaizeSurveyCountyPerformanceQuery,
   useGetMaizeSurveyApStatsQuery,
   useLazyGetMaizeSurveyApStatsQuery,
+  useGetAgripreneursQuery,
+  useLazyGetAgripreneursQuery,
 } = surveysApi

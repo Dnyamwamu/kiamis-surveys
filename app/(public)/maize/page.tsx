@@ -48,6 +48,7 @@ import {
     useGetMaizeSurveyCountyPerformanceQuery,
     useGetMaizeSurveyCountyStatsQuery,
     useGetMaizeSurveyApStatsQuery,
+    useGetAgripreneursQuery,
 } from "@/lib/features/api/surveys/surveysApi";
 
 import {
@@ -55,110 +56,6 @@ import {
     AreaChart,
     Area,
 } from "recharts";
-
-// Mock data reflecting the Maize Performance Assessment Programme
-const kpiStats = {
-    visitedFarmers: 145280,
-    visitedTarget: 150000,
-    visitedPercent: 96.85,
-    countiesCovered: 42,
-    avgHouseholdSize: 5.4,
-    averageAcreage: 3.2,
-};
-
-const genderData = [
-    { name: "Male", value: 1021, percentage: 46.9 },
-    { name: "Female", value: 1097, percentage: 50.4 },
-    { name: "Other", value: 58, percentage: 2.7 },
-];
-
-const registrationData = [
-    { name: "Registered Farmers", value: 112500, percentage: 77.4 },
-    { name: "New Farmers", value: 32780, percentage: 22.6 },
-];
-
-const householdRangeData = [
-    { range: "1 - 3 members", value: 38240 },
-    { range: "4 - 6 members", value: 68520 },
-    { range: "7 - 9 members", value: 26810 },
-    { range: "10+ members", value: 11710 },
-];
-
-const dailyProgressData = [
-    { day: "Jun 10", Visited: 3100 },
-    { day: "Jun 11", Visited: 3400 },
-    { day: "Jun 12", Visited: 3800 },
-    { day: "Jun 13", Visited: 3500 },
-    { day: "Jun 14", Visited: 4200 },
-    { day: "Jun 15", Visited: 4500 },
-    { day: "Jun 16", Visited: 4800 },
-    { day: "Jun 17", Visited: 5100 },
-    { day: "Jun 18", Visited: 4900 },
-    { day: "Jun 19", Visited: 5600 },
-    { day: "Jun 20", Visited: 6100 },
-    { day: "Jun 21", Visited: 6400 },
-    { day: "Jun 22", Visited: 6800 },
-    { day: "Jun 23", Visited: 6500 },
-    { day: "Jun 24", Visited: 7200 },
-    { day: "Jun 25", Visited: 7800 },
-    { day: "Jun 26", Visited: 8200 },
-    { day: "Jun 27", Visited: 9400 },
-    { day: "Jun 28", Visited: 10100 },
-    { day: "Jun 29", Visited: 9800 },
-    { day: "Jun 30", Visited: 11200 },
-    { day: "Jul 1", Visited: 10500 },
-    { day: "Jul 2", Visited: 10800 },
-    { day: "Jul 3", Visited: 11200 },
-    { day: "Jul 4", Visited: 11500 },
-    { day: "Jul 5", Visited: 12100 },
-    { day: "Jul 6", Visited: 12400 },
-    { day: "Jul 7", Visited: 12900 },
-    { day: "Jul 8", Visited: 13200 },
-    { day: "Jul 9", Visited: 13580 },
-];
-
-
-
-const growthStageData = [
-    { stage: "Emergence", Count: 5811 },
-    { stage: "Vegetative", Count: 24698 },
-    { stage: "Tasseling", Count: 36320 },
-    { stage: "Milking", Count: 29056 },
-    { stage: "Grain Fill", Count: 33415 },
-    { stage: "Maturity", Count: 15980 },
-];
-
-
-
-const plantColorData = [
-    { name: "Deep Green (Healthy)", value: 78451, color: "#065f46" },
-    { name: "Pale Green (Mild Stress)", value: 43584, color: "#34d399" },
-    { name: "Yellowing (Nitrogen Def)", value: 17433, color: "#fbbf24" },
-    { name: "Purpling (Phosphorus Def)", value: 5812, color: "#8b5cf6" },
-];
-
-const irrigationData = [
-    { name: "Rainfed", value: 418406, percentage: 90, color: "#3b82f6" },
-    { name: "Irrigated", value: 46490, percentage: 10, color: "#10b981" },
-];
-
-
-
-
-
-const cropUniformityData = [
-    { name: "Even growth", value: 104602, percentage: 72, color: "#10b981" },
-    { name: "Patchy growth", value: 26150, percentage: 18, color: "#f59e0b" },
-    { name: "Stunted areas", value: 14528, percentage: 10, color: "#ef4444" },
-];
-
-
-
-
-
-
-
-
 
 const countyMaizeAcreageData = [
     { county: "BUNGOMA", acres: 92100 },
@@ -461,6 +358,8 @@ export default function SurveysPage() {
         subcounty: selectedSubCounty || undefined,
         ward: selectedWard || undefined,
     });
+
+    const { data: agripreneursData, isLoading: isAgripreneursLoading } = useGetAgripreneursQuery();
 
     // Calculate dynamic scale factor
     const scaleFactor = activeVisitedFarmers / 145280;
@@ -1323,7 +1222,7 @@ export default function SurveysPage() {
                                 <div className="flex items-center justify-between text-[11px] font-medium text-slate-500">
                                     <span className="flex items-center gap-1">
                                         <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                                        Exp. Yield: <span className="font-bold text-slate-700">{activeExpectedYieldBagsPerAcre.toFixed(1)} Bags/Acre</span>
+                                        Expected Yield: <span className="font-bold text-slate-700">{activeExpectedYieldBagsPerAcre.toFixed(1)} Bags/Acre</span>
                                     </span>
                                 </div>
 
@@ -1391,10 +1290,17 @@ export default function SurveysPage() {
                             </div>
                         </CardHeader>
                         <CardContent className="px-5 pb-4 pt-1">
-                            <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-medium text-slate-500">
-                                    Avg. Daily Submissions: <span className="font-bold text-slate-700">{activeAvgAgpSubmissions.toLocaleString()}</span>
-                                </span>
+                            <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[11px] font-medium text-slate-500">
+                                        Avg. Daily Submissions: <span className="font-bold text-slate-700">{activeAvgAgpSubmissions.toLocaleString()}</span>
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[11px] font-medium text-slate-500">
+                                        Total Agripreneurs Onboarded: <span className="font-bold text-slate-700">{isAgripreneursLoading ? "..." : (agripreneursData?.count ?? 0).toLocaleString()}</span>
+                                    </span>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
