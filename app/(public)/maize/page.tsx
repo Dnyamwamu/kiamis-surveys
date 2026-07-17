@@ -814,7 +814,10 @@ export default function SurveysPage() {
     const fsrpCountCounties = fsrpCounties.length;
 
     const exportCSV = () => {
-        const getDistVal = (arr: any[], nameQuery: string) => {
+        const getDistVal = (
+            arr: { name: string; value: number; percentage?: number | string }[],
+            nameQuery: string
+        ) => {
             const item = arr.find(d => d.name.toLowerCase().includes(nameQuery.toLowerCase()));
             if (!item) return "N/A";
             const pct = item.percentage !== undefined ? item.percentage : ((item.value / (activeVisitedFarmers || 1)) * 100).toFixed(1);
