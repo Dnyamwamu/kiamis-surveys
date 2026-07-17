@@ -821,7 +821,7 @@ export default function SurveysPage() {
             return `${item.value} (${pct}%)`;
         };
 
-        let csvContent = "Category,Metric,Value\n"
+        const csvContent = "Category,Metric,Value\n"
             // General Stats
             + `General,Farmers Visited,${activeVisitedFarmers}\n`
             + `General,Target Farmers,${activeVisitedTarget}\n`
