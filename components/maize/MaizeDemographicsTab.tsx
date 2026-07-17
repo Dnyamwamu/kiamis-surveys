@@ -47,6 +47,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { useGetAgripreneursQuery, useGetMaizeSurveyApStatsQuery } from "@/lib/features/api/surveys/surveysApi";
 
 interface DemographicsData {
     name: string;
@@ -83,6 +84,58 @@ interface MaizeDemographicsTabProps {
     activeAverageAcreage: number;
 }
 
+const CountyAgripreneurRow = ({
+    county,
+    project,
+    submissions,
+}: {
+    county: string;
+    project: string;
+    submissions: number;
+}) => {
+    // Fetch total number of agripreneurs onboarded in this county
+    const { data: totalData, isLoading: isTotalLoading } = useGetAgripreneursQuery({
+        county: county.toLowerCase(),
+    });
+
+    // Fetch active agripreneurs for this county in the maize survey
+    const { data: activeData, isLoading: isActiveLoading } = useGetMaizeSurveyApStatsQuery({
+        county: county,
+        project: project === "ALL" ? undefined : project,
+        page_size: 1,
+    });
+
+    const totalAgripreneurs = totalData?.count !== undefined ? totalData.count : null;
+    const activeAgripreneurs = activeData?.count !== undefined ? activeData.count : null;
+
+    return (
+        <TableRow className="hover:bg-slate-50/50 border-slate-100">
+            <TableCell className="p-3 font-bold text-slate-800 text-sm">{county}</TableCell>
+            <TableCell className="p-3 text-slate-600 font-mono text-right text-sm font-semibold">
+                {isTotalLoading ? (
+                    <span className="inline-block w-3.5 h-3.5 rounded-full border-2 border-slate-200 border-t-emerald-600 animate-spin" />
+                ) : totalAgripreneurs !== null ? (
+                    totalAgripreneurs.toLocaleString()
+                ) : (
+                    "0"
+                )}
+            </TableCell>
+            <TableCell className="p-3 text-slate-600 font-mono text-right text-sm font-semibold">
+                {isActiveLoading ? (
+                    <span className="inline-block w-3.5 h-3.5 rounded-full border-2 border-slate-200 border-t-emerald-600 animate-spin" />
+                ) : activeAgripreneurs !== null ? (
+                    activeAgripreneurs.toLocaleString()
+                ) : (
+                    "0"
+                )}
+            </TableCell>
+            <TableCell className="p-3 text-emerald-700 font-mono text-right text-sm font-bold">
+                {submissions.toLocaleString()}
+            </TableCell>
+        </TableRow>
+    );
+};
+
 export default function MaizeDemographicsTab({
     activeGenderData,
     activeRegistrationData,
@@ -101,6 +154,9 @@ export default function MaizeDemographicsTab({
     activeAverageAcreage,
 }: MaizeDemographicsTabProps) {
 
+    const sortedAgripreneurCountyData = React.useMemo(() => {
+        return [...liveCountyPerformanceData].sort((a, b) => b.visited - a.visited);
+    }, [liveCountyPerformanceData]);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -533,6 +589,45 @@ export default function MaizeDemographicsTab({
                                 </Bar>
                             </BarChart>
                         </ResponsiveContainer>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Agripreneur Performance by County Table */}
+            <Card className="shadow-md border-slate-200 lg:col-span-2">
+                <CardHeader>
+                    <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <Users className="w-5 h-5 text-emerald-600" />
+                        Agripreneur Performance by County
+                    </CardTitle>
+                    <CardDescription>
+                        Overview of total and active agripreneurs deployed per county and their corresponding survey submission volumes.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="pb-6">
+                    <div className="border border-slate-200 rounded-xl overflow-hidden">
+                        <div className="overflow-y-auto max-h-[350px]">
+                            <Table>
+                                <TableHeader className="bg-slate-50/70 sticky top-0 z-10">
+                                    <TableRow className="hover:bg-transparent">
+                                        <TableHead className="font-semibold text-slate-600 text-xs uppercase tracking-wider h-9">County</TableHead>
+                                        <TableHead className="font-semibold text-slate-600 text-xs uppercase tracking-wider text-right h-9">Total Agripreneurs</TableHead>
+                                        <TableHead className="font-semibold text-slate-600 text-xs uppercase tracking-wider text-right h-9">Active Agripreneurs</TableHead>
+                                        <TableHead className="font-semibold text-slate-600 text-xs uppercase tracking-wider text-right h-9">Submissions Made</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {sortedAgripreneurCountyData.map((item) => (
+                                        <CountyAgripreneurRow
+                                            key={item.county}
+                                            county={item.county}
+                                            project={item.project}
+                                            submissions={item.visited}
+                                        />
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
