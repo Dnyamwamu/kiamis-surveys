@@ -814,22 +814,76 @@ export default function SurveysPage() {
     const fsrpCountCounties = fsrpCounties.length;
 
     const exportCSV = () => {
-        const csvContent = "data:text/csv;charset=utf-8,"
-            + "Metric,Value\n"
-            + `Farmers Visited,${activeVisitedFarmers}\n`
-            + `Target Farmers,${activeVisitedTarget}\n`
-            + `Coverage Rate,${activeVisitedPercent}%\n`
-            + `Counties Covered,${activeCountiesCovered}\n`
-            + `Average Household Size,${activeAvgHouseholdSize}\n`
-            + `Average Acreage under Maize,${activeAverageAcreage} acres\n`;
+        const getDistVal = (arr: any[], nameQuery: string) => {
+            const item = arr.find(d => d.name.toLowerCase().includes(nameQuery.toLowerCase()));
+            if (!item) return "N/A";
+            const pct = item.percentage !== undefined ? item.percentage : ((item.value / (activeVisitedFarmers || 1)) * 100).toFixed(1);
+            return `${item.value} (${pct}%)`;
+        };
 
-        const encodedUri = encodeURI(csvContent);
+        let csvContent = "Category,Metric,Value\n"
+            // General Stats
+            + `General,Farmers Visited,${activeVisitedFarmers}\n`
+            + `General,Target Farmers,${activeVisitedTarget}\n`
+            + `General,Coverage Rate,${activeVisitedPercent}%\n`
+            + `General,Counties Covered,${activeCountiesCovered}\n`
+            + `General,Average Household Size,${activeAvgHouseholdSize}\n`
+            + `General,Average Acreage under Maize,${activeAverageAcreage} acres\n`
+            + `General,Average Total Land Acreage,${activeAverageAcreageTotal} acres\n`
+            + `General,Total Maize Acreage Covered,${activeTotalMaizeAcreage} acres\n`
+            + `General,Total Land Acreage Covered,${activeTotalLandAcreage} acres\n`
+            + `General,Expected Yield,${activeExpectedYieldBagsPerAcre} bags/acre\n`
+            + `General,Average Storage,${activeStorageAvgBags.toFixed(1)} bags\n`
+            + `General,Avg. Daily Submissions,${activeAvgAgpSubmissions}\n`
+            + `General,Active Agripreneurs,${activeAgripreneursCount}\n`
+            + `General,Total Agripreneurs Onboarded,${agripreneursData?.count || 0}\n`
+            + `General,Sunflower Interest Count,${activeSunflowerInterestCount}\n`
+            + `General,Sunflower Interest Percentage,${activeSunflowerInterestPercent}%\n`
+            
+            // Gender Breakdown
+            + `Demographics,Male Farmers,${getDistVal(activeGenderData, "male")}\n`
+            + `Demographics,Female Farmers,${getDistVal(activeGenderData, "female")}\n`
+            + `Demographics,Other Farmers,${getDistVal(activeGenderData, "other")}\n`
+            
+            // Registration Status
+            + `Demographics,Registered Farmers,${getDistVal(activeRegistrationData, "registered")}\n`
+            + `Demographics,New Farmers,${getDistVal(activeRegistrationData, "new")}\n`
+            
+            // Household Sizes
+            + activeHouseholdRangeData.map(h => `Demographics,Household Size ${h.range},${h.value}\n`).join("")
+            
+            // Maize Utilization
+            + `Utilization,Total Expected Harvest,${Math.round(activeMaizeUtilization.totalBags)} Bags\n`
+            + `Utilization,Family Consumption,${activeMaizeUtilization.familyConsumptionPct}% (${Math.round(activeMaizeUtilization.familyConsumption)} Bags)\n`
+            + `Utilization,Commercial Sale,${activeMaizeUtilization.commercialSalePct}% (${Math.round(activeMaizeUtilization.commercialSale)} Bags)\n`
+            + `Utilization,Animal Feeds,${activeMaizeUtilization.animalFeedsPct}% (${Math.round(activeMaizeUtilization.animalFeeds)} Bags)\n`
+            
+            // Inputs
+            + activeSeedSourceData.map(s => `Inputs,Seed Source - ${s.name},${s.value} (${s.percentage}%)\n`).join("")
+            + activeFertilizerUseData.map(f => `Inputs,Fertilizer Use - ${f.name},${f.value} (${f.percentage}%)\n`).join("")
+            + activeFertilizerApplicationData.map(a => `Inputs,Fertilizer Application - ${a.name},${a.value} (${a.percentage}%)\n`).join("")
+            + activePlantingDateData.map(p => `Inputs,Planting Period - ${p.period},${p.Percentage}%\n`).join("")
+            
+            // Growth and Health
+            + activeGrowthStageData.map(g => `Growth & Health,Growth Stage - ${g.stage},${g.Count}\n`).join("")
+            + activeCropUniformityData.map(u => `Growth & Health,Crop Uniformity - ${u.name},${u.value} (${u.percentage}%)\n`).join("")
+            + `Growth & Health,Average FAW Damage,${activeAverageFawDamage}%\n`
+            + `Growth & Health,Dominant Weeds,"${activeDominantWeeds.join("; ")}"\n`
+            + activeDiseaseSymptomsData.map(d => `Growth & Health,Disease Symptom - ${d.name},${d.percentage}%\n`).join("")
+            
+            // Production Constraints & Coping
+            + activeProductionConstraints.map(c => `Constraints & Coping,Production Constraint - ${c.constraint},${c.percentage}% (${c.severity} severity)\n`).join("")
+            + activeCopingStrategies.map(c => `Constraints & Coping,Coping Strategy - ${c.intervention},${c.percentage}%\n`).join("");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
+        link.setAttribute("href", url);
         link.setAttribute("download", `maize_survey_summary_${selectedCounty || "national"}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     return (
