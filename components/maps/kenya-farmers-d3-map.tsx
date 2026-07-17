@@ -200,6 +200,12 @@ export default function KenyaFarmersD3Map({
               const pending = Math.round(total * 0.11);
               const rejected = Math.max(0, total - approved - pending);
 
+              // Calculate active agripreneurs using the deterministic formula to match the table
+              const hash = countyStats.county.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+              const factor = 15 + (hash % 15);
+              const totalAgripreneurs = Math.max(2, Math.round(target / factor)) || 10;
+              const activeAgripreneurs = Math.max(1, Math.min(totalAgripreneurs, Math.round(total / (factor * 0.9)))) || 5;
+
               return (
                 <div className="p-2 space-y-1.5 min-w-[220px]">
                   <div className="font-bold text-slate-900 border-b border-slate-100 pb-1 flex justify-between items-center">
@@ -210,6 +216,10 @@ export default function KenyaFarmersD3Map({
                     <div className="flex justify-between text-slate-700 font-bold border-b border-slate-100/80 pb-1 mb-1">
                       <span>Total Reached:</span>
                       <span className="text-slate-900">{total.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-slate-600 font-medium">
+                      <span>Active Agripreneurs:</span>
+                      <span className="font-bold text-slate-950">{activeAgripreneurs.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-slate-600">
                       <span>Registered Visited:</span>
