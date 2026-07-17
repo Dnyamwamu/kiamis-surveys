@@ -97,7 +97,7 @@ export default function MaizePestsYieldsTab({
 }: MaizePestsYieldsTabProps) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Major Pests */}
+            {/* Major Pests (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -146,8 +146,9 @@ export default function MaizePestsYieldsTab({
                     </div>
                 </CardContent>
             </Card>
+            */}
 
-            {/* Weed Infestation */}
+            {/* Weed Infestation (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -194,6 +195,7 @@ export default function MaizePestsYieldsTab({
                     </div>
                 </CardContent>
             </Card>
+            */}
 
             {/* Pest Pressure Distribution */}
             <Card className="shadow-md border-slate-200">
@@ -227,7 +229,7 @@ export default function MaizePestsYieldsTab({
                 </CardContent>
             </Card>
 
-            {/* Disease Symptoms Distribution */}
+            {/* Disease Symptoms Distribution (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -282,8 +284,9 @@ export default function MaizePestsYieldsTab({
                     </div>
                 </CardContent>
             </Card>
+            */}
 
-            {/* Historical Yield Trends */}
+            {/* Historical Yield Trends (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -312,6 +315,7 @@ export default function MaizePestsYieldsTab({
                     </div>
                 </CardContent>
             </Card>
+            */}
 
             {/* Maize Use Profile */}
             <Card className="shadow-md border-slate-200">

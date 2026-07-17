@@ -173,7 +173,7 @@ export default function MaizeGrowthTab({
                     </CardContent>
                 </Card>
 
-                {/* 3. Crop Colour */}
+                {/* 3. Crop Colour (Uses Mock/Fallback Data)
                 <Card className="shadow-md border-slate-200">
                     <CardHeader>
                         <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -231,6 +231,7 @@ export default function MaizeGrowthTab({
                         </div>
                     </CardContent>
                 </Card>
+                */}
             </div>
 
             {/* Detailed Crop Growth & Health Matrix */}

@@ -61,7 +61,7 @@ export default function MaizePerformanceTab({
                 </div>
             </div>
 
-            {/* 1. Overall Performance Rating */}
+            {/* 1. Overall Performance Rating (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -105,6 +105,7 @@ export default function MaizePerformanceTab({
                     </div>
                 </CardContent>
             </Card>
+            */}
 
             {/* Key Findings Grid */}
             <div>

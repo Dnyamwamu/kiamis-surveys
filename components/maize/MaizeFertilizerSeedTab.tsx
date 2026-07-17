@@ -66,7 +66,7 @@ export default function MaizeFertilizerSeedTab({
     return (
         <div className="space-y-8 animate-fadeIn">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* 1. Fertilizer Use */}
+                {/* 1. Fertilizer Use (Uses Mock/Fallback Data)
                 <Card className="shadow-md border-slate-200">
                     <CardHeader>
                         <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -114,8 +114,9 @@ export default function MaizeFertilizerSeedTab({
                         </div>
                     </CardContent>
                 </Card>
+                */}
 
-                {/* 2. Fertilizer Application */}
+                {/* 2. Fertilizer Application (Uses Mock/Fallback Data)
                 <Card className="shadow-md border-slate-200">
                     <CardHeader>
                         <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -163,6 +164,7 @@ export default function MaizeFertilizerSeedTab({
                         </div>
                     </CardContent>
                 </Card>
+                */}
             </div>
 
             {/* 3. Nutrient Deficiency */}

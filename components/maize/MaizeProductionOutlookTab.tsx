@@ -230,7 +230,7 @@ export default function MaizeProductionOutlookTab({
                 </CardContent>
             </Card>
 
-            {/* Five-Year Yield Trend */}
+            {/* Five-Year Yield Trend (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200 lg:col-span-2">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -243,7 +243,6 @@ export default function MaizeProductionOutlookTab({
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Composed Chart (Bar + Line) */}
                         <div className="h-[250px]">
                             <ResponsiveContainer width="100%" height="100%">
                                 <ComposedChart
@@ -269,7 +268,6 @@ export default function MaizeProductionOutlookTab({
                             </ResponsiveContainer>
                         </div>
 
-                        {/* Table */}
                         <div className="border border-slate-100 rounded-xl overflow-hidden h-fit">
                             <table className="w-full border-collapse text-left text-sm">
                                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
@@ -305,8 +303,9 @@ export default function MaizeProductionOutlookTab({
                     </div>
                 </CardContent>
             </Card>
+            */}
 
-            {/* Expected Utilization of Harvest */}
+            {/* Expected Utilization of Harvest (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200 lg:col-span-2">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -384,8 +383,9 @@ export default function MaizeProductionOutlookTab({
                     </div>
                 </CardContent>
             </Card>
+            */}
 
-            {/* Chart: Maize Storage from Previous Year */}
+            {/* Chart: Maize Storage from Previous Year (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200 lg:col-span-2">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -398,7 +398,6 @@ export default function MaizeProductionOutlookTab({
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-                        {/* Bar Chart (Col span 2 on md+) */}
                         <div className="md:col-span-2 h-[260px]">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={activeStorageData.chartData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
@@ -422,7 +421,6 @@ export default function MaizeProductionOutlookTab({
                             </ResponsiveContainer>
                         </div>
 
-                        {/* Summary Metrics Panel */}
                         <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-5">
                             <h4 className="text-sm font-bold text-slate-800 border-b border-slate-200 pb-2">Storage Summary Stats</h4>
 
@@ -455,10 +453,10 @@ export default function MaizeProductionOutlookTab({
                     </div>
                 </CardContent>
             </Card>
+            */}
 
-            {/* Key Constraints Affecting Production */}
+            {/* Key Constraints Affecting Production (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200">
-
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                         <AlertTriangle className="w-5 h-5 text-red-500" />
@@ -500,8 +498,9 @@ export default function MaizeProductionOutlookTab({
                     </div>
                 </CardContent>
             </Card>
+            */}
 
-            {/* Farmers' Coping Strategies */}
+            {/* Farmers' Coping Strategies (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -556,8 +555,9 @@ export default function MaizeProductionOutlookTab({
                     </div>
                 </CardContent>
             </Card>
+            */}
 
-            {/* Overall Performance Rating */}
+            {/* Overall Performance Rating (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200 lg:col-span-2">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -600,6 +600,7 @@ export default function MaizeProductionOutlookTab({
                     </div>
                 </CardContent>
             </Card>
+            */}
         </div>
     );
 }
