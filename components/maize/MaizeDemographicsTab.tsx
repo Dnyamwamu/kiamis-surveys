@@ -272,6 +272,8 @@ export default function MaizeDemographicsTab({
                         <h4 className="text-sm font-bold text-slate-800 mb-3 flex items-center justify-between">
                             <span>Counties Summary</span>
                             <span className="text-xs text-slate-500 font-semibold">{liveCountyPerformanceData.length} Counties</span>
+                            {/* <span className="text-xs text-slate-500 font-semibold">45 Counties</span> */}
+
                         </h4>
                         <div className="overflow-y-auto flex-1 space-y-2 pr-1 select-none">
                             {liveCountyPerformanceData.map((item) => {

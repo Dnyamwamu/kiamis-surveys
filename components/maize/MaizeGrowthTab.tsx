@@ -93,8 +93,8 @@ export default function MaizeGrowthTab({
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="stage" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Growth Stage', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
                                 <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Number of Farmers', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
-                                <Tooltip 
-                                    contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} 
+                                <Tooltip
+                                    contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
                                     formatter={(value: unknown) => {
                                         const numVal = Number(value);
                                         const percent = totalGrowthCount > 0 ? ((numVal / totalGrowthCount) * 100).toFixed(1) : "0.0";
@@ -106,15 +106,15 @@ export default function MaizeGrowthTab({
                                     {activeGrowthStageData.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
-                                    <LabelList 
-                                        dataKey="Count" 
-                                        position="top" 
+                                    <LabelList
+                                        dataKey="Count"
+                                        position="top"
                                         style={{ fill: '#334155', fontSize: 10, fontWeight: 600 }}
                                         formatter={(val: unknown) => {
                                             const numVal = Number(val);
                                             const percent = totalGrowthCount > 0 ? ((numVal / totalGrowthCount) * 100).toFixed(1) : "0.0";
                                             return `${numVal.toLocaleString()} (${percent}%)`;
-                                        }} 
+                                        }}
                                     />
                                 </Bar>
                             </BarChart>
@@ -164,7 +164,7 @@ export default function MaizeGrowthTab({
                                         <span className="text-sm font-semibold text-slate-700">{item.name}</span>
                                     </div>
                                     <div className="text-right">
-                                        <span className="text-sm font-bold text-slate-800">{item.value.toLocaleString()} Fields</span>
+                                        <span className="text-sm font-bold text-slate-800">{item.value.toLocaleString()} </span>
                                         <span className="text-xs text-slate-500 ml-2">({item.percentage}%)</span>
                                     </div>
                                 </div>

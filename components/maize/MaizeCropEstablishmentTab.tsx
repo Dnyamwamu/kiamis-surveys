@@ -26,9 +26,7 @@ import {
     LabelList,
     Cell,
     PieChart,
-    Pie,
-    AreaChart,
-    Area
+    Pie
 } from "recharts";
 
 interface CountyAcreageData {
@@ -53,6 +51,7 @@ interface SeedSourceData {
 interface SeedVarietyData {
     name: string;
     value: number;
+    percentage?: number;
     color: string;
 }
 
@@ -75,6 +74,18 @@ export default function MaizeCropEstablishmentTab({
     activeSeedVarietyData,
     COLORS,
 }: MaizeCropEstablishmentTabProps) {
+    const processedSeedVarietyData = React.useMemo(() => {
+        const total = activeSeedVarietyData.reduce((sum, item) => sum + item.value, 0);
+        return activeSeedVarietyData.map((item) => {
+            const pct = item.percentage !== undefined
+                ? item.percentage
+                : (total > 0 ? parseFloat(((item.value / total) * 100).toFixed(1)) : 0);
+            return {
+                ...item,
+                percentage: pct,
+            };
+        });
+    }, [activeSeedVarietyData]);
     return (
         <div className="space-y-8 animate-fadeIn">
             {/* 1. Area under Maize Production */}
@@ -91,7 +102,7 @@ export default function MaizeCropEstablishmentTab({
                             </CardDescription>
                         </div>
                         <div className="bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100 shrink-0">
-                            <span className="text-[10px] text-emerald-800 font-bold uppercase tracking-wider block">Total Cultivated Area</span>
+                            <span className="text-[10px] text-emerald-800 font-bold uppercase tracking-wider block">Area Under Maize</span>
                             <span className="text-lg font-black text-emerald-950 mt-0.5 block">{totalMaizeAcreage.toLocaleString()} Acres</span>
                         </div>
                     </div>
@@ -129,7 +140,7 @@ export default function MaizeCropEstablishmentTab({
 
                         {/* Column 2: Scrollable Table of County vs Rainfed vs Irrigated */}
                         <div className="space-y-4">
-                            <h4 className="text-sm font-semibold text-slate-700">Irrigation Ledger</h4>
+                            <h4 className="text-sm font-semibold text-slate-700">Irrigation</h4>
                             <div className="border border-slate-200 rounded-xl overflow-hidden">
                                 <div className="overflow-y-auto max-h-[298px]">
                                     <table className="w-full border-collapse text-left text-sm">
@@ -232,16 +243,27 @@ export default function MaizeCropEstablishmentTab({
                     <CardContent>
                         <div className="h-[250px]">
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={activeSeedVarietyData} layout="vertical" margin={{ top: 10, right: 40, left: 35, bottom: 20 }}>
+                                <BarChart data={processedSeedVarietyData} layout="vertical" margin={{ top: 10, right: 60, left: 35, bottom: 20 }}>
                                     <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" />
                                     <XAxis type="number" stroke="#475569" fontSize={11} tickLine={false} label={{ value: 'Number of Farmers', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
-                                    <YAxis dataKey="name" type="category" stroke="#475569" fontSize={11} tickLine={false} width={130} label={{ value: 'Seed Variety', angle: -90, position: 'insideLeft', offset: 25, fill: '#64748b', fontSize: 11, fontWeight: 500 }} />
-                                    <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }} />
+                                    <YAxis dataKey="name" type="category" stroke="#475569" fontSize={11} tickLine={false} width={150} label={{ value: 'Seed Variety', angle: -90, position: 'insideLeft', offset: 25, fill: '#64748b', fontSize: 11, fontWeight: 500 }} />
+                                    <Tooltip
+                                        contentStyle={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px" }}
+                                        formatter={(val: unknown, _name?: unknown, item?: { payload?: { percentage?: number } }) => [
+                                            `${Number(val).toLocaleString()} (${item?.payload?.percentage || 0}%)`,
+                                            "Farmers Reached"
+                                        ]}
+                                    />
                                     <Bar dataKey="value" name="Farmers Reached" fill="#10b981" radius={[0, 4, 4, 0]}>
-                                        {activeSeedVarietyData.map((entry, index) => (
+                                        {processedSeedVarietyData.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} />
                                         ))}
-                                        <LabelList dataKey="value" position="right" style={{ fill: '#334155', fontSize: 10, fontWeight: 600 }} />
+                                        <LabelList
+                                            dataKey="percentage"
+                                            position="right"
+                                            style={{ fill: '#334155', fontSize: 11, fontWeight: 600 }}
+                                            formatter={(val: unknown) => `${val}%`}
+                                        />
                                     </Bar>
                                 </BarChart>
                             </ResponsiveContainer>
@@ -251,7 +273,7 @@ export default function MaizeCropEstablishmentTab({
             </div>
 
             {/* 3. Planting Period */}
-            <Card className="shadow-md border-slate-200">
+            {/* <Card className="shadow-md border-slate-200">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                         <CalendarDays className="w-5 h-5 text-emerald-600" />
@@ -264,13 +286,7 @@ export default function MaizeCropEstablishmentTab({
                 <CardContent>
                     <div className="h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={activePlantingDateData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
-                                <defs>
-                                    <linearGradient id="colorPercentage" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
-                                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
+                            <BarChart data={activePlantingDateData} margin={{ top: 20, right: 20, left: 10, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="period" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Planting Window', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
                                 <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `${val}%`} label={{ value: 'Percentage of Farmers', angle: -90, position: 'insideLeft', offset: 10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} width={80} />
@@ -279,12 +295,14 @@ export default function MaizeCropEstablishmentTab({
                                     formatter={(val: unknown) => [`${val}%`, "Percentage of Farmers"]}
                                 />
                                 <Legend verticalAlign="top" height={36} iconType="circle" />
-                                <Area type="monotone" dataKey="Percentage" name="Percentage of Farmers" stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#colorPercentage)" />
-                            </AreaChart>
+                                <Bar dataKey="Percentage" name="Percentage of Farmers" fill="#10b981" radius={[6, 6, 0, 0]} maxBarSize={80}>
+                                    <LabelList dataKey="Percentage" position="top" style={{ fill: '#334155', fontSize: 11, fontWeight: 600 }} formatter={(val: unknown) => `${val}%`} />
+                                </Bar>
+                            </BarChart>
                         </ResponsiveContainer>
                     </div>
                 </CardContent>
-            </Card>
+            </Card> */}
         </div>
     );
 }

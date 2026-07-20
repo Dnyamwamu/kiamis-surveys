@@ -63,6 +63,8 @@ interface MaizeProductionOutlookTabProps {
     totalGreenAcreage: number;
     totalSilageAcreage: number;
     totalExpectedYieldBags: number;
+    activeExpectedYieldBagsPerAcre?: number;
+    activeHistoricalYieldData?: { year: string; Yield: number }[];
     activeProductionConstraints: ProductionConstraintData[];
     activeCopingStrategies: CopingStrategyData[];
     activePerformanceRatings: PerformanceRatingData[];
@@ -75,6 +77,8 @@ export default function MaizeProductionOutlookTab({
     totalGreenAcreage,
     totalSilageAcreage,
     totalExpectedYieldBags,
+    activeExpectedYieldBagsPerAcre,
+    activeHistoricalYieldData,
     activeProductionConstraints,
     activeCopingStrategies,
     activePerformanceRatings,
@@ -82,6 +86,20 @@ export default function MaizeProductionOutlookTab({
     activeStorageDataProp,
 }: MaizeProductionOutlookTabProps) {
     const COLORS = ["#059669", "#0284c7", "#ea580c", "#7c3aed", "#db2777"];
+
+    const expectedYieldPerAcre = activeExpectedYieldBagsPerAcre !== undefined
+        ? activeExpectedYieldBagsPerAcre
+        : (totalMaizeAcreage > 0 ? (totalExpectedYieldBags / totalMaizeAcreage) : 20.0);
+
+    const previousYearYield = React.useMemo(() => {
+        if (activeHistoricalYieldData && activeHistoricalYieldData.length > 0) {
+            const prevEntry = activeHistoricalYieldData.find(d =>
+                d.year.includes("2025") || d.year.includes("2024") || (!d.year.includes("Exp") && !d.year.includes("2026"))
+            );
+            if (prevEntry) return prevEntry.Yield;
+        }
+        return 5.0;
+    }, [activeHistoricalYieldData]);
 
     const activeStorageData = React.useMemo(() => {
         if (activeStorageDataProp) {
@@ -213,16 +231,20 @@ export default function MaizeProductionOutlookTab({
                             </thead>
                             <tbody className="divide-y divide-slate-200">
                                 <tr className="hover:bg-slate-50/50 transition-colors">
-                                    <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">Average expected yield (Bags/Acre) (E09)</td>
-                                    <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">20.0</td>
+                                    <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">Average expected yield (Bags/Acre)</td>
+                                    <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">
+                                        {expectedYieldPerAcre.toFixed(1)}
+                                    </td>
                                 </tr>
                                 <tr className="hover:bg-slate-50/50 transition-colors">
                                     <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">Expected total production (Bags)</td>
                                     <td className="p-3 text-emerald-700 font-mono text-right text-xs sm:text-sm font-bold">{totalExpectedYieldBags.toLocaleString()}</td>
                                 </tr>
                                 <tr className="hover:bg-slate-50/50 transition-colors">
-                                    <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">Previous year&apos;s yield (Bags/Acre) (E13)</td>
-                                    <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">5.0</td>
+                                    <td className="p-3 font-bold text-slate-700 text-xs sm:text-sm">Previous year&apos;s yield (Bags/Acre)</td>
+                                    <td className="p-3 text-slate-800 font-mono text-right text-xs sm:text-sm font-bold">
+                                        {previousYearYield.toFixed(1)}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

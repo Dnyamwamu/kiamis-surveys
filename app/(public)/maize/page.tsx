@@ -1680,7 +1680,7 @@ export default function SurveysPage() {
                         <MaizeCropEstablishmentTab
                             topCountiesAcreageData={topCountiesAcreageData}
                             sortedCountyMaizeAcreageData={sortedCountyMaizeAcreageData}
-                            totalMaizeAcreage={totalMaizeAcreage}
+                            totalMaizeAcreage={activeTotalMaizeAcreage}
                             activePlantingDateData={activePlantingDateData}
                             activeSeedSourceData={activeSeedSourceData}
                             activeSeedVarietyData={activeSeedVarietyData}
@@ -1756,10 +1756,12 @@ export default function SurveysPage() {
                         </div>
                     ) : (
                         <MaizeProductionOutlookTab
-                            totalMaizeAcreage={totalMaizeAcreage}
+                            totalMaizeAcreage={activeTotalMaizeAcreage}
                             totalGreenAcreage={totalGreenAcreage}
                             totalSilageAcreage={totalSilageAcreage}
                             totalExpectedYieldBags={totalExpectedYieldBags}
+                            activeExpectedYieldBagsPerAcre={activeExpectedYieldBagsPerAcre}
+                            activeHistoricalYieldData={activeHistoricalYieldData}
                             activeProductionConstraints={activeProductionConstraints}
                             activeCopingStrategies={activeCopingStrategies}
                             activePerformanceRatings={activePerformanceRatings}
@@ -1774,7 +1776,7 @@ export default function SurveysPage() {
                 {activeSubTab === "performance" && (
                     <MaizePerformanceTab
                         totalExpectedYieldBags={totalExpectedYieldBags}
-                        totalMaizeAcreage={totalMaizeAcreage}
+                        totalMaizeAcreage={activeTotalMaizeAcreage}
                         activeVisitedFarmers={activeVisitedFarmers}
                         activePerformanceRatings={activePerformanceRatings}
                     />

@@ -198,7 +198,7 @@ export default function MaizePestsYieldsTab({
             */}
 
             {/* Pest Pressure Distribution */}
-            <Card className="shadow-md border-slate-200">
+            {/* <Card className="shadow-md border-slate-200">
                 <CardHeader>
                     <CardTitle className="text-xl font-bold text-slate-800 flex items-center gap-2">
                         <AlertTriangle className="w-5 h-5 text-red-500" />
@@ -227,7 +227,7 @@ export default function MaizePestsYieldsTab({
                         </ResponsiveContainer>
                     </div>
                 </CardContent>
-            </Card>
+            </Card> */}
 
             {/* Disease Symptoms Distribution (Uses Mock/Fallback Data)
             <Card className="shadow-md border-slate-200">

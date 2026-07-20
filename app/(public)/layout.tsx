@@ -166,7 +166,7 @@ export default function PublicLayout({
                   href="/datahub"
                   className={getLinkClass("/datahub")}
                 >
-                  Maize Data Hub
+                  Data Hub
                 </Link>
                 <Link
                   href="/about"
@@ -238,7 +238,7 @@ export default function PublicLayout({
                 className={getMobileLinkClass("/datahub")}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Maize Data Hub
+                Data Hub
               </Link>
 
               <Link
