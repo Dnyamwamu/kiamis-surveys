@@ -163,6 +163,12 @@ export default function PublicLayout({
                   Maize Performance Assessment Report
                 </Link>
                 <Link
+                  href="/datahub"
+                  className={getLinkClass("/datahub")}
+                >
+                  Maize Data Hub
+                </Link>
+                <Link
                   href="/about"
                   className={getLinkClass("/about")}
                 >
@@ -228,6 +234,14 @@ export default function PublicLayout({
               </Link>
 
               <Link
+                href="/datahub"
+                className={getMobileLinkClass("/datahub")}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Maize Data Hub
+              </Link>
+
+              <Link
                 href="/about"
                 className={getMobileLinkClass("/about")}
                 onClick={() => setMobileMenuOpen(false)}
@@ -261,6 +275,9 @@ export default function PublicLayout({
             <ul className="mt-2 space-y-3 text-sm">
               <li>
                 <Link href="/maize" className="hover:text-amber-300 transition-colors">Maize Crop Assessment Survey</Link>
+              </li>
+              <li>
+                <Link href="/datahub" className="hover:text-amber-300 transition-colors">Maize Survey Data Hub</Link>
               </li>
 
               <li>

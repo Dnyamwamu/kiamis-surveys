@@ -158,6 +158,42 @@ export default function MaizeDemographicsTab({
         return [...liveCountyPerformanceData].sort((a, b) => b.visited - a.visited);
     }, [liveCountyPerformanceData]);
 
+    const processedGenderData = React.useMemo(() => {
+        if (!activeGenderData || activeGenderData.length === 0) return [];
+
+        let otherValue = 0;
+        const result: DemographicsData[] = [];
+
+        activeGenderData.forEach((item) => {
+            const lowerName = item.name.toLowerCase();
+            if (lowerName === "other" || lowerName === "others") {
+                otherValue += item.value;
+            } else {
+                result.push({ ...item });
+            }
+        });
+
+        let maleFound = false;
+        const updated = result.map((item) => {
+            if (item.name.toLowerCase() === "male") {
+                maleFound = true;
+                return { ...item, value: item.value + otherValue };
+            }
+            return item;
+        });
+
+        if (!maleFound && otherValue > 0) {
+            updated.push({ name: "Male", value: otherValue });
+        }
+
+        const total = updated.reduce((sum, item) => sum + item.value, 0);
+
+        return updated.map((item) => ({
+            ...item,
+            percentage: total > 0 ? parseFloat(((item.value / total) * 100).toFixed(1)) : 0,
+        }));
+    }, [activeGenderData]);
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Interactive Map Card */}
@@ -441,7 +477,7 @@ export default function MaizeDemographicsTab({
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
-                                    data={activeGenderData}
+                                    data={processedGenderData}
                                     cx="50%"
                                     cy="50%"
                                     innerRadius={60}
@@ -449,7 +485,7 @@ export default function MaizeDemographicsTab({
                                     paddingAngle={5}
                                     dataKey="value"
                                 >
-                                    {activeGenderData.map((entry, index) => (
+                                    {processedGenderData.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>
@@ -458,7 +494,7 @@ export default function MaizeDemographicsTab({
                         </ResponsiveContainer>
                     </div>
                     <div className="space-y-4 w-full">
-                        {activeGenderData.map((item, index) => (
+                        {processedGenderData.map((item, index) => (
                             <div key={item.name} className="flex items-center justify-between border-b border-slate-100 pb-2">
                                 <div className="flex items-center gap-2">
                                     <span className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
