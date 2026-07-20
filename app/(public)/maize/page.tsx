@@ -965,8 +965,8 @@ export default function SurveysPage() {
     return (
         <div className="min-h-screen bg-slate-50/50 pb-16">
             {/* Header Banner */}
-            <section className="relative py-20 bg-linear-to-br from-green-900 to-green-800 text-white overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(16,185,129,0.08),transparent)]" />
+            <section className="relative bg-gradient-to-r from-emerald-900 via-green-800 to-emerald-900 text-white overflow-hidden py-14">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(16,185,129,0.1),transparent)]" />
                 <div className="container mx-auto px-6 max-w-7xl relative z-10">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                         <div className="lg:col-span-7">

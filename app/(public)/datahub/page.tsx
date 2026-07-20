@@ -278,6 +278,9 @@ export default function DataHubPage() {
     }, [scaleFactor, selectedCounty, selectedSubCounty, selectedWard, countyProjectFilter, liveCountyPerformanceData]);
 
     const totalAcreage = activeCountyMaizeAcreageData.reduce((sum, item) => sum + item.acres, 0);
+    const activeTotalMaizeAcreage = maizeStatsData?.total_maize_acreage !== undefined
+        ? maizeStatsData.total_maize_acreage
+        : totalAcreage;
     const totalRainfed = activeCountyMaizeAcreageData.reduce((sum, item) => sum + item.rainfed, 0);
     const totalIrrigated = activeCountyMaizeAcreageData.reduce((sum, item) => sum + item.irrigated, 0);
 
@@ -417,31 +420,31 @@ export default function DataHubPage() {
             }
 
             const hash = item.county.charCodeAt(0) + idx;
-            
+
             // Farmer Reached
             const reached = visitedFarmers;
-            
+
             // Approved Records: 80% to 90%
             const approvedPercent = 80 + (hash % 11);
             const approved = Math.round((reached * approvedPercent) / 100);
-            
+
             // Rejected Records: 3% to 7%
             const rejectedPercent = 3 + (hash % 5);
             const rejected = Math.round((reached * rejectedPercent) / 100);
-            
+
             // Pending Approval: remainder
             const pending = Math.max(0, reached - approved - rejected);
-            
+
             // Average HH size: 4.5 to 6.0
             const avgHHSize = parseFloat((4.5 + (hash % 16) / 10).toFixed(1));
-            
+
             // Total Maize Acreage
             const maizeAcreage = item.acres;
-            
+
             // Total Farm Size: Maize Acreage * multiplier (1.3 to 1.8)
             const farmSizeMultiplier = 1.3 + (hash % 6) / 10;
             const totalFarmSize = Math.round(maizeAcreage * farmSizeMultiplier);
-            
+
             // Farmers Willing to grow sunflower: 35% to 45%
             const willingPercent = 35 + (hash % 11);
             const willingSunflower = Math.round((reached * willingPercent) / 100);
@@ -485,10 +488,10 @@ export default function DataHubPage() {
             // Seed sources (Acres)
             const subsidyPercent = 55 + (hash % 11);
             const seedSubsidy = Math.round((maizeAcreage * subsidyPercent) / 100);
-            
+
             const retainedPercent = 5 + (hash % 6);
             const seedRetained = Math.round((maizeAcreage * retainedPercent) / 100);
-            
+
             const seedAgrodealers = Math.max(0, maizeAcreage - seedSubsidy - seedRetained);
 
             // Irrigation & Rainfed (Acres)
@@ -845,9 +848,9 @@ export default function DataHubPage() {
             const colors = ["Dark Green", "Light Green", "Pale Yellow"];
             const uniformities = ["Excellent", "Good", "Fair"];
             const watering = ["Rainfed", "Drip Irrigation", "Sprinkler"];
-            
+
             const hash = item.county.charCodeAt(0) + idx;
-            
+
             return {
                 id: `FLD-${1000 + idx}`,
                 county: item.county,
@@ -1056,11 +1059,10 @@ export default function DataHubPage() {
                                     <button
                                         key={proj}
                                         onClick={() => setCountyProjectFilter(proj)}
-                                        className={`flex-1 text-xs font-semibold py-2 px-3 rounded-md transition-all ${
-                                            countyProjectFilter === proj
+                                        className={`flex-1 text-xs font-semibold py-2 px-3 rounded-md transition-all ${countyProjectFilter === proj
                                                 ? "bg-white text-slate-800 shadow-xs"
                                                 : "text-slate-600 hover:text-slate-900"
-                                        }`}
+                                            }`}
                                     >
                                         {proj === "ALL" ? "All" : proj}
                                     </button>
@@ -1113,11 +1115,10 @@ export default function DataHubPage() {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                                className={`flex items-center gap-2 whitespace-nowrap px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 border ${
-                                    activeTab === tab.id
+                                className={`flex items-center gap-2 whitespace-nowrap px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 border ${activeTab === tab.id
                                         ? "bg-slate-900 text-white border-slate-900 shadow-md scale-[1.02]"
                                         : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900"
-                                }`}
+                                    }`}
                             >
                                 <IconComponent className="w-4 h-4" />
                                 {tab.label}
@@ -1415,7 +1416,7 @@ export default function DataHubPage() {
                                         <CardHeader className="pb-2">
                                             <CardTitle className="text-lg font-bold text-slate-800 flex items-center gap-2">
                                                 <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
-                                                County-wise Performance Ledger
+                                                County-wise Performance
                                             </CardTitle>
                                             <CardDescription>Reached vs Target farmers progress per county.</CardDescription>
                                         </CardHeader>
@@ -1521,7 +1522,7 @@ export default function DataHubPage() {
                                     {/* Top Summary Cards (Primary KPIs) */}
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                                         {[
-                                            { title: "Total Maize Acreage", value: `${totalAcreage.toLocaleString()} Ac`, desc: "Aggregate surveyed area", color: "from-emerald-500 to-emerald-600", bg: "bg-emerald-50" },
+                                            { title: "Area under Maize", value: `${activeTotalMaizeAcreage.toLocaleString()} Ac`, desc: "Aggregate surveyed area", color: "from-emerald-500 to-emerald-600", bg: "bg-emerald-50" },
                                             { title: "Average Farm Size", value: `${averageMaizeAcreage} Ac`, desc: "Mean acreage per farmer", color: "from-teal-500 to-teal-600", bg: "bg-teal-50" },
                                             { title: "Median Farm Size", value: `${medianMaizeAcreage} Ac`, desc: "Typical farmer acreage", color: "from-sky-500 to-sky-600", bg: "bg-sky-50" },
                                             { title: "Largest Farm", value: `${largestFarm} Ac`, desc: "Max surveyed field size", color: "from-indigo-500 to-indigo-600", bg: "bg-indigo-50" },
@@ -2130,18 +2131,16 @@ export default function DataHubPage() {
                                                         <td className="px-6 py-3 font-medium text-slate-600">{field.stage}</td>
                                                         <td className="px-6 py-3 text-right font-semibold text-slate-900">{field.acres} Ac</td>
                                                         <td className="px-6 py-3 text-center">
-                                                            <Badge className={`border-none font-semibold text-[10px] px-2 py-0.5 ${
-                                                                field.uniformity === "Excellent" ? "bg-emerald-100 text-emerald-800" :
-                                                                field.uniformity === "Good" ? "bg-blue-100 text-blue-800" : "bg-amber-100 text-amber-800"
-                                                            }`}>
+                                                            <Badge className={`border-none font-semibold text-[10px] px-2 py-0.5 ${field.uniformity === "Excellent" ? "bg-emerald-100 text-emerald-800" :
+                                                                    field.uniformity === "Good" ? "bg-blue-100 text-blue-800" : "bg-amber-100 text-amber-800"
+                                                                }`}>
                                                                 {field.uniformity}
                                                             </Badge>
                                                         </td>
                                                         <td className="px-6 py-3 text-center">
-                                                            <Badge className={`border-none font-semibold text-[10px] px-2 py-0.5 ${
-                                                                field.color === "Dark Green" ? "bg-green-800/10 text-green-950" :
-                                                                field.color === "Light Green" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
-                                                            }`}>
+                                                            <Badge className={`border-none font-semibold text-[10px] px-2 py-0.5 ${field.color === "Dark Green" ? "bg-green-800/10 text-green-950" :
+                                                                    field.color === "Light Green" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
+                                                                }`}>
                                                                 {field.color}
                                                             </Badge>
                                                         </td>
@@ -2570,7 +2569,7 @@ export default function DataHubPage() {
                                             <div className="space-y-3">
                                                 {dominantWeedsData.map((item, idx) => (
                                                     <div key={idx} className="flex justify-between items-center text-xs bg-white border border-slate-100 rounded-lg p-2.5 shadow-2xs">
-                                                        <span className="font-bold text-slate-700">{idx+1}. {item.name}</span>
+                                                        <span className="font-bold text-slate-700">{idx + 1}. {item.name}</span>
                                                         <span className="font-semibold text-slate-500">{item.fields.toLocaleString()} Fields Monitored</span>
                                                     </div>
                                                 ))}
