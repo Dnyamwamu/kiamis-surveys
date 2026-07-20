@@ -110,7 +110,7 @@ export default function KenyaFarmersD3Map({
   }, [surveyData]);
 
   const countyStatsMap = useMemo(() => {
-    return new Map(data.map((d) => [d.county.toUpperCase(), d]));
+    return new Map(data.filter(d => Boolean(d?.county)).map((d) => [d.county.toUpperCase(), d]));
   }, [data]);
 
   const { maxValue, colorScale } = useMemo(() => {
@@ -118,7 +118,7 @@ export default function KenyaFarmersD3Map({
     return {
       maxValue: maxVal,
       colorScale: (countyName: string, value: number, target: number) => {
-        const isSelected = selectedCounty && countyName.toUpperCase() === selectedCounty.toUpperCase();
+        const isSelected = selectedCounty && countyName?.toUpperCase() === selectedCounty?.toUpperCase();
 
         if (surveyData && !showIntensity) {
           const percent = target > 0 ? (value / target) * 100 : 0;
@@ -139,6 +139,7 @@ export default function KenyaFarmersD3Map({
 
   const mapData = useMemo(() => {
     return data.reduce((acc, d) => {
+      if (!d?.county) return acc;
       const target = d.target || d.totalFarmers * 1.05;
       acc[d.county.toUpperCase()] = {
         value: d.totalFarmers,

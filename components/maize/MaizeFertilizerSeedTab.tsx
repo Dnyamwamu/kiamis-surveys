@@ -48,8 +48,8 @@ export default function MaizeFertilizerSeedTab({
     activeVisitedFarmers,
     COLORS,
 }: MaizeFertilizerSeedTabProps) {
-    const nitrogenPct = activeNutrientDeficiencyData.find(d => d.deficiency.toLowerCase().includes("nitrogen"))?.Present || 15.0;
-    const phosphorusPct = activeNutrientDeficiencyData.find(d => d.deficiency.toLowerCase().includes("phosphorus"))?.Present || 12.0;
+    const nitrogenPct = activeNutrientDeficiencyData.find(d => d.deficiency?.toLowerCase().includes("nitrogen"))?.Present || 15.0;
+    const phosphorusPct = activeNutrientDeficiencyData.find(d => d.deficiency?.toLowerCase().includes("phosphorus"))?.Present || 12.0;
     const healthyPct = Math.max(0, 100 - (nitrogenPct + phosphorusPct));
 
     const pieData = [
@@ -180,7 +180,7 @@ export default function MaizeFertilizerSeedTab({
                 </CardHeader>
                 <CardContent className="flex flex-col md:flex-row items-center justify-around gap-8">
                     <div className="w-[200px] h-[200px] shrink-0">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <PieChart>
                                 <Pie
                                     data={pieData}

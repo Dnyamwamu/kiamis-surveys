@@ -113,7 +113,7 @@ export default function MaizeCropEstablishmentTab({
                         <div className="space-y-4">
                             <h4 className="text-sm font-semibold text-slate-700">Top Counties - Rainfed vs Irrigated comparison</h4>
                             <div className="h-[300px]">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                     <BarChart
                                         layout="vertical"
                                         data={topCountiesAcreageData}
@@ -193,7 +193,7 @@ export default function MaizeCropEstablishmentTab({
                     </CardHeader>
                     <CardContent className="flex flex-col sm:flex-row items-center justify-around gap-6">
                         <div className="w-[200px] h-[200px] shrink-0">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                 <PieChart>
                                     <Pie
                                         data={activeSeedSourceData}
@@ -242,7 +242,7 @@ export default function MaizeCropEstablishmentTab({
                     </CardHeader>
                     <CardContent>
                         <div className="h-[250px]">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                 <BarChart data={processedSeedVarietyData} layout="vertical" margin={{ top: 10, right: 60, left: 35, bottom: 20 }}>
                                     <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" />
                                     <XAxis type="number" stroke="#475569" fontSize={11} tickLine={false} label={{ value: 'Number of Farmers', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
@@ -285,7 +285,7 @@ export default function MaizeCropEstablishmentTab({
                 </CardHeader>
                 <CardContent>
                     <div className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <BarChart data={activePlantingDateData} margin={{ top: 20, right: 20, left: 10, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="period" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Planting Window', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />

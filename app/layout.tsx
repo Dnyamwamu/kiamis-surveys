@@ -62,7 +62,7 @@ export default function RootLayout({
         <Providers>
           {children}
           <Toaster />
-          <Analytics />
+          {process.env.NODE_ENV === "production" && <Analytics />}
         </Providers>
       </body>
     </html>

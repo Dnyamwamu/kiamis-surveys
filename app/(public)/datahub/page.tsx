@@ -205,14 +205,14 @@ export default function DataHubPage() {
 
     const filteredLocationData = liveCountyPerformanceData.filter((item) => {
         const matchesProject = countyProjectFilter === "ALL" || item.project === countyProjectFilter;
-        const matchesCounty = !selectedCounty || item.county.toLowerCase() === selectedCounty.toLowerCase();
+        const matchesCounty = !selectedCounty || item.county?.toLowerCase() === selectedCounty?.toLowerCase();
         return matchesProject && matchesCounty;
     });
 
     let reachedSum = 0;
     let targetSum = 0;
     if (selectedCounty) {
-        const match = filteredLocationData.find(item => item.county.toLowerCase() === selectedCounty.toLowerCase());
+        const match = filteredLocationData.find(item => item.county?.toLowerCase() === selectedCounty?.toLowerCase());
         if (match) {
             reachedSum = match.visited || 0;
             targetSum = match.target || 0;
@@ -242,7 +242,7 @@ export default function DataHubPage() {
     const activeCountyMaizeAcreageData = React.useMemo(() => {
         return countyMaizeAcreageData
             .filter((item) => {
-                const matchesCounty = !selectedCounty || item.county.toLowerCase() === selectedCounty.toLowerCase();
+                const matchesCounty = !selectedCounty || item.county?.toLowerCase() === selectedCounty?.toLowerCase();
                 const matchingPerf = liveCountyPerformanceData.find(p => p.county === item.county);
                 const matchesProject = countyProjectFilter === "ALL" || (matchingPerf && matchingPerf.project === countyProjectFilter);
                 return matchesCounty && matchesProject;
@@ -250,7 +250,7 @@ export default function DataHubPage() {
             .map((item) => {
                 let acres = item.acres;
                 acres = Math.round(acres * scaleFactor);
-                if (selectedCounty && item.county.toLowerCase() === selectedCounty.toLowerCase()) {
+                if (selectedCounty && item.county?.toLowerCase() === selectedCounty?.toLowerCase()) {
                     if (selectedSubCounty) {
                         const subFactor = 0.25 + (selectedSubCounty.charCodeAt(0) % 5) * 0.05;
                         acres = Math.round(acres * subFactor);
@@ -335,6 +335,7 @@ export default function DataHubPage() {
     const mapData = React.useMemo(() => {
         const data: Record<string, { value: number; color: string }> = {};
         activeCountyMaizeAcreageData.forEach((item) => {
+            if (!item?.county) return;
             const ratio = item.acres / maxAcreage;
             const greenIntensity = Math.round(20 + ratio * 80);
             data[item.county.toUpperCase()] = {
@@ -408,7 +409,7 @@ export default function DataHubPage() {
             let visitedFarmers = matchingPerf ? matchingPerf.visited : 0;
             // Scale to match subcounty/ward selection
             visitedFarmers = Math.round(visitedFarmers * scaleFactor);
-            if (selectedCounty && item.county.toLowerCase() === selectedCounty.toLowerCase()) {
+            if (selectedCounty && item.county?.toLowerCase() === selectedCounty?.toLowerCase()) {
                 if (selectedSubCounty) {
                     const subFactor = 0.25 + (selectedSubCounty.charCodeAt(0) % 5) * 0.05;
                     visitedFarmers = Math.round(visitedFarmers * subFactor);
@@ -470,7 +471,7 @@ export default function DataHubPage() {
             let visitedFarmers = matchingPerf ? matchingPerf.visited : 0;
             // Scale to match subcounty/ward selection
             visitedFarmers = Math.round(visitedFarmers * scaleFactor);
-            if (selectedCounty && item.county.toLowerCase() === selectedCounty.toLowerCase()) {
+            if (selectedCounty && item.county?.toLowerCase() === selectedCounty?.toLowerCase()) {
                 if (selectedSubCounty) {
                     const subFactor = 0.25 + (selectedSubCounty.charCodeAt(0) % 5) * 0.05;
                     visitedFarmers = Math.round(visitedFarmers * subFactor);
@@ -575,7 +576,7 @@ export default function DataHubPage() {
             let visitedFarmers = matchingPerf ? matchingPerf.visited : 0;
             // Scale to match subcounty/ward selection
             visitedFarmers = Math.round(visitedFarmers * scaleFactor);
-            if (selectedCounty && item.county.toLowerCase() === selectedCounty.toLowerCase()) {
+            if (selectedCounty && item.county?.toLowerCase() === selectedCounty?.toLowerCase()) {
                 if (selectedSubCounty) {
                     const subFactor = 0.25 + (selectedSubCounty.charCodeAt(0) % 5) * 0.05;
                     visitedFarmers = Math.round(visitedFarmers * subFactor);
@@ -731,7 +732,7 @@ export default function DataHubPage() {
             let visitedFarmers = matchingPerf ? matchingPerf.visited : 0;
             // Scale to match subcounty/ward selection
             visitedFarmers = Math.round(visitedFarmers * scaleFactor);
-            if (selectedCounty && item.county.toLowerCase() === selectedCounty.toLowerCase()) {
+            if (selectedCounty && item.county?.toLowerCase() === selectedCounty?.toLowerCase()) {
                 if (selectedSubCounty) {
                     const subFactor = 0.25 + (selectedSubCounty.charCodeAt(0) % 5) * 0.05;
                     visitedFarmers = Math.round(visitedFarmers * subFactor);
@@ -1211,7 +1212,7 @@ export default function DataHubPage() {
                                             </div>
                                         </div>
                                         <div className="h-[200px] flex items-center justify-center">
-                                            <ResponsiveContainer width="100%" height="100%">
+                                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                 <PieChart>
                                                     <Pie
                                                         data={[
@@ -1269,7 +1270,7 @@ export default function DataHubPage() {
                                             </div>
                                         </div>
                                         <div className="h-[200px] flex items-center justify-center">
-                                            <ResponsiveContainer width="100%" height="100%">
+                                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                 <PieChart>
                                                     <Pie
                                                         data={[
@@ -1318,7 +1319,7 @@ export default function DataHubPage() {
                                             </div>
                                         </div>
                                         <div className="h-[200px] lg:col-span-2">
-                                            <ResponsiveContainer width="100%" height="100%">
+                                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                 <BarChart
                                                     data={[
                                                         { range: "1-2 members", value: Math.round(activeVisitedFarmers * 0.15) },
@@ -1371,8 +1372,8 @@ export default function DataHubPage() {
                                                             yOffset={0}
                                                             projectionType="geoMercator"
                                                             tooltipContents={(regionKey) => {
-                                                                const countyName = regionKey.toUpperCase();
-                                                                const match = filteredLocationData.find(c => c.county.toUpperCase() === countyName);
+                                                                const countyName = regionKey?.toUpperCase();
+                                                                const match = filteredLocationData.find(c => c.county?.toUpperCase() === countyName);
                                                                 if (!match) return <div className="p-1 text-xs font-bold text-gray-500">{regionKey} - No Data</div>;
                                                                 return (
                                                                     <div className="p-2 space-y-1 text-xs">
@@ -1580,8 +1581,8 @@ export default function DataHubPage() {
                                                             yOffset={0}
                                                             projectionType="geoMercator"
                                                             tooltipContents={(regionKey) => {
-                                                                const countyName = regionKey.toUpperCase();
-                                                                const match = activeCountyMaizeAcreageData.find(c => c.county.toUpperCase() === countyName);
+                                                                const countyName = regionKey?.toUpperCase();
+                                                                const match = activeCountyMaizeAcreageData.find(c => c.county?.toUpperCase() === countyName);
                                                                 if (!match) return <div className="p-1 text-xs font-bold text-gray-500">{regionKey} - No Data</div>;
                                                                 return (
                                                                     <div className="p-2 space-y-1 text-xs">
@@ -1610,7 +1611,7 @@ export default function DataHubPage() {
                                             </CardHeader>
                                             <CardContent className="flex-1 flex flex-col md:flex-row items-center justify-center gap-6 p-6">
                                                 <div className="w-[200px] h-[200px] relative shrink-0">
-                                                    <ResponsiveContainer width="100%" height="100%">
+                                                    <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                         <PieChart>
                                                             <Pie
                                                                 data={acreageClasses}
@@ -1662,7 +1663,7 @@ export default function DataHubPage() {
                                                 <CardDescription>Number of respondents grouped by farm size ranges.</CardDescription>
                                             </CardHeader>
                                             <CardContent className="h-[320px] pt-4">
-                                                <ResponsiveContainer width="100%" height="100%">
+                                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                     <BarChart data={histogramData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                         <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                         <XAxis dataKey="range" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -1725,7 +1726,7 @@ export default function DataHubPage() {
                                                 <CardDescription>Top 10 counties by cumulative maize acres.</CardDescription>
                                             </CardHeader>
                                             <CardContent className="h-[320px] pt-4">
-                                                <ResponsiveContainer width="100%" height="100%">
+                                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                     <BarChart data={topCounties} layout="vertical" margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
                                                         <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                         <XAxis type="number" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -1747,7 +1748,7 @@ export default function DataHubPage() {
                                                 <CardDescription>Comparison of average farm sizes across top counties.</CardDescription>
                                             </CardHeader>
                                             <CardContent className="h-[320px] pt-4">
-                                                <ResponsiveContainer width="100%" height="100%">
+                                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                     <BarChart data={topCounties} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                         <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                         <XAxis dataKey="county" tick={{ fontSize: 9, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -1813,7 +1814,7 @@ export default function DataHubPage() {
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                                         <div className="h-[240px]">
-                                            <ResponsiveContainer width="100%" height="100%">
+                                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                 <PieChart>
                                                     <Pie
                                                         data={seedSourcesData}
@@ -1862,7 +1863,7 @@ export default function DataHubPage() {
                                 </AccordionTrigger>
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="h-[280px]">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                             <BarChart data={seedVarietiesData} layout="vertical" margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                 <XAxis type="number" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -1887,7 +1888,7 @@ export default function DataHubPage() {
                                 </AccordionTrigger>
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="h-[280px]">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                             <BarChart data={plantingDatesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                 <XAxis dataKey="period" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -1985,7 +1986,7 @@ export default function DataHubPage() {
                                 </AccordionTrigger>
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="h-[280px]">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                             <BarChart data={growthStagesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                 <XAxis dataKey="stage" tick={{ fontSize: 9, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -2011,7 +2012,7 @@ export default function DataHubPage() {
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                                         <div className="h-[240px]">
-                                            <ResponsiveContainer width="100%" height="100%">
+                                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                 <PieChart>
                                                     <Pie
                                                         data={cropUniformityData}
@@ -2062,7 +2063,7 @@ export default function DataHubPage() {
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                                         <div className="h-[240px]">
-                                            <ResponsiveContainer width="100%" height="100%">
+                                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                 <PieChart>
                                                     <Pie
                                                         data={plantColorData}
@@ -2245,7 +2246,7 @@ export default function DataHubPage() {
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                                         <div className="h-[240px]">
-                                            <ResponsiveContainer width="100%" height="100%">
+                                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                 <PieChart>
                                                     <Pie
                                                         data={fertilizerUseData}
@@ -2295,7 +2296,7 @@ export default function DataHubPage() {
                                 </AccordionTrigger>
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="h-[280px]">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                             <BarChart data={fertilizerApplicationData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                 <XAxis dataKey="type" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -2323,7 +2324,7 @@ export default function DataHubPage() {
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                                         <div className="h-[240px]">
-                                            <ResponsiveContainer width="100%" height="100%">
+                                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                 <PieChart>
                                                     <Pie
                                                         data={irrigationSystemsData}
@@ -2373,7 +2374,7 @@ export default function DataHubPage() {
                                 </AccordionTrigger>
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="h-[280px]">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                             <BarChart data={nutrientDeficiencyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                 <XAxis dataKey="deficiency" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -2476,7 +2477,7 @@ export default function DataHubPage() {
                                 </AccordionTrigger>
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="h-[280px]">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                             <BarChart data={pestPresenceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                 <XAxis dataKey="name" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -2503,7 +2504,7 @@ export default function DataHubPage() {
                                 </AccordionTrigger>
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="h-[280px]">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                             <BarChart data={diseaseSymptomsData} layout="vertical" margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                 <XAxis type="number" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -2531,7 +2532,7 @@ export default function DataHubPage() {
                                         {/* Donut Weed Levels */}
                                         <div className="flex flex-col sm:flex-row items-center gap-6">
                                             <div className="w-[180px] h-[180px] relative shrink-0">
-                                                <ResponsiveContainer width="100%" height="100%">
+                                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                     <PieChart>
                                                         <Pie
                                                             data={weedLevelsData}
@@ -2591,7 +2592,7 @@ export default function DataHubPage() {
                                 </AccordionTrigger>
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="h-[280px]">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                             <BarChart data={weedPestPressureData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                 <XAxis dataKey="name" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -2700,7 +2701,7 @@ export default function DataHubPage() {
 
                                     {/* Line Chart */}
                                     <div className="h-[280px]">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                             <ComposedChart data={historicalYieldsData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                 <XAxis dataKey="year" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -2745,7 +2746,7 @@ export default function DataHubPage() {
 
                                     {/* Storage Distribution Chart */}
                                     <div className="h-[280px]">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                             <BarChart data={storageDistributionData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                 <XAxis dataKey="range" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -2770,7 +2771,7 @@ export default function DataHubPage() {
                                 </AccordionTrigger>
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="h-[280px]">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                             <BarChart data={constraintsData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                                 <XAxis dataKey="constraint" tick={{ fontSize: 10, fontWeight: 600, fill: "#64748b" }} axisLine={false} tickLine={false} />
@@ -2796,7 +2797,7 @@ export default function DataHubPage() {
                                 <AccordionContent className="pt-4 pb-6 border-t border-slate-100">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                                         <div className="h-[240px]">
-                                            <ResponsiveContainer width="100%" height="100%">
+                                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                                 <PieChart>
                                                     <Pie
                                                         data={copingStrategiesData}

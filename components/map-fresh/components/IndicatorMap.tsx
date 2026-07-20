@@ -68,6 +68,7 @@ export const IndicatorMap: React.FC<Props> = (props) => {
   // Extract correct datum for a specific region based on year range selection
   const datumForRegion = useCallback(
     (regionKey: string) => {
+      if (!regionKey) return null;
       const values = data[regionKey.toUpperCase()] ?? data[regionKey.toLowerCase()] ?? data[regionKey] ?? [];
       if (values.length === 0) return null;
 
@@ -101,6 +102,7 @@ export const IndicatorMap: React.FC<Props> = (props) => {
       // Collect all numeric values across regions to generate color bounds
       const allValues: (string | number)[] = [];
       regions.forEach((region) => {
+        if (!region?.name) return;
         const key = region.name.toUpperCase();
         const d = datumForRegion(key);
         if (d != null && d.value != null) {
@@ -120,7 +122,9 @@ export const IndicatorMap: React.FC<Props> = (props) => {
 
       const regionNamesByKey = regions.reduce(
         (result, region) => {
-          result[region.name.toUpperCase()] = region.name;
+          if (region?.name) {
+            result[region.name.toUpperCase()] = region.name;
+          }
           return result;
         },
         {} as Record<string, string>,
@@ -128,6 +132,7 @@ export const IndicatorMap: React.FC<Props> = (props) => {
 
       const mapData = regions.reduce(
         (result, region) => {
+          if (!region?.name) return result;
           const key = region.name.toUpperCase();
           const datum = datumForRegion(key);
 

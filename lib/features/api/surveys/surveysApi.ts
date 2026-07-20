@@ -584,9 +584,9 @@ export const surveysApi = createApi({
       query: (params) => {
         const queryParams = new URLSearchParams()
         if (params) {
-          if (params.county) queryParams.append("county", params.county.toLowerCase())
-          if (params.subcounty) queryParams.append("subcounty", params.subcounty.toLowerCase())
-          if (params.ward) queryParams.append("ward", params.ward.toLowerCase())
+          if (params.county && typeof params.county === "string") queryParams.append("county", params.county.toLowerCase())
+          if (params.subcounty && typeof params.subcounty === "string") queryParams.append("subcounty", params.subcounty.toLowerCase())
+          if (params.ward && typeof params.ward === "string") queryParams.append("ward", params.ward.toLowerCase())
           if (params.page_size !== undefined) queryParams.append("page_size", params.page_size.toString())
         }
         const qs = queryParams.toString()

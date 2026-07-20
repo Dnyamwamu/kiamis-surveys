@@ -210,7 +210,7 @@ export default function MaizePestsYieldsTab({
                 </CardHeader>
                 <CardContent>
                     <div className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <BarChart data={activePestDiseaseData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Threat Category', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
@@ -242,7 +242,7 @@ export default function MaizePestsYieldsTab({
                 </CardHeader>
                 <CardContent className="flex flex-col sm:flex-row items-center justify-around gap-6">
                     <div className="w-[200px] h-[200px] shrink-0">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <PieChart>
                                 <Pie
                                     data={activeDiseaseSymptomsData}
@@ -299,7 +299,7 @@ export default function MaizePestsYieldsTab({
                 </CardHeader>
                 <CardContent>
                     <div className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <ComposedChart data={activeHistoricalYieldData} margin={{ top: 20, right: 30, left: 10, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
                                 <XAxis dataKey="year" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Year', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
@@ -330,7 +330,7 @@ export default function MaizePestsYieldsTab({
                 </CardHeader>
                 <CardContent className="flex flex-col sm:flex-row items-center justify-around gap-6">
                     <div className="w-[200px] h-[200px] shrink-0">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <PieChart>
                                 <Pie
                                     data={activeMaizeUseData}
@@ -376,7 +376,7 @@ export default function MaizePestsYieldsTab({
                 </CardHeader>
                 <CardContent>
                     <div className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <BarChart data={activePoorPerformanceCauses} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="cause" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Primary Cause', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />

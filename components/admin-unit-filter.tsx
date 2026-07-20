@@ -116,7 +116,7 @@ export function AdminUnitFilter({
     if (!adminUnits) return selectedCounty;
     if (!selectedCounty) return "";
     const matched = adminUnits.counties.find(
-      (c) => c.county.toLowerCase() === selectedCounty.toLowerCase()
+      (c) => c.county?.toLowerCase() === selectedCounty?.toLowerCase()
     );
     return matched ? matched.county : selectedCounty;
   }, [adminUnits, selectedCounty]);
@@ -125,7 +125,7 @@ export function AdminUnitFilter({
     if (!adminUnits) return selectedSubCounty;
     if (!selectedSubCounty) return "";
     const matched = adminUnits.subcounties.find(
-      (sc) => sc.subcounty.toLowerCase() === selectedSubCounty.toLowerCase()
+      (sc) => sc.subcounty?.toLowerCase() === selectedSubCounty?.toLowerCase()
     );
     return matched ? matched.subcounty : selectedSubCounty;
   }, [adminUnits, selectedSubCounty]);
@@ -134,7 +134,7 @@ export function AdminUnitFilter({
     if (!adminUnits) return selectedWard;
     if (!selectedWard) return "";
     const matched = adminUnits.wards.find(
-      (w) => w.ward.toLowerCase() === selectedWard.toLowerCase()
+      (w) => w.ward?.toLowerCase() === selectedWard?.toLowerCase()
     );
     return matched ? matched.ward : selectedWard;
   }, [adminUnits, selectedWard]);
@@ -143,7 +143,7 @@ export function AdminUnitFilter({
   const availableSubCounties = useMemo(() => {
     if (!adminUnits || !normalizedCounty) return [];
     const county = adminUnits.counties.find(
-      (c) => c.county.toLowerCase() === normalizedCounty.toLowerCase()
+      (c) => c.county?.toLowerCase() === normalizedCounty?.toLowerCase()
     );
     if (!county) return [];
     return adminUnits.subcounties.filter(
@@ -155,7 +155,7 @@ export function AdminUnitFilter({
     if (!adminUnits) return [];
     if (normalizedSubCounty) {
       const subcounty = adminUnits.subcounties.find(
-        (sc) => sc.subcounty.toLowerCase() === normalizedSubCounty.toLowerCase()
+        (sc) => sc.subcounty?.toLowerCase() === normalizedSubCounty?.toLowerCase()
       );
       if (!subcounty) return [];
       return adminUnits.wards.filter(
@@ -163,7 +163,7 @@ export function AdminUnitFilter({
       );
     } else if (normalizedCounty) {
       const county = adminUnits.counties.find(
-        (c) => c.county.toLowerCase() === normalizedCounty.toLowerCase()
+        (c) => c.county?.toLowerCase() === normalizedCounty?.toLowerCase()
       );
       if (!county) return [];
       const countySubcounties = adminUnits.subcounties.filter(

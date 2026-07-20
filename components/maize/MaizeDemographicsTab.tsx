@@ -95,7 +95,7 @@ const CountyAgripreneurRow = ({
 }) => {
     // Fetch total number of agripreneurs onboarded in this county
     const { data: totalData, isLoading: isTotalLoading } = useGetAgripreneursQuery({
-        county: county.toLowerCase(),
+        county: county ? county.toLowerCase() : "",
     });
 
     // Fetch active agripreneurs for this county in the maize survey
@@ -165,7 +165,7 @@ export default function MaizeDemographicsTab({
         const result: DemographicsData[] = [];
 
         activeGenderData.forEach((item) => {
-            const lowerName = item.name.toLowerCase();
+            const lowerName = item.name ? item.name.toLowerCase() : "";
             if (lowerName === "other" || lowerName === "others") {
                 otherValue += item.value;
             } else {
@@ -175,7 +175,7 @@ export default function MaizeDemographicsTab({
 
         let maleFound = false;
         const updated = result.map((item) => {
-            if (item.name.toLowerCase() === "male") {
+            if (item.name?.toLowerCase() === "male") {
                 maleFound = true;
                 return { ...item, value: item.value + otherValue };
             }
@@ -277,7 +277,7 @@ export default function MaizeDemographicsTab({
                         </h4>
                         <div className="overflow-y-auto flex-1 space-y-2 pr-1 select-none">
                             {liveCountyPerformanceData.map((item) => {
-                                const isSelected = selectedCounty.toLowerCase() === item.county.toLowerCase();
+                                const isSelected = selectedCounty?.toLowerCase() === item.county?.toLowerCase();
                                 const completionRate = item.target > 0 ? (item.visited / item.target) * 100 : 0;
                                 return (
                                     <div
@@ -400,7 +400,7 @@ export default function MaizeDemographicsTab({
                                     </TableCell>
                                     <TableCell className="text-right font-bold text-slate-800 py-2.5 text-sm">
                                         {(() => {
-                                            const registeredItem = activeRegistrationData.find(d => d.name.toLowerCase().includes("registered") || d.name.toLowerCase().includes("existing"));
+                                            const registeredItem = activeRegistrationData.find(d => d.name?.toLowerCase().includes("registered") || d.name?.toLowerCase().includes("existing"));
                                             const val = registeredItem ? registeredItem.value : Math.round(activeVisitedFarmers * 0.64);
                                             return val.toLocaleString();
                                         })()}
@@ -476,7 +476,7 @@ export default function MaizeDemographicsTab({
                 </CardHeader>
                 <CardContent className="flex flex-col sm:flex-row items-center justify-around gap-6">
                     <div className="w-[200px] h-[200px] shrink-0">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <PieChart>
                                 <Pie
                                     data={processedGenderData}
@@ -525,7 +525,7 @@ export default function MaizeDemographicsTab({
                 </CardHeader>
                 <CardContent className="flex flex-col sm:flex-row items-center justify-around gap-6">
                     <div className="w-[200px] h-[200px] shrink-0">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <PieChart>
                                 <Pie
                                     data={activeRegistrationData}
@@ -574,7 +574,7 @@ export default function MaizeDemographicsTab({
                 </CardHeader>
                 <CardContent>
                     <div className="h-[200px]">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <BarChart data={activeHouseholdRangeData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="range" stroke="#94a3b8" fontSize={11} tickLine={false} label={{ value: 'Household Size Range', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
@@ -612,7 +612,7 @@ export default function MaizeDemographicsTab({
                 </CardHeader>
                 <CardContent>
                     <div className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <BarChart data={activeTargetComparisonData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Category', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />

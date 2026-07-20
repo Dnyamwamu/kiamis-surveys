@@ -128,7 +128,7 @@ export default function MaizeYieldEstimateTab({
                         <div className="space-y-4">
                             <h4 className="text-sm font-semibold text-slate-700">Aggregate Allocation Breakdowns</h4>
                             <div className="h-[250px] flex items-center justify-center">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                     <PieChart>
                                         <Pie
                                             data={[
@@ -200,7 +200,7 @@ export default function MaizeYieldEstimateTab({
                     </CardHeader>
                     <CardContent>
                         <div className="h-[250px]">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                 <ComposedChart
                                     data={[
                                         { year: "2022", Yield: 5 },
@@ -280,7 +280,7 @@ export default function MaizeYieldEstimateTab({
                         <div className="space-y-4">
                             <h4 className="text-sm font-semibold text-slate-700">Top 10 Counties Utilisation (Bags)</h4>
                             <div className="h-[300px]">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                     <BarChart
                                         layout="vertical"
                                         data={topCountiesYieldData}

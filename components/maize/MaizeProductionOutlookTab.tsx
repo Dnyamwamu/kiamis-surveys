@@ -156,7 +156,7 @@ export default function MaizeProductionOutlookTab({
                 </CardHeader>
                 <CardContent className="flex flex-col sm:flex-row items-center justify-around gap-8">
                     <div className="w-[200px] h-[200px] shrink-0">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <PieChart>
                                 <Pie
                                     data={categories}
@@ -266,7 +266,7 @@ export default function MaizeProductionOutlookTab({
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="h-[250px]">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                 <ComposedChart
                                     data={[
                                         { year: "2022", Yield: 5 },

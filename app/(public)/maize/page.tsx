@@ -189,7 +189,7 @@ export default function SurveysPage() {
             item.project === countyProjectFilter;
         const matchesCounty =
             !selectedCounty ||
-            item.county.toLowerCase() === selectedCounty.toLowerCase();
+            item.county?.toLowerCase() === selectedCounty?.toLowerCase();
         return matchesProject && matchesCounty;
     });
 
@@ -199,7 +199,7 @@ export default function SurveysPage() {
     let activeCountiesCount = 0;
 
     if (selectedCounty) {
-        const match = filteredLocationData.find(item => item.county.toLowerCase() === selectedCounty.toLowerCase());
+        const match = filteredLocationData.find(item => item.county?.toLowerCase() === selectedCounty?.toLowerCase());
         if (match) {
             reachedSum = match.visited || 0;
             targetSum = (match.target as number | null) || 0;
@@ -384,7 +384,7 @@ export default function SurveysPage() {
         const result: { name: string; value: number; percentage?: number }[] = [];
 
         rawGenderData.forEach((item) => {
-            const lowerName = item.name.toLowerCase();
+            const lowerName = item.name ? item.name.toLowerCase() : "";
             if (lowerName === "other" || lowerName === "others") {
                 otherValue += item.value;
             } else {
@@ -394,7 +394,7 @@ export default function SurveysPage() {
 
         let maleFound = false;
         const updated = result.map((item) => {
-            if (item.name.toLowerCase() === "male") {
+            if (item.name?.toLowerCase() === "male") {
                 maleFound = true;
                 return { ...item, value: item.value + otherValue };
             }
@@ -413,11 +413,11 @@ export default function SurveysPage() {
         }));
     }, [rawGenderData]);
 
-    const activeMaleFarmersCount = activeGenderData.find(d => d.name.toLowerCase() === "male")?.value
+    const activeMaleFarmersCount = activeGenderData.find(d => d.name?.toLowerCase() === "male")?.value
         || maizeStatsData?.male_farmers_count
         || Math.round(activeVisitedFarmers * 0.469);
 
-    const activeFemaleFarmersCount = activeGenderData.find(d => d.name.toLowerCase() === "female")?.value
+    const activeFemaleFarmersCount = activeGenderData.find(d => d.name?.toLowerCase() === "female")?.value
         || maizeStatsData?.female_farmers_count
         || Math.round(activeVisitedFarmers * 0.504);
 
@@ -498,7 +498,7 @@ export default function SurveysPage() {
     const totalColorCount = rawPlantColorData.reduce((sum, item) => sum + item.value, 0);
 
     const mappedPlantColorData = rawPlantColorData.map((item) => {
-        const mappedName = colorNameMap[item.name.toLowerCase()] || item.name;
+        const mappedName = colorNameMap[item.name?.toLowerCase() || ""] || item.name;
         const percentage = totalColorCount > 0 ? parseFloat(((item.value / totalColorCount) * 100).toFixed(1)) : 0;
         return {
             name: mappedName,
@@ -522,17 +522,17 @@ export default function SurveysPage() {
         if (selectedWard) return 1;
         if (selectedSubCounty) {
             return adminUnits.wards.filter(
-                (w) => w.subcounty.toLowerCase() === selectedSubCounty.toLowerCase()
+                (w) => w.subcounty?.toLowerCase() === selectedSubCounty?.toLowerCase()
             ).length;
         }
         if (selectedCounty) {
             return adminUnits.wards.filter(
-                (w) => w.county.toLowerCase() === selectedCounty.toLowerCase()
+                (w) => w.county?.toLowerCase() === selectedCounty?.toLowerCase()
             ).length;
         }
-        const projectCounties = filteredLocationData.map(c => c.county.toLowerCase());
+        const projectCounties = filteredLocationData.map(c => c.county?.toLowerCase()).filter((c): c is string => Boolean(c));
         return adminUnits.wards.filter(
-            (w) => projectCounties.includes(w.county.toLowerCase())
+            (w) => w.county && projectCounties.includes(w.county.toLowerCase())
         ).length;
     }, [adminUnits, selectedCounty, selectedSubCounty, selectedWard, filteredLocationData]);
 
@@ -547,7 +547,7 @@ export default function SurveysPage() {
     let lateFields = 0;
 
     plantingDates.forEach(item => {
-        const periodLower = item.period.toLowerCase();
+        const periodLower = item.period ? item.period.toLowerCase() : "";
         if (periodLower.includes("early march")) {
             earlyFields += item.fields;
         } else if (periodLower.includes("mid march") || periodLower.includes("late march") || periodLower.includes("timely")) {
@@ -621,7 +621,7 @@ export default function SurveysPage() {
 
     const rawDiseaseData = healthData?.disease_symptoms || [];
     const mappedDiseaseData = rawDiseaseData.map((item, idx) => {
-        const mappedName = diseaseNameMap[item.name.toLowerCase()] || item.name;
+        const mappedName = diseaseNameMap[item.name?.toLowerCase() || ""] || item.name;
         return {
             name: mappedName,
             percentage: item.percentage,
@@ -729,7 +729,7 @@ export default function SurveysPage() {
 
     const activeCountyMaizeAcreageData = countyMaizeAcreageData
         .filter((item) => {
-            const matchesCounty = !selectedCounty || item.county.toLowerCase() === selectedCounty.toLowerCase();
+            const matchesCounty = !selectedCounty || item.county?.toLowerCase() === selectedCounty?.toLowerCase();
             const matchingPerf = liveCountyPerformanceData.find(p => p.county === item.county);
             const matchesProject = countyProjectFilter === "ALL" || (matchingPerf && matchingPerf.project === countyProjectFilter);
             return matchesCounty && matchesProject;
@@ -737,7 +737,7 @@ export default function SurveysPage() {
         .map((item) => {
             let acres = item.acres;
             acres = Math.round(acres * scaleFactor);
-            if (selectedCounty && item.county.toLowerCase() === selectedCounty.toLowerCase()) {
+            if (selectedCounty && item.county?.toLowerCase() === selectedCounty?.toLowerCase()) {
                 if (selectedSubCounty) {
                     const subFactor = 0.25 + (selectedSubCounty.charCodeAt(0) % 5) * 0.05;
                     acres = Math.round(acres * subFactor);
@@ -819,14 +819,14 @@ export default function SurveysPage() {
                     item.project === countyProjectFilter;
                 const matchesCounty =
                     !selectedCounty ||
-                    item.county.toLowerCase() === selectedCounty.toLowerCase();
+                    item.county?.toLowerCase() === selectedCounty?.toLowerCase();
                 return matchesProject && matchesCounty;
             })
             .map((item) => {
                 let visited = item.visited;
                 let target = item.target;
 
-                if (selectedCounty && item.county.toLowerCase() === selectedCounty.toLowerCase()) {
+                if (selectedCounty && item.county?.toLowerCase() === selectedCounty?.toLowerCase()) {
                     if (selectedSubCounty) {
                         const subFactor = 0.25 + (selectedSubCounty.charCodeAt(0) % 5) * 0.05;
                         visited = Math.round(visited * subFactor);
@@ -891,7 +891,7 @@ export default function SurveysPage() {
             arr: { name: string; value: number; percentage?: number | string }[],
             nameQuery: string
         ) => {
-            const item = arr.find(d => d.name.toLowerCase().includes(nameQuery.toLowerCase()));
+            const item = arr.find(d => d.name?.toLowerCase().includes(nameQuery?.toLowerCase() || ""));
             if (!item) return "N/A";
             const pct = item.percentage !== undefined ? item.percentage : ((item.value / (activeVisitedFarmers || 1)) * 100).toFixed(1);
             return `${item.value} (${pct}%)`;

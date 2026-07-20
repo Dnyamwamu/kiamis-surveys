@@ -88,7 +88,7 @@ export default function MaizeGrowthTab({
                 </CardHeader>
                 <CardContent>
                     <div className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                             <BarChart data={activeGrowthStageData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="stage" stroke="#94a3b8" fontSize={12} tickLine={false} label={{ value: 'Growth Stage', position: 'insideBottom', offset: -10, fill: '#64748b', fontSize: 11, fontWeight: 500 }} height={40} />
@@ -137,7 +137,7 @@ export default function MaizeGrowthTab({
                     </CardHeader>
                     <CardContent className="flex flex-col sm:flex-row items-center justify-around gap-6">
                         <div className="w-[200px] h-[200px] shrink-0">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                 <PieChart>
                                     <Pie
                                         data={activeCropUniformityData}
@@ -186,7 +186,7 @@ export default function MaizeGrowthTab({
                     </CardHeader>
                     <CardContent className="flex flex-col sm:flex-row items-center justify-around gap-6">
                         <div className="w-[200px] h-[200px] shrink-0">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                 <PieChart>
                                     <Pie
                                         data={activePlantColorData}
