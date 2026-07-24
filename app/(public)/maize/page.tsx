@@ -1089,7 +1089,7 @@ export default function SurveysPage() {
                             />
                         </div>
                         <div className="w-full lg:w-80">
-                            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Project Sponsor</h3>
+                            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Project </h3>
                             <div className="flex bg-slate-100 p-1 rounded-lg w-full">
                                 <button
                                     onClick={() => setCountyProjectFilter("ALL")}

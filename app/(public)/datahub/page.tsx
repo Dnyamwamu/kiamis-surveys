@@ -1054,15 +1054,15 @@ export default function DataHubPage() {
                             />
                         </div>
                         <div className="w-full lg:w-80">
-                            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Project Sponsor</h3>
+                            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Project</h3>
                             <div className="flex bg-slate-100 p-1 rounded-lg w-full">
                                 {(["ALL", "NAVCDP", "FSRP"] as const).map((proj) => (
                                     <button
                                         key={proj}
                                         onClick={() => setCountyProjectFilter(proj)}
                                         className={`flex-1 text-xs font-semibold py-2 px-3 rounded-md transition-all ${countyProjectFilter === proj
-                                                ? "bg-white text-slate-800 shadow-xs"
-                                                : "text-slate-600 hover:text-slate-900"
+                                            ? "bg-white text-slate-800 shadow-xs"
+                                            : "text-slate-600 hover:text-slate-900"
                                             }`}
                                     >
                                         {proj === "ALL" ? "All" : proj}
@@ -1117,8 +1117,8 @@ export default function DataHubPage() {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
                                 className={`flex items-center gap-2 whitespace-nowrap px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 border ${activeTab === tab.id
-                                        ? "bg-slate-900 text-white border-slate-900 shadow-md scale-[1.02]"
-                                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900"
+                                    ? "bg-slate-900 text-white border-slate-900 shadow-md scale-[1.02]"
+                                    : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900"
                                     }`}
                             >
                                 <IconComponent className="w-4 h-4" />
@@ -2133,14 +2133,14 @@ export default function DataHubPage() {
                                                         <td className="px-6 py-3 text-right font-semibold text-slate-900">{field.acres} Ac</td>
                                                         <td className="px-6 py-3 text-center">
                                                             <Badge className={`border-none font-semibold text-[10px] px-2 py-0.5 ${field.uniformity === "Excellent" ? "bg-emerald-100 text-emerald-800" :
-                                                                    field.uniformity === "Good" ? "bg-blue-100 text-blue-800" : "bg-amber-100 text-amber-800"
+                                                                field.uniformity === "Good" ? "bg-blue-100 text-blue-800" : "bg-amber-100 text-amber-800"
                                                                 }`}>
                                                                 {field.uniformity}
                                                             </Badge>
                                                         </td>
                                                         <td className="px-6 py-3 text-center">
                                                             <Badge className={`border-none font-semibold text-[10px] px-2 py-0.5 ${field.color === "Dark Green" ? "bg-green-800/10 text-green-950" :
-                                                                    field.color === "Light Green" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
+                                                                field.color === "Light Green" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
                                                                 }`}>
                                                                 {field.color}
                                                             </Badge>
